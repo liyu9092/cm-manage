@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆 </a>
+            <span>&gt;</span><a href="index.html">定妆赠送活动</a>
+            <span>&gt;</span>查看赠送活动
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>查看赠送活动</h4>
+                </div>
+                <div class="flex-item ">
+                    <div class="fr" id="breadcrumb">
+                        <script type="text/template" id='breadcrumb-t'>
+                        <a href="coupon_list.html#presentId=<%=query.id%>" class="btn" data-slug="powderArticles.articlesTicketList">
+                            查看卷详情
+                        </a>
+                        <%if (data.articleExpireStatus == 1){%>
+                        <%if (data.verifyStatus == 1){%>
+                        <a class="btn" data-check data-url='powderArticles/switchVerifyArticles' data-text='关闭验证后此活动的赠送券将无法使用，是否关闭' data-status='2' data-id='<%=query.id%>' data-slug="powderArticles.switchVerifyArticles">
+                             关闭验证
+                        </a>
+                        <%}else{%>
+                        <a class="btn" data-check data-url='powderArticles/switchVerifyArticles' data-text='开启验证后此活动的赠送券可继续使用，是否开启' data-status='1' data-id='<%=query.id%>' data-slug="powderArticles.switchVerifyArticles">
+                             开启验证
+                        </a>
+                        <%}%>
+                        <%if (data.articleStatus == 1){%>
+                        <a class="btn" data-check data-url='powderArticles/switchArticles' data-text='关闭活动后将停止赠送活动，是否关闭' data-status='2' data-id='<%=query.id%>' data-slug="powderArticles.switchArticles">
+                             关闭活动
+                        </a>
+                        <%}else{%>
+                        <a class="btn" data-check data-url='powderArticles/switchArticles' data-text='开启活动后将继续赠送，是否开启' data-id='<%=query.id%>' data-status='1' data-slug="powderArticles.switchArticles">
+                             开启活动
+                        </a>
+                        <%}%>
+                        <%}%>
+                        <a href="index.html" class="btn">
+                             返回
+                        </a>
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="table table-detail" style="margin:0" ajat="powderArticles/showArticlesInfo?presentId=<%=query.id%>#domid=table&tempid=table-t" id="table">
+                <script type="text/template" id='table-t'>
+                <table >
+                    <tbody>
+                        <tr>
+                            <td class="td">活动名称：</td>
+                            <td><%=data.articleName%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">赠送项目：</td>
+                            <td><%=data.itemName%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">赠送数量：</td>
+                            <td><%=data.quantity%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">已使用数：</td>
+                            <td><%=data.useNum%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">未使用数：</td>
+                            <td><%=data.notUseNum%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">活动起始日：</td>
+                            <td><%=data.startTime%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">活动截止日：</td>
+                            <td><%=data.endTime%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">有效期：</td>
+                            <td><%=data.expireTime%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">申请部门：</td>
+                            <td><%=data.departmentName%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">负责人：</td>
+                            <td><%=data.managerName%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">活动简介：</td>
+                            <td><%=data.detail.replace(/\n/g,"</br>")%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">创建人：</td>
+                            <td><%=data.creater%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">创建时间：</td>
+                            <td><%=data.createTime%></td>
+                        </tr>
+                    </tbody>
+                </table>
+                 </script>
+                 <script type="text/javascript">
+                  $('body').on('click','a[data-check]',function(){
+                      var $this = $(this),
+                          text = $this.attr('data-text'),
+                          url = $this.attr('data-url'),
+                          status = $this.attr('data-status'),
+                          id = $this.attr('data-id');
+                          confirmBox({
+                              'text':text,
+                              'url':url,
+                              'data':{
+                                  'presentId':id,
+                                  'articleStatus':status,
+                                  'verifyStatus':status
+                              }
+                          })
+                  }).on('_ready','#table',function(e,res){
+                      lib.ajat('#domid=breadcrumb&tempid=breadcrumb-t').template(res.response);
+                  })
+
+
+                  var confirmBox = function(options){
+                       parent.lib.popup.confirm({
+                           text:options.text,
+                           define: function(){
+                               lib.ajax({
+                                   url : options.url,
+                                   data:options.data
+                               }).done(function(data, status, xhr){
+                                   if(data.result == 1){
+                                       parent.lib.popup.result({
+                                           text:options.resultText,
+                                           define:function(){
+                                               location.reload();
+                                           }
+                                       });
+                                   }
+                               });
+                           }
+                       });
+                  };
+                 </script>
+            </div>
+        </div>
+    </body>
+</html>

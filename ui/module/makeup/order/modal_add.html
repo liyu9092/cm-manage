@@ -1,0 +1,68 @@
+<form  data-role="form" action="book/create">
+    <div class="control-group">
+        <label class="control-label" for=""><span class="red">*</span>手机号码：</label>
+        <div class="control">
+            <input type="text" name="phone" placeholder="11位有效数字手机号码" maxlength="11" pattern="mobile" required patternmsg="请输入11位有效手机号">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for=""><span class="red">*</span>姓名：</label>
+        <div class="control">
+            <input type="text" name="name" placeholder="2-10个字" minlength="2" maxlength="10" required >
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for=""><span class="red">*</span>性别：</label>
+        <div class="control">
+            <label class="radio">
+              <input type="radio" name="sex" value="2" checked  required/>
+              <span>女</span>
+            </label>
+            <label class="radio">
+              <input type="radio" name="sex" value="1" required/>
+              <span>男</span>
+            </label>                    
+        </div>
+    </div>    
+    <div class="control-group">
+        <label class="control-label" for=""><span class="red">*</span>预约项目：</label>
+        <div class="control" id="control-item">
+
+                 
+        </div>
+    </div>  
+    <div class="control-group">
+        <label class="control-label" for=""><span class="red">*</span>预约日期：</label>
+        <div class="control">
+            <input type="date" name="date" required>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="">推荐码：</label>
+        <div class="control">
+            <input type="text" name="recomment_code" minlength="1" maxlength="11" pattern='number' placeholder="1-11位数字">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for=""></label>
+        <button class="btn popup-alert-cancel" type="button">取消</button>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <button class="btn-primary">确认创建</button>
+    </div>
+    <script>
+        $(function(){
+            lib.ajax({
+              type: "get",
+              url : 'beautyItem/itemList',
+              data: {'is_gift':'0'}
+            }).done(function(data, status, xhr){
+                if(data.result == '1'){
+                    data.data.forEach(function(item,i){
+                        $("#control-item").append('<label class="label"><input type="checkbox" name="item_ids" value="'+item.item_id+'" required><span>'+item.name+'</span></label>');
+                    })
+                    $("#control-item").append('<div class="control-help" style="display:none;"></div>');                
+                }
+            })                   
+        });
+    </script>                                                              
+</form>

@@ -1,0 +1,95 @@
+<div class="popup popup-<%=options.direction||'center'%>">
+    <%if(options.type=='alert'){%>
+    <div class="popup-alert">
+        <div class="popup-alert-title"><%=options.text%></div>
+        <div class="flex-box popup-footer"><div class="flex-item"><a class="popup-alert-define touch-link"><%=options.defineText||"确定"%></a></div></div>
+    </div>
+    <%}%>
+    <%if(options.type=='confirm'){%>
+    <div class="popup-alert">
+		<%if(!options.content){%>
+        <div class="popup-alert-title">
+            <%=options.text%>
+            <%if(options.inputType){%>
+            <input class="popup-prompt-input" style="width:100%" placeholder="<%=options.placeholder%>" type="<%=options.inputType%>" />
+            <%}%>
+        </div>
+		<%}else{%>
+			<div class="popup-alert-title">
+				<%=options.text%>
+			</div>
+			<div class="popup-alert-body">
+				<%=options.content%>
+			</div>
+		<%}%>
+        <div class="flex-box popup-footer">
+            <div class="flex-item"><a class="popup-alert-cancel touch-link"><%=options.cancelText||"取消"%></a></div>
+            <div class="flex-item"><a class="popup-alert-define touch-link"><%=options.defineText||"确定"%></a></div>
+        </div>
+    </div>
+    <%}%>
+    <%if(options.type=='sheet'){%>
+    <div class="popup-sheet">
+        <%for(var i=0;i<options.list.length;i++){%>
+        <a class="popup-sheet-item touch-link" data-id="<%=options.list[i].id%>"><%=options.list[i].name%></a>
+        <%}%>
+    </div>
+    <div class="popup-sheet-cancel"><a class="touch-link"><%=options.cancelText||"取消"%></a></div>
+    <%}%>
+    <%if(options.type=='menu'){%>
+    <div class="popup-menu">
+        <%if(options.title){%>
+        <div class="popup-menu-title"><%=options.title%></div>
+        <%}%>
+        <div class="popup-menu-list">
+        <%for(var i=0;i<options.list.length;i++){%>
+        <a class="popup-menu-item touch-link <%=options.list[i].active?'popup-menu-active':''%>" data-id="<%=options.list[i].id%>"><%=options.list[i].name%></a>
+        <%}%>
+        </div>
+    </div>
+    <%}%>
+	<%if(options.type=='box'){%>
+    <div class="popup-box">
+        <%if(options.title){%>
+        <div class="popup-box-title">
+			<%=options.title%>
+		</div>
+        <%}%>
+		<a class="popup-box-close fa fa-times-circle"></a>
+        <div class="popup-box-body">
+			<%if(options.src){%>
+				<%options.src+=options.src.indexOf("#")>-1?"&":"#"+"popup=box"%>
+				<iframe src="<%=options.src%>" frameborder="0"></iframe>
+			<%}else{%>
+				<%=options.content%>
+			<%}%>
+        </div>
+		 <%if(options.confirm){%>
+		 <div class="tc popup-footer" style="padding:5px 0;border:0">
+            <a class="popup-alert-cancel btn"><%=options.cancelText||"取消"%></a>
+			<span class="space"></span>
+            <a class="popup-alert-define btn-primary"><%=options.defineText||"确定"%></a>
+        </div>
+		<%}%>
+    </div>
+    <%}%>
+	<%if(options.type=='swiper'){%>
+	<a class="swiper-close"><i class="fa fa-times-circle"></i></a>
+	<div class="swiper-container">
+        <div class="swiper-wrapper">
+			<%for(var i=0;i<options.list.length;i++){%>
+			<div class="swiper-slide">
+				<img src="<%=options.list[i]%>" alt="" />
+			</div>
+			<%}%>
+        </div>
+               <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+		<%if(options.list.length>1){%>
+        <!-- Add Arrows -->
+        <div class="swiper-button-next"><i class="fa fa-angle-right"></i></div>
+        <div class="swiper-button-prev"><i class="fa fa-angle-left"></i></div>
+		<%}%>
+    </div>
+	<%}%>
+</div>

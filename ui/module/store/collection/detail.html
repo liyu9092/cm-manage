@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+	<div class="breadcrumb">
+		<a>店铺结算 </a><span>&gt;</span><a href="index.html">代收单</a><span>&gt;</span>查看代收单
+		<div class="flex-box">
+			<div class="flex-item">
+				<h4>查看代收单</h4>
+			</div>
+		</div>
+		<hr />
+	</div>
+	<div class="wrapper">
+		
+		<div class="table-detail" ajat="shop_count/delegate_detail/<%=query.id%>#domid=detail&tempid=detail-t" id="detail">
+		<script type="text/template" id="detail-t">
+			<div class="detail-operation">
+				<button class="btn btn-cancel" type="button">返回</button>
+			</div>
+			<%var arr=["项目消费"]%>
+			<table>
+				<thead>
+					<tr>
+						<td colspan="2">
+						  <%=data.salon?data.salon.salonname:""%>
+						  <span class="table-detail-sn">店铺编号：<%=data.salon.sn%></span>
+						</td>
+					</tr>
+				</thead>
+				  <tbody>
+					<tr>
+					  <td>代收单号：</td>
+					  <td><%=data.code%></td>
+					</tr>
+					<tr>
+					  <td>代收类型：</td>
+					  <td><%=arr[data.type-1]%></td>
+					</tr>
+					<tr>
+					  <td>代收金额：</td>
+					  <td><%=data.money%></td>
+					</tr>
+					<tr>
+					  <td>代收日期：</td>
+					  <td><%=data.day%></td>
+					</tr>
+				  </tbody>
+			</table>
+		</script>
+		</div>
+	</div>
+  </body>
+</html>

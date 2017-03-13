@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>店铺管理</a><span>&gt;</span><a href="../index.html">店铺资料</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>造型师列表-<%=query.salonname%></h4>
+				</div>
+			</div>
+		</div>
+		<div class="wrapper">
+			<div class="position-group">
+				<form data-role="hash">
+					<div class="input-group input-switch">
+						<select>
+							<option value="0">手机号</option>
+							<option value="1">造型师名称</option>
+						</select>
+						<input class="input-search" type="text" name="mobilephone"  
+						placeholder="请输入手机号码">
+						<input class="input-search hide" type="text" name="stylistName" 
+						placeholder="请输入造型师名称">
+						<button class="btn btn-search">
+							<i class="fa fa-search"></i>
+						</button>
+					</div>
+				</form>
+			</div>
+
+			<div class="table" ajat="stylist/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+			<table>
+				<thead>
+					<tr> 					     
+					<th>序号</th>
+					<th>造型师名称</th>
+					<th>手机号</th>
+					<th>在职编号</th>
+					<th>悬赏等级</th>
+					<th>快剪等级</th>
+					<th>作品</th>
+					<th>状态</th>
+					<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<%
+					  data=data.data
+                      var gradeText = { "1":"资深发型师","2":"资深发型师","1,2":"资深发型师","3":"设计总监", 
+                      "4":"美发大师"};
+                      var fastGradeText = {"1":"普通快剪", "2":"总监快剪"}
+                      var statusText = {"1":"正常","2":"禁用"};
+					%>
+					<%data.forEach(function(item,i){%>
+						<tr>				 
+						<td><%=i+1%></td>
+						<td><%=item.stylistName%></td>
+						<td><%=item.mobilephone%></td>
+						<td><%=item.sNumber%></td>
+						<td><%=gradeText[item.grade]%></td>
+						<td><%=fastGradeText[item.fastGrade]%></td>
+						<td><a class="link" data-slug="works.index" href="works.html#id=<%=item.stylistId%>"><%=item.num%></a></td>
+						<td><%=statusText[item.status]%></td>
+						<td>
+						<a class="link" data-slug="stylist.show,stylist.update" href="detail.html#id=<%=item.stylistId%>">
+						查看&gt;
+						</a>
+						</td>
+						</tr> 
+					<%})%>
+				</tbody>
+			</table>
+
+			<div class="pager">
+			</div>
+			</script>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+			$(function(){
+				$('#table').on('change','tbody label input',function(){
+					if($('tbody label input:checked').length>0){
+						$('.table-bottom button').attr('disabled',false);
+					}else{
+						$('.table-bottom button').attr('disabled',true);
+					}
+					var checked=$('tbody label input:checked');
+					var ids=[];
+					checked.each(function(){
+						ids.push(this.value);
+					});
+					//$('.table-bottom input[name="ids"]').val(ids.toString());
+				})
+			});
+		</script>
+
+  </body>
+</html>

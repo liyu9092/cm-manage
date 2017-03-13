@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+	<div class="breadcrumb">
+		<a>商户管理</a><span>&gt;</span><a href="index.html">商户列表</a><span>&gt;</span><%=query.preview?"预览":""%>商户详情
+		<div class="flex-box">
+			<div class="flex-item">
+				<h4><%=query.preview?"预览":""%>商户详情</h4>
+			</div>
+		</div>
+		<hr />
+	</div>
+	<div class="wrapper">
+		<div class="table-detail" ajat="<%if(query.id){%>merchant/getMerchantList?id=<%=query.id%><%}%>#domid=detail&tempid=detail-t" id="detail" >
+		<script type="text/template" id="detail-t">
+			<%
+				if(query.preview=="preview"){
+					data=JSON.parse(localStorage.getItem("preview"));
+				}
+			%>
+			<div class="detail-operation">
+				<%if(query.preview!="preview"){%>
+					<a class="btn" data-slug="merchant.update" href="edit.html?id=<%=data.id%>">编辑</a>
+					<span class="space"></span>
+					<form action="merchant/del" data-role="normal" data-slug="merchant.del" onsuccess="parent.lib.popup.result({define:function(){history.back()}})" data-confirm="该商户还有正在合作的店铺请先终止该商户所有店铺合作，再删除商户">
+						<input type="hidden" name="id" value="<%=data.id%>" />
+						<button class="btn">删除</button>
+					</form>
+					<span class="space"></span>
+					<button class="btn btn-cancel" type="button">返回</button>
+				<%}else{%>
+					<button class="btn" type="button" onclick="window.close()">关闭预览</button>
+				<%}%>
+			</div>
+			<table>
+				<thead>
+					<tr>
+						<td colspan="2">
+						  <%=data.name%> <div class="table-detail-sn">编号：<%=data.sn%></div>
+						</td>
+					</tr>
+				</thead>
+				  <tbody>
+					<tr>
+						<td>联系人：</td>
+						<td><%=data.contact%></td>
+					</tr>                           
+					<tr>
+						<td>联系手机：</td>
+						<td><%=data.mobile%></td>
+					</tr>                           
+					<tr>
+						<td>联系座机：</td>
+						<td><%=data.phone%></td>
+					</tr>                           
+					<tr>
+						<td>联系邮箱：</td>
+						<td><%=data.email%></td>
+					</tr>                           
+					<tr>
+						<td>详情地址：</td>
+						<td><%=data.addr%></td>
+					</tr>                           
+					<tr>
+						<td>成立日期：</td>
+						<td><%if(data.foundingDate){%>
+								<%=data.foundingDate.toString().indexOf("-")==-1?lib.tools.getDate(data.foundingDate):data.foundingDate%>
+							<%}%>
+						</td>
+					</tr>
+					<tr>
+						<td>创建日期：</td>
+						<td><%if(data.addTime){%>
+								<%=data.addTime.toString().indexOf("-")==-1?lib.tools.getDate(data.addTime):data.addTime%>
+							<%}%>
+						</td>
+					</tr> 
+				  </tbody>
+			</table>
+		</script>
+		</div>
+	</div>
+	<script type="text/javascript">
+		
+	</script>
+  </body>
+</html>

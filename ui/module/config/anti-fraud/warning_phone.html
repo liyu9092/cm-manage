@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <style>
+      form > span {dispaly:inline-block;margin-right:15px;}
+      </style>
+      <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+        <div class="breadcrumb">
+            <a>系统配置</a><span>&gt;</span>
+            <a>反欺诈</a><span>&gt;</span>
+            <a>预警查询-手机号</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>预警查询-手机号</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+
+            <form data-role="hash" id="form">
+              <span>
+                  <label>手机号码：</label>
+                  <input type="text" name="keyword"/>
+<!--                   <input type="hidden" name="keywordType" value="0"/> -->
+              </span>
+
+              <span class="date-group">
+                  <span style="padding:0 5px 0 15px">从</span>
+                  <input type="date" name="minTime" date-start="start" placeholder="YYYY-MM-DD" required/>
+                  <span style="padding:0 10px">到</span>
+                  <input type="date" name="maxTime" date-end="end" placeholder="YYYY-MM-DD" required/>
+              </span>
+
+              <span>
+                  <label for="">购买单量大于等于：</label>
+                  <input type="text" name="orderNum" pattern='number' maxlength="3" />
+                  <span>（数值最小为6）</span>
+              </span>
+
+              <button class="btn" type="submit">搜索</button>
+            </form>
+
+            <form action="warning/phoneExport" data-role="export" data-slug="warning.phoneExport">
+              <button class="btn">
+                <i class="fa fa-file-excel-o"></i> 导出
+              </button>
+            </form>
+
+            <div class="table" id="table" ajat="<%if(query._){%>warning/phoneIndex?<%=query._%><%}%>#domid=table&tempid=table-t">
+            <script type="text/template" id="table-t">
+            <table>
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>手机号</th>
+                        <th>登录次数</th>
+                        <th>支付次数</th>
+                        <th>购买单量</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <%data.data && data.data.forEach(function(item,i){%>
+                  <tr>
+                    <td><%=i+1%></td>
+                    <td><%=item.userMobile%></td>
+                    <td><%=item.loginNum%></td>
+                    <td><%=item.payNum%></td>
+                    <td><%=item.orderNum%></td>
+                    <td>
+                        <form action="warning/phoneBlock" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})"
+                          <%=item.blacklistStatus=='0' ? '':'disabled'%>>
+                          <button class="link" data-slug="warning.phoneBlock">移入黑名单</button>
+                          <input type="hidden" name="mobilephone" value="<%=item.userMobile%>" />
+                        </form>
+                    </td>
+                  </tr>
+                <%})%>
+                </tbody>
+            </table>
+            <div class="pager"></div>
+            </script>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+        $(function(){
+          var max = new Date(new Date().getTime()-24*60*60*1000);
+          // var max = new Date();
+          var min = new Date(new Date().getTime()-30*24*60*60*1000);
+          $("input[date-start='start']").val(min.format("yyyy-MM-dd"));
+          $("input[date-end='end']").val(max.format("yyyy-MM-dd"));
+
+          if(!lib.query._){
+            $('form[data-role="hash"]').submit();
+          }
+
+          setDate(min,max);
+
+          $("input[date-end='end']").on('change',function(){
+              var endDay = new Date($(this).val());
+              $("input[date-start='start']").attr('max',endDay.format("yyyy-MM-dd"));
+          })
+
+          $("input[date-start='start']").on('change',function(){
+              var startDay = new Date($(this).val());
+              $("input[date-end='end']").attr('min',startDay.format("yyyy-MM-dd"));
+          })
+
+          function setDate (min,max) {
+              $("input[date-start='start']").attr('min',min.format("yyyy-MM-dd"));
+              $("input[date-start='start']").attr('max',max.format("yyyy-MM-dd"));
+
+              $("input[date-end='end']").attr('min',min.format("yyyy-MM-dd"));
+              $("input[date-end='end']").attr('max',max.format("yyyy-MM-dd"));
+          }
+
+          $("input[pattern='number']").on("keydown",function(e){
+              var key = e.which;
+              //alert(key)
+              if ((key > 95 && key < 106) || //小键盘上的0到9
+                  (key > 47 && key < 58) || //大键盘上的0到9
+                  key == 8 || key == 116 || key == 9 || key == 46 || key == 37 || key == 39
+                  //不影响正常编辑键的使用(116:f5;8:BackSpace;9:Tab;46:Delete;37:Left;39:Right;)
+              ) {
+                  return true;
+              } else {
+                  return false;
+              }
+          });
+
+          $("input[pattern='number']").on("input",function(e){
+              var self = this;
+              var time = setTimeout(function(){
+                  clearTimeout(time);
+                  if($(self).val()){
+                     var num = $(self).val() * 1;
+                     if(num < 6){
+                       $("input[pattern='number']").val(6);
+                     }
+                  }
+              }, 400)
+          });
+      });
+    </script>
+  </body>
+</html>

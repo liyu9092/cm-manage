@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+		<a>系统管理</a><span>&gt;</span><a href="index.html">用户管理</a><span>&gt;</span><span id="breadcrumb-current"><%=query._?"编辑用户":"新增用户"%></span>
+			<div class="flex-box">
+			<div class="flex-item">
+				<h4><%=query._?"编辑用户":"新增用户"%></h4>
+			</div>		 
+		</div>
+		<hr />
+	</div>	
+	
+	<div class="wrapper" ajat="<%if(query.id){%>manager/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		<form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>manager/update/<%=data.id%><%}else{%>manager/create<%}%>" <%=data.status==3?"disabled":""%>>
+		 <div class="detail-operation">
+				<button class="btn btn-cancel" type="button" style="<%=data.status==3?"display:none":""%>">取消</button>
+				<span class="space"></span>
+				 <button class="btn-primary" data-slug="<%=query._?"manager.update":"manager.create"%>" style="<%=data.status==3?"display:none":""%>">提交</button>
+			</div>
+		
+		<div class="control-group">
+					<%if(!query._){%>
+                    <legend class="add-title" style="margin-left:70px;" id="titlt-msg">基本信息：</legend>
+					<%}%>
+                </div>
+				<%if(!query._){%>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>登陆账号：</label>
+                    <div class="control">
+                        <input type="text"  requiredmsg="账号为邮箱格式，不包@choumei.cn" required value="<%=data.username||""%>" name="username" id="user_name">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>用户姓名：</label>
+                    <div class="control">
+                        <input type="text" required value="<%=data.name||""%>" name="name" id="name">
+                      
+                    </div>
+                </div>
+				<%}else{%>
+					<div class="control-group">
+					 <label class="control-label" for="">
+					登陆账号：</label>
+					<div class="control">
+					<%=data.username||""%>
+					<span class="space"></span>
+					<span class="space"></span>
+					<span class="space"></span>
+					<span class="space"></span>
+					<span class="space"></span>用户姓名：<%=data.name||""%>
+					</div>
+					</div>
+				<%}%>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>联系手机：</label>
+                    <div class="control">
+                        <input type="text" patternmsg="手机号码输入不正确" pattern="mobile" requiredmsg="请输入手机号码" required name="tel" value="<%=data.tel||""%>" <%=data.status==3?"disabled":""%>>
+                    </div>
+                </div>
+				<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>所属城市：</label>
+				<div class="control">
+					<select required name="city_id"  ajat="list/city#domid=city&tempid=/module/public/template/city&sid=<%=data.city_id%>" id="city" <%=data.status==3?"disabled":""%>>
+					</select>
+						 
+				</div>
+			</div>	
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>所属部门：</label>
+				<div class="control">
+					<select required name="department_id"  ajat="list/department#domid=department&tempid=/module/public/template/department&sid=<%=data.department_id%>" id="department" <%=data.status==3?"disabled":""%> ajat-change="list/position?id=${value}#domid=position&tempid=position_t&sid=<%=data.position_id%>">
+					</select>
+				</div>
+			</div>
+		<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>职位：</label>
+				<div class="control">
+					<select required name="position_id"  _ajat="<%if(data.department_id){%>list/position?id=<%=data.department_id%><%}%>#domid=position&tempid=position_t&sid=<%=data.position_id%>" id="position" <%=data.status==3?"disabled":""%>>
+					</select>
+				</div>
+			</div>
+					 
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>用户状态：</label>
+				<div class="control">
+						<select required name="status"  <%=data.status==3?"disabled":""%>>
+						<option value="1" <%=data.status==1?"selected":""%>>正常</option>
+						<option value="2" <%=data.status==2?"selected":""%>>停用</option>
+						<%if(query.id){%>
+						<option value="3" <%=data.status==3?"selected":""%>>注销</option>
+						<%}%>
+					</select>
+					</select>
+				</div>
+			</div>
+			  <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>配置角色：</label>      
+				<%var sids=[];
+				if(data.roles){
+				for(var i=0;i<data.roles.length;i++){
+					sids.push(data.roles[i].id);
+				}
+				sessionStorage.setItem("roles",JSON.stringify(sids));
+				}%>					
+                       <div class="control"  ajat="role/index?page=1&page_size=10000#domid=roles&tempid=roles-t&sids=<%=sids%>&status=<%=data.status%>" id="roles" <%=data.status==3?"disabled":""%>>				 
+			  	       </div>					
+                    </div>             
+                <div class="control-group">
+                    <legend class="add-title" style="margin-left:70px;" id="title-password"><%if(query.id){%><label><input type="checkbox" class="checkbox" id="switch" /><span>重置密码</span> </label><%}else{%>设置密码<%}%></legend>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>登陆密码：</label>
+                    <div class="control">
+                        <input id="password" type="password" patternmsg="6-20位数字或字母组合" pattern="password" requiredmsg="请输入密码" required placeholder="6-20位数字或字母组合" name="password" value="<%=query._?"":"cm123456"%>" <%=query._?"disabled":""%> <%=data.status==3?"disabled":""%>>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>确认登录密码：</label>
+                    <div class="control">
+					<input type="password" match="password" matchmsg="确认密码与密码不一致" pattern="password" requiredmsg="请输入确认密码" required name="confirm" value="<%=query._?"":"cm123456"%>" <%=query._?"disabled":""%> <%=data.status==3?"disabled":""%>></div>
+                </div>
+				<div class="control-group">
+				<label class="control-label" for=""></label>
+				<div class="control">
+				<button class="btn-primary" data-slug="<%=query._?"manager.update":"manager.create"%>"  style="<%=data.status==3?"display:none":""%>">提交</button></div>
+			</div>
+		  </form>
+		  </script>
+	</div>
+	 
+	<script type="text/template" id="position_t">
+		<%for(var i=0;i<data.length;i++){%>
+			<option <%=data[i].id==protocol.custom.sid?"selected":""%> value="<%=data[i].id%>"><%=data[i].title%></option>
+		<%}%>
+	</script>
+	 <script type="text/javascript">
+        $(document.body).on('change','#switch',function(){
+            if($(this).is(':checked')){
+                $('input[type="password"]').removeAttr('disabled');
+            }else{
+                $('input[type="password"]').attr('disabled',true);
+            }
+        })
+    </script>
+	 
+	<script type="text/template" id="roles-t">
+			<label><input type="checkbox" disabled checked /><span>基本角色</span></label>
+			<%
+				var sids=JSON.parse(sessionStorage.getItem("roles"));
+				sessionStorage.removeItem("roles");
+			%>
+			<%data=data.data%>
+			<%data.forEach(function(item){%>
+                <%if(item.status!=3){%>
+				<label style="<%=item.id=="22"?"display:none":""%>">
+					<input <%=item.id=="22"?"checked":""%> type="checkbox" <%=sids&&sids.indexOf(item.id)>-1?"checked":""%>  name="roles" value="<%=item.id%>" <%=protocol.custom.status==3?"disabled":""%> />
+					<span><%=item.name%></span>
+				</label>
+                <%}%>
+			<%})%>
+			<div class="control-help" style="display:none"></div>
+ 
+	</script>
+  </body>
+</html>

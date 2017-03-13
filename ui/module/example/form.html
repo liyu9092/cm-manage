@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="../../js/include.js"></script>
+  </head>
+  <body>
+	<div class="breadcrumb">
+		<a href="ui.html">一级导航</a><span>&gt;</span><a href="ui.html">二级导航</a><span>&gt;</span>新增用户
+	</div>
+	<div class="wrapper">
+		<form method="post" class="form-vertical" data-role="form" action="/data/post.json">
+		<legend>基本信息</legend>
+  	<div class="control-group">
+  		<label class="control-label" for=""><span class="red">*</span>邮箱</label>
+  		<div class="control">
+			<input class="input-unit" type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required  name="account"><span class="unit">%</span>
+		</div>
+  	</div>
+	<div class="control-group">
+  		<label class="control-label" for="">手机号码</label>
+  		<div class="control">
+			<input type="text" patternmsg="手机号码输入不正确" pattern="mobile" requiredmsg="请输入手机号码" required  name="mobile">
+		</div>
+  	</div>
+	<div class="control-group">
+  		<label class="control-label" for="">年龄</label>
+  		<div class="control">
+			<input type="text" patternmsg="年龄输入不正确" pattern="number" requiredmsg="请输入年龄" required  name="age">
+		</div>
+  	</div>
+	<div class="control-group">
+  		<label class="control-label" for="">密码</label>
+  		<div class="control"><input id="password" type="password" patternmsg="6-20位数字和字母组合" pattern="password" requiredmsg="请输入密码" required placeholder="6-20位数字和字母组合"  name="password"></div>
+  	</div>
+	<div class="control-group">
+  		<label class="control-label" for="">确认密码</label>
+  		<div class="control"><input type="password" match="password" matchmsg="确认密码与密码不一致" pattern="password" requiredmsg="请输入确认密码" required name="confirm"></div>
+  	</div>
+	<div class="control-group">
+  		<label class="control-label" for="">性别</label>
+  		<div class="control">
+			<label>
+				<input type="radio" name="radio" /><span>男</span>
+			</label>
+			<label>
+				<input type="radio" name="radio" /><span>女</span>
+			</label>
+		</div>
+  	</div>
+	<div class="control-group">
+  		<label class="control-label" for="">城市</label>
+  		<div class="control">
+			<select requiredmsg="请选择城市" required name="city"  id="city">
+				<option value="">城市</option>
+				<option value="1">深圳</option>
+				<option value="2">上海</option>
+				<option value="3">北京</option>
+				<option value="4">天津</option>
+				<option value="5">广州</option>
+			</select>
+		</div>
+  	</div>
+	<div class="control-group">
+  		<label class="control-label" for="">描述</label>
+  		<div class="control"><textarea requiredmsg="请输入描述信息" required></textarea></div>
+  	</div>
+	<div class="control-group">
+  		<label class="control-label" for="">兴趣爱好</label>
+  		<div class="control">
+			<label>
+				<input type="checkbox" name="checkbox" required /><span>篮球</span>
+			</label>
+			<label>
+				<input type="checkbox" name="checkbox" required/><span>足球</span>
+			</label>
+		</div>
+  	</div>
+	<div class="control-group">
+  		<label class="control-label" for=""></label>
+  		<div class="control"><button class="btn-primary" type="submit">提交</button><span class="space"></span><button type="reset" class="btn">重置</button></div>
+  	</div>
+  </form>
+	</div>
+	<script type="text/javascript">
+		$('#popup-alert').on('click',function(){
+			lib.popup.alert({text:'请完善用户信息'})
+		});
+		$('#popup-confirm').on('click',function(){
+			lib.popup.alert({text:'确认删除用户信息'})
+		});
+		$('#popup-loading').on('click',function(){
+			lib.popup.tips({text:'用户信息提交中',icon:'loading'})
+		});
+		$('#popup-success').on('click',function(){
+			lib.popup.tips({text:'用户信息提交成功',icon:'success'})
+		});
+		$('#popup-fail').on('click',function(){
+			lib.popup.tips({text:'用户信息提交失败',icon:'fail'})
+		});
+		$(document).on('click','[data-toggle-class]',function(){
+			var $this=$(this);
+			$this.parent().toggleClass($this.data('toggle-class'));
+		});
+		$(document).on('click',function(e){
+			if($(e.target).closest('.open').length==0){
+				$('.open').removeClass('open')
+			}
+		});
+	</script>
+  </body>
+</html>

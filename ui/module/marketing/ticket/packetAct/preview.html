@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理 </a>
+            <span>&gt;</span><a href="index.html">红包活动</a><span>&gt;</span>活动预览
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>活动预览</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="table-detail" ajat="#domid=table&tempid=table-t" id="table">
+				<script type="text/template" id="table-t">
+				<%var data=JSON.parse(sessionStorage.getItem("formData"))%>
+				<%var types=JSON.parse(sessionStorage.getItem("types"))%>
+				<%var voucher=JSON.parse(data.voucher)%>
+				<%var gift=JSON.parse(data.gift)%>
+                <div class="detail-operation">
+                    <button class="btn" type="button" onclick="window.close()">关闭</button>  
+                </div> 
+                <table>
+					<thead>
+					<tr>
+						<th colspan="2">
+						 活动基本信息
+						</th>
+					</tr>
+				</thead>
+                    <tbody>
+                        <tr>
+                            <td>红包活动名称</td>
+                            <td><%=data.laisee_name%></td>
+                        </tr>
+
+                        <tr>
+                            <td>活动简介</td>
+                            <td><%=splitStr(data.lc_remark).replace(/\n/g,"</br>")%></td>
+                        </tr>
+
+                        <tr>
+                            <td>红包有效天数</td>
+                            <td><%=data.effective%></td>
+                        </tr>   
+
+                        <tr>
+                            <td>红包领取金额上限</td>
+                            <td><%=data.total_money%></td>
+                        </tr>
+                    </tbody>                     
+					<thead>
+						<tr>
+							<th colspan="2">
+							红包规格
+							</th>
+						</tr>
+					</thead>
+                    <tbody>
+                        <tr>
+                            <td>红包规格详情(6张)</td>
+                            <td>
+								<%voucher.forEach&&voucher.forEach(function(item){%>
+									<%types.forEach(function(item2){%>
+										<%if(item.vUseItemTypes==item2.typeid){%>
+											<%=item2.typename%>
+										<%}%>
+									<%})%> 
+									<%=item.vUseMoney%>元<%=item.vNumber%>张，满<%=item.vUseNeedMoney%>元可用，领取后<%=item.few_day%>天内有效 <br />
+								<%})%>
+							</td>
+                        </tr>
+
+                        <tr>
+                            <td>新手礼包</td>
+                            <td>
+								<%gift.forEach&&gift.forEach(function(item){%>
+									<%types.forEach(function(item2){%>
+										<%if(item.vUseItemTypes==item2.typeid){%>
+											<%=item2.typename%>
+										<%}%>
+									<%})%> 
+									<%=item.vUseMoney%>元<%=item.vNumber%>张，满<%=item.vUseNeedMoney%>元可用，领取后<%=item.few_day%>天内有效 <br />
+								<%})%>
+							</td>
+                        </tr>
+                    </tbody>                     
+                </table>
+				<br />
+				<form style="text-align:right;" action="<%if(query._){%>laisee/update<%}else{%>laisee/create<%}%>" data-role="form">
+					<a class="btn" href="addBase.html?<%=query._%>"  type="button">返回</a>
+					<span class="space"></span>
+					<a class="btn" href="index.html">取消</a>
+					<span class="space"></span>
+					<button data-slug="<%=query.id?"laisee.update":"laisee.create"%>" class="btn-primary">提交</button>
+				</form>
+				</script>
+            </div>
+        </div>
+		<script type="text/javascript">
+			var splitStr = function(str,index){
+				var array=[];
+				str.split("\n").forEach(function(item,i){
+					if(item.length>20){
+						var tmp="";
+						for(var i=0;i<item.length;i++){
+							tmp=tmp+item.charAt(i);
+							if(tmp.length==20){
+								array.push(tmp);
+								tmp="";
+							}
+						}
+					}else{
+						array.push(item);
+					}
+				});
+				return array.join("\n");
+			}
+			$('#table').on("_ready",function(){
+				var form=$('#table form')[0];
+				form.goback=function(){
+					sessionStorage.removeItem("formData");
+					if(parent!=window){
+						location.href="/module/marketing/ticket/packetAct/index.html";
+					}else{
+						window.close();
+					}
+				}
+				form._getFormData = function(){
+					var data=lib.tools.getFormData($(this));
+					var formData=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{};
+					data=$.extend(formData,data);
+					return data;
+				}
+			})
+		</script>
+    </body>
+</html>

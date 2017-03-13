@@ -1,0 +1,22 @@
+<style type="text/css">
+	.popup-form input,.popup-form textarea{
+		width:400px;
+	}
+	.popup-form .control-label{
+		width:120px;
+	}
+</style>
+<form data-role="form" class="popup-form">
+	 <div class="control-group">
+		<label class="control-label" for=""><span class="red">*</span>标题：</label>
+		<div class="control">
+			<input type="text" name="title" value="<%=data.title%>" placeholder="2~20个字" maxlength="20" minlength="2" required />
+		</div>
+	</div> 
+	 <div class="control-group">
+		<label class="control-label" for=""><span class="red">*</span>内容：</label>
+		<div class="control">
+			<textarea class="large" name="content" placeholder="2~500个字" maxlength="500" minlength="2" required ><%=data.content?data.content.replace(/<br\/>|<br>/g,"\n"):""%></textarea>
+		</div>
+	</div>
+</form>

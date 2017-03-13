@@ -1,0 +1,20 @@
+﻿<%data.forEach(function(item){%>
+<label title="<%=item.companyAcronym%>(<%=item.code%>)">
+<input type="checkbox" <%=protocol.custom.disabled?"disabled":""%> value="<%=item.code%>" <%=protocol.custom.sid&&protocol.custom.sid.indexOf(item.code)>-1?"checked":""%> /><span><%=item.companyAcronym%>(<%=item.code%>)</span>
+</label>
+<%})%>
+<style type="text/css">
+	.popup-box{
+		line-height:28px;
+	}
+	.popup-box-body{
+		padding:0px 5px;
+	}
+	.popup-box label span{
+		width:202px;
+		overflow:hidden;
+		height:22px;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+</style>

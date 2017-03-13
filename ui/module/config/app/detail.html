@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>系统配置</a><span>&gt;</span><a href="index.html">店铺星级积分详情</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4><%=query.salonname%>店铺星级积分详情 </h4>
+                </div>
+            </div>      
+        </div> 
+
+        <div class="wrapper">
+            <form data-role="hash">                       
+                <span>积分变化时间：</span>
+                <span class="date-group">
+                    <input type="date" data-role="start" name="start_time" placeholder="yyyy-MM-dd"/>
+                    到
+                    <input type="date" data-role="end" name="end_time" placeholder="yyyy-MM-dd"/>
+                </span>
+                <button class="btn" type="submit">查询</button>
+            </form>
+
+                          
+           <div class="table" ajat="salonstar/show?<%=query._%>#domid=table&tempid=table-t" id="table">
+            <script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>积分变化时间</th>
+                            <th>积分变化原因</th>
+                            <th>积分变化</th>
+                            <th>累计积分</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                      <%var data=data.data%>
+                      <%for(var i=0;i<data.length;i++){%>
+                       <tr>
+                        <td><%=data[i].create_time%></td>
+                        <td><%=data[i].description%></td>
+                        <%if(data[i].score.toString().indexOf("-") > -1){%>
+                            <td><%=data[i].score.toString().replace('-','减分 ')%></td>
+                        <%}else{%>
+                            <td><%="加分 "+data[i].score%></td>
+                        <%}%>    
+                        <td><%=data[i].totalScore%></td>
+                        </tr>
+                        <%}%>                    
+                    </tbody>
+            </table>        
+             <div class="pager"> </div>
+            </script>
+        </div>
+            </div>            
+    </body>
+</html>

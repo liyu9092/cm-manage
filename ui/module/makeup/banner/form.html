@@ -1,0 +1,88 @@
+
+<form data-role="form" class="banner" draggable="false">
+    <ul>
+        <li class="clearfix">
+            <div class="fl"><h3><strong></strong></h3></div>
+            <div class="fr">
+                <button type="submit" class='link save'>保存</button>
+                <button type="reset"  class='link canncel'>取消</button>
+                <button type="button" class='link edit hidden'>编辑</button>
+                <button type="button" class='link del'>删除</button>
+                <input  type="hidden" name="type" value="<%=data.type%>">
+            </div>
+        </li>
+
+        <li>
+            <div class="thumbnails-item">
+                <div class="thumbnails-item-btn">
+                    <button type="button" class="btn-primary uploader">上传</button>
+                </div>                                 
+            </div>                        
+        </li>
+
+        <li style="padding:0">
+            <span class="control-help imageTip" style="display:none">请先上传图片</span>
+        </li>
+
+        <li class="inputBox">
+            <div class="radios">
+                <label><span>题目：</span></label>
+                <input id="title" type="text" name="name" placeholder="1~20个字符，必填" required maxLength="20"/>
+            </div>
+
+            <div class="radios">
+                <label class="radio">
+                    <input type="radio" name="behavior" value="1" checked/>
+                    <span>h5链接</span>
+                </label>
+
+                <input id="h5url" type="text" name="url" placeholder="输入h5链接地址，带http://"  pattern="(^http:\/\/)" patternmsg="h5链接有误" required/>
+            </div>
+
+            <div class="radios">
+                <label class="radio">
+                    <input type="radio" name="behavior" value="2" />
+                    <span>App内部链接</span>
+                </label>
+
+                <select name="url" style="width:26.5%;" disabled>
+                    <option value="salon">美发店主页</option>
+                    <option value="artificers">指定跳转</option>
+                    <option value="item">定妆项目</option>
+                </select>
+
+                <div class="control complete">
+                    <input class="search" type="text" name="salonName" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" autocomplete="off" disabled required requiredmsg="未填写"/>
+                    <input type="hidden" class="salonId" name="salonId" disabled required>
+                    <div class="complete-position" id="complete-position"></div>
+                </div>
+
+                <select name="itemId" style="width:26%;" class="itemSelect hidden">
+                  <% var itemText = {'1':'SPM','2':'FFA'}; %>
+                  <% data.list.forEach(function(item,i){%>
+                    <option value="<%=itemText[item.type]+"_"+item.item_id%>"><%=item.name%></option>
+                  <%})%>
+                </select>   
+
+                <select name="itemId" style="width:26%;" class="artificersSelect hidden">
+                    <option value="1">预约主页</option>
+                    <option value="2">定妆中心介绍页</option>
+                    <option value="3">约明星院长页面</option>
+                    <option value="4">约院长页</option>
+                    <option value="5">院长列表页</option>
+                    <option value="6">身边好店</option>
+                    <option value="7">离我最近</option>
+                    <option value="8">等级最高</option>
+                    <option value="9">约发型师</option>                     
+                </select>                                                                            
+            </div>
+
+            <div class="radios">
+                <label class="radio">
+                    <input type="radio" name="behavior" value="0"/>
+                    <span>无跳转</span>
+                </label>
+            </div>
+        </li>
+    </ul>             
+</form>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+		<link rel="stylesheet" href="index.css" />
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span>预约设置
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4> 预约上限设置</h4>
+			</div>
+			<div id="edit-btns">
+				<button class="btn edit"  data-slug="calendar.modifyLimit">编辑</button>
+				<span style="display:none">
+					<button class="btn cancel">取消</button>
+					<span class="space"></span>
+					<button class="btn-primary" type="submit" form="form">保存</button>
+				</span>
+			</div>
+		 </div>		 
+        </div>		
+        <div class="wrapper">
+			<form data-role="hash" ajat="#domid=hash&tempid=hash-t" id="hash"  ajat-one="true">
+				<script type="text/template" id="hash-t">
+				<%var date=new Date();
+				date.setFullYear(date.getFullYear()+10);%>
+				<div class="position-group">
+					<ul class="table-box">
+						<li class="table-item"><button class="prev"><i class="fa fa-chevron-left"></i></button></li>
+						<li class="table-item"><input id="month" type="month" name="searchData" required placeholder="yyyy-mm" min="2015-11" max="<%=date.format("yyyy-MM")%>" value="<%=!query._?new Date().format("yyyy-MM"):""%>" /></li>
+						<li class="table-item"><button class="next"><i class="fa fa-chevron-right"></i></button></li>
+					</ul>
+				</div>
+				</script>
+			</form>
+           <div class="table" ajat="calendar/limit?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+					<ul class="week clearfix">
+						<li>星期日</li>
+						<li>星期一</li>
+						<li>星期二</li>
+						<li>星期三</li>
+						<li>星期四</li>
+						<li>星期五</li>
+						<li>星期六</li>
+					</ul>
+					<form id="form" action="calendar/modifyLimit" data-role="form">
+					<div class="date-container clearfix">
+						<%if(data.forEach){%>
+						<%
+							if(!lib.query._){
+								document.getElementById("month").value=new Date(data[0].bookingDate).format("yyyy-MM");
+							}
+							var startDay= new Date(data[0].bookingDate).getDay();
+							if(startDay>0){
+								for(var i=0;i<startDay;i++){
+									data.unshift("");
+								}
+							}
+							var endDay= new Date(data[data.length-1].bookingDate).getDay();
+							if(data[data.length-1].nowDay==-1||data[data.length-1].nowDay==0){
+								document.getElementById("edit-btns").style.display="none";
+							}else{
+								document.getElementById("edit-btns").style.display="inline-block";
+							}
+							if(endDay!=6){
+								for(var i=1;i<7-endDay;i++){
+									data.push("");
+								}
+							}
+						%>
+						<%data.forEach(function(item,i){%>
+						<%var disabled=item&&item.nowDay!=1%>
+						<%var _date=new Date(item.bookingDate).getDate()%>
+						<div class="date-item"  <%=disabled===true?"disabled":""%> style="min-height:125px">
+							<%if(item&&item.nowDay===0){%>
+								<div class="today-block">今天</div>
+							<%}%>
+							<%if(item){%>
+							<h4><%=_date%></h4>
+							<p class="weak">
+								<input type="hidden" name="id" value="" />
+								实际预约数：<label <%if(item.quantity>item.bookingLimit){%>style="color:#FF9900"<%}%>><%=item.quantity%></label><br />
+								预约上限：
+								<%if(disabled){%>
+									<%=item.bookingLimit%>
+								<%}else{%>
+								<span><%=item.bookingLimit%></span><input maxlength="4" data-id="<%=item.id%>" data-date="<%=item.bookingDate%>" type="text" name="limit" pattern="number" required min="<%=item.quantity%>" value="<%=item.bookingLimit%>" data-value="<%=item.bookingLimit%>"/>
+								<%}%>
+							</p>
+							<%}%>
+						</div>
+						<%})%>
+						<%}%>
+					</div>
+					</form>
+			</script>
+        </div>
+            </div>
+		<script type="text/javascript">
+				$(function(){
+				var checkedDate=function(date){
+					var input=$('.position-group input');
+					$('.prev').attr('disabled',date.getTime()<=new Date(input.attr('min')).getTime());
+					$('.next').attr('disabled',date.getTime()>=new Date(input.attr('max')).getTime());
+				}
+				$(document.body).on("click",'.next',function(){
+					var input=$('.position-group input');
+					var date=new Date(input.val());
+					var month=date.getMonth();
+					if(month==11){
+						date.setFullYear(date.getFullYear()+1);
+						date.setMonth(0);
+					}else{
+						date.setMonth(month+1);
+					}
+					input.val(date.format("yyyy-MM"));
+					input.closest('form').submit();
+					checkedDate(date);
+					
+				}).on("click",'.prev',function(){
+					var input=$('.position-group input');
+					var date=new Date(input.val());
+					var month=date.getMonth();
+					if(month==0){
+						date.setFullYear(date.getFullYear()-1);
+						date.setMonth(11);
+					}else{
+						date.setMonth(month-1);
+					}
+					input.val(date.format("yyyy-MM"));
+					input.closest('form').submit();
+					checkedDate(date);
+				}).on('click','.edit',function(){
+					$(this).hide().siblings().show();
+					$(document.body).addClass("edit-page");
+				}).on('click','.cancel',function(){
+					location.reload();
+				}).on('input','input[type="month"]',function(){
+					$(this).closest('form').submit();
+				}).on('error','input[name="limit"]',function(){
+					var $this=$(this);
+					console.log($.trim($this.val())==$this.data('value'));
+					if($.trim($this.val())==$this.data('value')){
+						$this.siblings('.control-help').hide();
+					}
+				});
+				setTimeout(function(){
+					var date=new Date($('.position-group input').val());
+					checkedDate(date);
+				},1000);
+			
+			$('#table').on('_ready',function(){
+				var form=document.getElementById('form');
+				form._getFormData=function(){
+					var data=[];
+					$('input[name="limit"]').each(function(){
+						var $this=$(this);
+						if($this.val()!=$this.data('value')){
+							data.push({
+								id:$this.data('id'),
+								limit:$this.val(),
+								date:$this.data('date')
+							});
+						}
+					})
+					return {data:JSON.stringify(data)}
+				}
+				form.goback=function(){
+					location.reload();
+				}
+			});
+			})
+		</script>
+    </body>
+</html>

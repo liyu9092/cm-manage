@@ -1,0 +1,245 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+      <style>
+        .tab{
+          position: absolute;
+          top:35px;
+          left:30%;
+          border: none;
+        }
+
+        .tab a{
+          width:145px;
+          height:45px;
+          line-height: 45px;
+          margin:2px;
+          border: 1px solid #E6EAF2;
+          border-bottom: none;
+          font-size: 18px;
+          text-align: center;
+          display: inline-block; 
+          background-color:#f5f5f5;           
+        }
+
+       .active{background-color:inherit!important;};
+      
+      </style>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>交易管理</a><span>&gt;</span><a href="refundment.html">普通订单退款</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>普通订单退款</h4>
+				</div>
+			</div>
+		</div>
+
+    <div class="wrapper">
+        <div id="form" ajat="#domid=form&tempid=form-t" ajat-one="true">
+            <script type="text/template" id="form-t">
+                <div class="tab">            
+                    <a href="refundment.html?reload=1#state=0" <%=(!query.state || query.state=="0") ? "class=active" : ""%>>全部退款</a>
+
+                    <a href="refundment.html?reload=2#state=6,2" <%=query.state=="6,2" ? "class=active" : ""%>>待审核
+                    </a>
+
+                    <a id="approved" href="refundment.html?reload=3#state=7,10,12" <%=query.state=="7,10,12" ? "class=active" : ""%>>已审核</a>
+                </div>
+
+                <form data-role="hash" >             
+                  <div class="input-group placeholder-switch">
+                    <select name="key">
+                      <option value="1" data-placeholder="请输入订单号">订单号</option>
+                      <option value="2" selected="selected" data-placeholder="请输入用户手机号">用户手机号</option>
+                      <option value="3" data-placeholder="请输入用户臭美号">用户臭美号</option>
+                      <option value="4" data-placeholder="请输入店铺名称">店铺名称</option>
+                    </select>
+                    <input type="text" class="input-search" name="keyword" maxlength="16" 
+                    placeholder="请输入用户手机号"/>
+                  </div>  
+
+                  <span class="date-group">
+                    <span style="padding:0 5px 0 20px">申请退款时间</span>
+                    <input type="date" name="refund_min_time" data-role="start" placeholder="YYYY-MM-DD"/>
+                    <span style="padding:0 10px">到</span>
+                    <input type="date" name="refund_max_time" data-role="end" placeholder="YYYY-MM-DD"/>
+                  </span>
+
+                  <span class="date-group">
+                    <span style="padding:0 5px 0 15px">退款状态</span>
+                    <select name="state" >
+                      <%if(!query.state || query.state === "0"){%>
+                          <option value="0">全部</option>
+                          <option value="6,2">待审核</option>
+                          <option value="10">退款中</option>
+                          <option value="7">退款成功</option>
+                          <option value="12">退款失败</option>
+                      <%}else if(query.state === "6,2"){%>
+                          <option value="6,2">待审核</option>
+                      <%}else{%>
+                          <option value="7,10,12">全部</option>
+                          <option value="10">退款中</option>
+                          <option value="7">退款成功</option>
+                          <option value="12">退款失败</option>
+                      <%}%>
+                    </select>
+                  </span>
+
+                  <button class="btn" type="submit">搜索</button>         
+                </form>
+
+                <form data-role="export" action="refund/export" data-slug="refund.export">
+                  <input type="hidden" name="currentpage" value="true"/>
+                  <button class="btn">
+                    <i class="fa fa-file-excel-o"></i> 导出
+                  </button>
+                </form>  
+            </script>          
+        </div>
+
+			<div class="table" ajat="refund/index?<%=query._%>#domid=table&tempid=table-t&timeout=30000" id="table">
+			<script type="text/template" id="table-t">
+
+        <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">
+        <%if(data.total == 0){%>
+          当前页面下所有退款金额统计为：0.00元
+        <%}else{ var refund_money=0;%>
+          <%data.data &&　data.data.forEach(function(item,i){
+            refund_money+=item.refund_money*100;
+          })%>
+          当前页面下所有退款金额统计为：<%=refund_money/100%>元
+        <%}%>
+        </div> 
+
+			<table>
+        <thead>
+          <tr>
+              <%if(query.state != "7,10,12"){%>
+              <th style="width:50px">
+                  <label class="select-all"><input type="checkbox"/><span>全选</span></label>
+              </th>  
+              <%}%>        
+              <th>序号</th>
+              <th>臭美券密码</th>
+              <th>订单编号</th>
+              <th>购买时间</th>
+              <th>申请退款时间</th>
+              <th>店铺名称</th>
+              <th>用户手机号</th>
+              <th>现金券编号</th>
+              <th>支付方式</th>
+              <th>金额</th>
+              <th>实付金额</th>
+              <th>退款金额</th>
+              <th>退款方式</th>
+              <th>退款状态</th>
+              <th>购物车号</th>
+              <th>操作</th>
+          </tr>
+        </thead>
+
+        <tbody>			  
+        <% 
+        var retypeObj = {"1":"原路返还","2":"退回余额"};
+        var refundObj = {"2":"待审核","6":"待审核","7":"退款成功","10":"退款中","12":"退款失败"};
+        var payObj    = {"2":"支付宝","3":"微信","4":"余额","9":"现金券","10":"易联"};      
+        %>
+				<%data.data &&　data.data.forEach(function(item,i){%>
+          <%
+          var arr = [];
+          item.fundflow && item.fundflow.forEach(function(item,i){                  
+            arr.push(payObj[item.pay_type]);
+          })
+          %>            
+          <tr>
+              <%if(query.state != "7,10,12"){%>
+              <td>
+                  <label>
+                      <input type="checkbox" data-id="<%=item.order_refund_id%>" 
+                      <%=(item.order_status!="6" && item.order_status!="2")  ? "disabled" : ""%>/>
+                      <span></span>
+                  </label>
+              </td>
+              <%}%>             
+              <td><%=i+1%></td>
+              <td><%=item.ticketno.substr(0,2)+"****"+item.ticketno.substr(item.ticketno.length-2)%></td>
+              <td><%=item.ordersn%></td>
+              <td class="formatHms"><%=item.buy_time%></td>
+              <td class="formatHms"><%=item.add_time%></td>
+              <td><%=item.salon && item.salon.salonname %></td>
+              <td><%=item.user && item.user.mobilephone%></td>
+              <td><%=item.voucher && item.voucher.vSn%></td>
+              <td><%=arr.join("+")%></td>
+              <td><%=item.priceall_ori%></td>
+              <td><%=item.actuallyPay%></td>
+              <td><%=item.refund_money%></td>
+              <td><%=retypeObj[item.retype]%></td>
+              <td><%=refundObj[item.order_status]%></td>
+              <td><%=item.shopcartsn%></td>
+              <td>
+                <a class="link" href="detail.html?method=refund/show/&id=<%=item.order_refund_id%>"
+                data-slug="refund.show">
+                查看&gt
+                </a>
+                <%if(item.order_status=="6" || item.order_status=="2"){%>
+                    <a class="link pass" style="margin:0 8px;" data-type="0" data-slug="refund.accept"
+                    data-id="<%=item.order_refund_id%>">
+                    通过
+                    </a>
+                    <a class="link reject" data-type="0" data-slug="refund.reject" 
+                    data-id="<%=item.order_refund_id%>" >
+                    拒绝
+                    </a>
+                <%}%>
+
+                <%if(item.order_status=="12" || item.order_status=="10"){%>
+                    <a class="link pass" style="margin:0 5px;" data-slug="refund.reaccept" data-type="1" 
+                    data-id='<%=item.order_refund_id%>'>
+                    重新退款
+                    </a>
+                <%}%>
+              </td>
+          </tr>
+				<%})%>
+        </tbody>
+      </table>
+
+      <%if(query.state != "7,10,12" && data.data && data.total > 0){%>
+      <div class="table-bottom">
+        <label class="select-all"><input type="checkbox"/><span>全选</span></label>
+        <button class="btn pass" data-type="2" style="margin-right:10px" data-slug="refund.accept" disabled>
+          通过
+        </button>
+        <button class="btn reject" data-type="1"  data-slug="refund.reject" disabled>
+          拒绝
+        </button>
+      </div>
+      <%}%>
+			<div class="pager">
+			</div>
+			</script>
+		</div>
+
+    <form id='alipaysubmit' name='alipaysubmit' target="_blank" style="display:none" method='post'
+    action='https://mapi.alipay.com/gateway.do?_input_charset=utf-8'>
+        <input type='hidden' name='_input_charset' value=''/>
+        <input type='hidden' name='batch_no' value=''/>
+        <input type='hidden' name='batch_num' value=''/>
+        <input type='hidden' name='detail_data' value=''/>
+        <input type='hidden' name='notify_url' value=''/>
+        <input type='hidden' name='partner' value=''/>
+        <input type='hidden' name='refund_date' value=''/>
+        <input type='hidden' name='seller_email' value=''/>
+        <input type='hidden' name='service' value=''/>
+        <input type='hidden' name='sign' value=''/>
+        <input type='hidden' name='sign_type' value=''/>
+    </form>
+	</div>
+  <script src="refundment.js"></script>
+  </body>
+</html>

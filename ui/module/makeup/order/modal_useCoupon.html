@@ -1,0 +1,43 @@
+<form action="powderArticles/usePresentTicket" data-role="form" id="form">
+<input type="hidden" name="articleCodeId" value="<%=query.id%>">
+<div class="control-group">
+    <label class="control-label" for=""><span class="red">*</span>使用日期：</label>
+    <div class="control">
+            <input type="date" data-role="start" value="<%=new Date().format('yyyy-MM-dd')%>"  name="useTime" id="useTime" placeholder="YYYY-MM-DD" required/>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for=""><span class="red">*</span>专家：</label>
+    <div class="control">
+        <input class="searchInput" id="search" type="text" ajat-complete="artificer/search/${value}#domid=complete-position-specialistId&tempid=/module/makeup/order/template/list-t" autocomplete="off" />
+        <input type="hidden" name="specialistId" class="inputId" value="" required>
+        <div class="complete-position" id="complete-position-specialistId" style="width:20%;min-width:250px;" ></div>
+        <span id="sn" class="weak"></span>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for=""><span class="red">*</span>助理：</label>
+    <div class="control">
+        <input class="searchInput" id="search" type="text" ajat-complete="assistant/search/${value}#domid=complete-position-assistantId&tempid=/module/makeup/order/template/list-t" autocomplete="off" />
+        <input type="hidden" name="assistantId" class="inputId" value="" required>
+        <div class="complete-position" id="complete-position-assistantId" style="width:20%;min-width:250px;" ></div>
+        <span id="sn" class="weak"></span>
+    </div>
+</div>
+</form>
+<script>
+    $('.searchInput').on('input',function(){
+        $(this).siblings('.complete-position').show().siblings('.inputId').val('');
+    })
+    $('.complete-position').on('click','li',function(){
+        var $this=$(this),
+            inputDesc = $this.html(),
+            id=$this.attr('data-id'),
+            parent= $this.parents('.complete-position');
+        parent.siblings('#search').val(inputDesc).siblings('.inputId').val(id);
+        parent.hide();
+    });
+    $('body').on('click',function(){
+        $('.complete-position').hide();
+    })
+</script>

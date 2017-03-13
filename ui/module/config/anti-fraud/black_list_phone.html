@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>系统配置</a><span>&gt;</span><a>反欺诈</a><span>&gt;</span><a>黑名单-手机号</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>黑名单-手机号</h4>
+				</div>
+			</div>
+		</div>
+		<div class="wrapper">
+        <form data-role="hash">
+            <div class="date-group">
+                <span style="padding:0 5px 0 15px">手机号码：</span>
+                <input type="hidden" name='keywordType' value="0">
+                <input type="text" class="input-search" name="keyword" placeholder="请输入手机号">
+            </div>
+          <span class="date-group">
+              <span style="padding:0 5px 0 15px">进入黑名单时间</span>
+              <input type="date" name="minTime" data-role="start" placeholder="YYYY-MM-DD"/>
+              <span style="padding:0 10px">至</span>
+              <input type="date" name="maxTime" data-role="end" placeholder="YYYY-MM-DD"/>
+          </span>
+
+          <button class="btn" type="submit">查询</button>
+        </form>
+
+        <a href="/module/config/anti-fraud/black_list_phoneUpload.html" class="btn btn-primary">手动添加</a>
+
+        <form action="blacklist/phoneExport" data-role="export" data-slug="blacklist.phoneExport">
+          <button class="btn btn-primary" type="submit">
+            <i class="fa fa-file-excel-o"></i> 导出
+          </button>
+        </form>
+
+			<div class="table"  ajat="blacklist/phoneIndex?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+        <table>
+        <thead>
+        <tr>
+        <th>序号</th>
+        <th>手机号</th>
+        <th>进入黑名单时间</th>
+        <th>备注</th>
+        <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <%data.data && data.data.forEach(function(item,index){%>
+          <tr>
+            <td><%=index+1%></td>
+            <td><%=item.mobilephone%></td>
+            <td><%=item.created_at%></td>
+            <td><%=item.note%></td>
+            <td><form action="blacklist/phoneRemove/<%=item.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})"><button data-slug="blacklist.openidRemove" href="" class="link btn-clear">移出黑名单</button></form></td>
+          </tr>
+        <%})%>
+        </tbody>
+        </table>
+        <div class="pager">
+        </div>
+			</script>
+		</div>
+        <script>
+        var today = new Date();
+        var dayTime = 1000*60*60*24;
+
+        var initDate = function(){
+            var minTime = new Date(today.getTime()-7*dayTime).format('yyyy-MM-dd');
+            var maxTime = today.format('yyyy-MM-dd')
+            $('input[name=minTime]').val(minTime).attr('max',maxTime);
+            $('input[name=maxTime]').val(maxTime).attr('min',minTime)
+        }();
+
+        $('body').on('change','input[name=minTime]',function(){
+            var date = new Date($(this).val());
+            initMin(date);
+        }).on('change','input[name=maxTime]',function(){
+            var date = new Date($(this).val());
+            initMax(date);
+        })
+
+        var initMax = function(date){
+            $('input[name=minTime]').attr('max',date.format('yyyy-MM-dd'));
+        }
+
+        var initMin = function(date){
+            $('input[name=maxTime]').attr('min',date.format('yyyy-MM-dd'));
+        }
+
+        </script>
+	</div>
+  </body>
+</html>

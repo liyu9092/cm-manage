@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <link rel="stylesheet" href="income.css" />
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>收入管理</a>
+            <span>&gt;</span><a href="index.html">佣金单</a>
+            <span>&gt;</span><a>查看佣金单</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>查看佣金单</h4>
+                </div>
+                <div class="flex-item">
+                    <button type="button" class="btn fr" onclick="history.back()">取消</button>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper" id="table-wrapper"
+        ajat="<%if(query.id){%>commission/show/<%=query.id%><%}%>#domid=table-wrapper&tempid=table-t">
+        <script type="text/template" id="table-t">
+            <div class="table" style="margin:0">
+                <table>
+                    <tr style="height:60px;">
+                        <td class="shop-name">
+                            <h1 style="padding-left:0"><%=data.salonname%></h1>
+                        </td>
+                        <td class="shop-num">编号：<%=data.salonsn%></td>
+                    </tr>                      
+                </table>
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <td class="td">佣金单号：</td>
+                            <td><%=data.sn%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">金额：</td>
+                            <td><%=data.amount%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="td">确认日期：</td>
+                            <td><%=data.date && new Date(data.date).format("yyyy-MM-dd")%></td>                            
+                        </tr>                        
+                    </tbody>                     
+                </table>
+            </div>
+        </script>
+        </div>
+    </body>
+</html>

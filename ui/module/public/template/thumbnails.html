@@ -1,0 +1,24 @@
+﻿<%data&&data.forEach&&data.forEach(function(item){%>
+	<div class="control-thumbnails-item">
+		<%if(item.thumbimg){item.thumbimg=item.thumbimg.replace("w/100/h/100","w/160/h/160")}%>
+		<%if(!item.thumbimg&&item.img&&item.img.indexOf("?")==-1){
+			if(item.img.indexOf("#")>-1){
+				item.thumbimg=item.img.replace("#","?imageView2/1/w/160/h/160#");
+			}else{
+				item.thumbimg=item.img+"?imageView2/1/w/160/h/160";
+			}
+		}%>
+		<img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img?item.img.split("?")[0]:""%>" data-type="<%=item.type%>"/>	    
+		<%if(data.operating!==false){%>
+		<a class="fa fa-times-circle control-thumbnails-remove"></a>
+		<input type="checkbox" name="thumb" class="thumb" value="<%=item.thumbimg%>">
+		<input type="checkbox" name="original" class="original" value="<%=item.img?item.img.split("?")[0]:""%>">
+		<input type="checkbox" name="ratio" class="ratio" value="<%=item.ratio%>">
+		<div class="control-thumbnails-operation flex-box">
+			<span class="control-thumbnails-before flex-item"><i class="fa fa-long-arrow-left"></i></span>
+			<span class="control-thumbnails-edit flex-item"><i class="fa fa-pencil-square-o"></i></span>
+			<span class="control-thumbnails-after flex-item"><i class="fa fa-long-arrow-right"></i></span>
+		</div>
+		<%}%>
+	</div>
+<%})%>

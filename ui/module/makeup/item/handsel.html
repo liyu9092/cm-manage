@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="index.html">韩式半永久</a><span>&gt;</span>编辑项目
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4>编辑项目</h4>
+			</div>
+		 </div>		 
+        </div>		
+        <div class="wrapper">
+			<form action="beautyItem/updateFashion" class="form-vertical" data-role="form" id="form" ajat="#domid=form&tempid=form-t">
+				<script type="text/template" id="form-t">
+				<%var data=JSON.parse(sessionStorage.getItem("formdata"))%>
+				<ul class="nav-step flex-box">
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>1.基本资料</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>2.详情承诺</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>3.设备介绍</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>4.产品介绍</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>5.预约流程</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>6.定妆流程</span>
+					</li>
+					<li class="flex-item active">
+						<span class="arrow">7.赠送说明</span>
+					</li>
+				</ul>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>赠送说明：</label>
+                    <div class="control">
+						<textarea class="large" maxlength="500" name="present_explain" required placeholder="1~500个字"><%=data.present_explain%></textarea>
+                    </div>
+                </div>
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>时间限制：</label>
+                    <div class="control">
+						<input type="text" disabled value="90" required min="1" max="999" pattern="number" placeholder="1-999整数数字" />天内有效（获取赠送后）<span class="weak">1-999整数数字</span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""></label>
+                    <a class="btn" href="<%=query.p=="index"?"index.html":"fashion.html"%>">取消</a>
+					<span class="space"></span>
+					<a class="btn" href="base.html?<%=query._%>">返回</a>
+					<span class="space"></span>
+                    <button class="btn-primary">提交</button>
+                </div>
+				</script>
+            </form>
+        </div>
+		<script type="text/javascript">
+			$("#form").on('_ready',function(){
+				this._getFormData=function(){
+					var data=lib.tools.getFormData($(this));
+					data=$.extend(JSON.parse(sessionStorage.getItem("formdata")),data);
+					sessionStorage.setItem("formdata",JSON.stringify(data));
+					return data;
+				}
+				this.goback=function(){
+					location.href="/module/makeup/item/detail.html?"+lib.query._;
+				}
+			});
+		</script>
+		</script>
+    </body>
+</html>

@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <link rel="stylesheet" href="income.css" />
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>收入管理</a>
+            <span>&gt;</span><a href="index.html">返佣单</a>
+            <span>&gt;</span><%=query.type=='perview' ? '预览返佣单' : '查看返佣单'%>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4><%=query.type=='perview' ? '预览 - 返佣单' : '查看返佣单'%></h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="table" style="margin:0" id="table-wrapper">
+            <script type="text/template" id="table-t">  
+
+                <div style="position:absolute;right:20px;top:40px;">
+                    <%if(query.type=='perview'){%>
+                        <button type="button" class="btn fr mr-20" onclick="window.close()">
+                            关闭预览
+                        </button>
+                    <%}else{%>
+                        <button type="button" class="btn fr mr-20" onclick="history.back()">
+                            取消
+                        </button>
+                    <%}%>
+
+                    <%
+                    if(lib.query.type != "perview"){
+                    %>
+                    <button type="button" class="btn fr mr-20"  <%=data.status == 1 ? "disabled" : ""%>  onclick="edit()" data-slug="rebate.update">
+                        编辑
+                    </button>
+                    <button type="button" class="btn fr mr-20" <%=data.status == 1 ? "disabled" : ""%>
+                        onclick="del(<%=data.id%>)" data-slug="rebate.destroy">
+                        删除
+                    </button>
+                    <button type="button" class="btn fr mr-20" <%=data.status == 1 ? "disabled" : ""%>
+                        onclick="sure(<%=data.id%>)" data-slug="rebate.confirm">
+                        确认
+                    </button>                  
+                    <%
+                    }
+                    %>
+                </div>
+
+                <table>
+                    <tr style="height:60px;">
+                        <td class="shop-name">
+                                <h1 style="padding-left:0"><%=data.salonname%></h1>
+                        </td>
+                        <td class="shop-num">编号：<%= data.salonsn%></td>
+                    </tr>                      
+                </table>
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <td class="td">返佣单号：</td>
+                            <td><%=data.sn%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">结算起始日：</td>
+                            <td><%=data.start_at && new Date(data.start_at).format("yyyy-MM-dd")%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">结算截止日：</td>
+                            <td><%=data.end_at && new Date(data.end_at).format("yyyy-MM-dd")%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">金额：</td>
+                            <td><%=data.amount%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">备注：</td>
+                            <td><%=data.note%></td>
+                        </tr>
+
+                        <%if(query.type!='perview'){%>
+                            <tr>
+                                <td class="td">制单人：</td>
+                                <td><%=data.created_by%></td>                            
+                            </tr>
+
+                            <tr>
+                                <td class="td">创建日期：</td>
+                                <td><%=data.created_at && new Date(data.created_at).format("yyyy-MM-dd")%></td>
+                            </tr>   
+
+                            <tr>
+                                <td class="td">确认人：</td>
+                                <td><%=data.confirm_by%></td>
+                            </tr>
+
+                            <tr>
+                                <td class="td">确认日期：</td>
+                                <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            </tr>
+
+                            <tr>
+                                <td class="td">状态：</td>
+                                <%
+                                var statusText = "";
+                                if(data.status == "1"){
+                                    statusText = "已确认";
+                                }
+                                if(data.status == "2"){
+                                    statusText = "待确认";
+                                }
+                                %>
+                                <td><%=statusText%></td>                            
+                            </tr> 
+                        <%}%>                          
+                    </tbody>                     
+                </table>
+                </script>
+            </div>
+        </div>
+        <script>
+            var type = lib.query.type;
+            if(type == "perview"){
+                var data = JSON.parse(sessionStorage.getItem('income-rebate-perview'));
+                lib.ajat('#domid=table-wrapper&tempid=table-t').template(data);              
+            }
+
+            if(type == "detail"){
+                var promise = lib.ajat('rebate/show/'+lib.query.id+'#domid=table-wrapper&tempid=table-t').render();
+                promise.done(function(data){
+                    sessionStorage.setItem('edit-rebate-data',JSON.stringify(data.data));                      
+                });                               
+            }
+
+            function edit() {
+                location = "add.html?type=edit";
+            }
+
+            function del(id){
+                parent.lib.popup.confirm({
+                    text:'你正在删除此返佣单,是否执行删除?',
+                    define:function(){
+                        lib.ajax({
+                            type: "get",
+                            url : "rebate/destroy/"+id   
+                        }).done(function(data, status, xhr){
+                            if(data.result == 1){
+                                parent.lib.popup.result({
+                                    text:"删除成功",
+                                    define:function(){
+                                        //history.back();
+                                        window.close();
+                                    }
+                                });                               
+                            }
+                        });                          
+                    }
+                }); 
+            }
+
+            function sure(id){
+                parent.lib.popup.confirm({
+                    text:'你正在确认此返佣单,是否继续?',
+                    define:function(){
+                        lib.ajax({
+                            type: "post",
+                            data : {rebate:[id]},
+                            url : "rebate/confirm"   
+                        }).done(function(data, status, xhr){
+                            if(data.result == 1){
+                                parent.lib.popup.result({
+                                    text:"返佣成功",
+                                    define:function(){
+                                        //history.back();
+                                        window.close();
+                                    }
+                                });
+                            }
+                        });                          
+                    }
+                });                
+            }
+        </script>
+    </body>
+</html>

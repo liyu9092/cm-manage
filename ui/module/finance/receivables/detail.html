@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+    <div class="breadcrumb">
+        <a>收款管理 </a><span>&gt;</span><a href="index.html">收款列表</a><span>&gt;</span><span id="breadcrumb-current"> <%=query.preview?"预览":"查看"%>收款单</span>
+		<div class="flex-box">
+			<div class="flex-item">
+				<h4> <%=query.preview?"预览 - ":"查看"%>收款单</h4>
+			</div>	
+		</div>
+		<hr />
+    </div>	
+   <div class="wrapper" ajat="<%if(query.id){%>receivables/getone?id=<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		<%
+				if(!query.id){
+					data=JSON.parse(sessionStorage.getItem("preview"));					 				 
+				}					
+			%>
+		<div class="detail-operation">
+			<%if(query.preview!="preview"){%>	
+				<form action="/receivables/confirmAct?id=<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){history.back()}});" data-confirm="你正在对<%=data.name%>家商户确认收款，收款金额<%=data.money%>，是否继续？" id="form-remove">
+						<input type="hidden" name="idStr" value="<%=query.id%>" />
+						<button class="btn" <%=data.status==2?"disabled":""%> data-slug="receivables.confirmAct">确认收款</button>			 
+				</form>
+		 		
+			<span class="space"></span>
+			<form action="/receivables/del?id=<%=query.id%>" data-role="normal" data-confirm="你正在删除此收款单，是否执行删除？" onsuccess="parent.lib.popup.result({define:function(){history.back()}});">
+				<button class="btn" <%=data.status==2?"disabled":""%> data-slug="receivables.del" >删除</button>
+			</form>
+             <span class="space"></span>
+			<button class="btn" onclick="location='edit.html?id=<%=data.id%>'" <%=data.status==2?"disabled":""%> data-slug="receivables.update">编辑</a></button>
+			<span class="space"></span>
+			<button class="btn btn-cancel" type="button">返回</button>
+			<%}else{%>
+				<button class="btn" type="button" onclick="window.close()">关闭预览</button>
+			<%}%>
+		</div>
+	<div class="table-detail">
+		<table>
+            <thead>
+               <tr>
+                    <td colspan="2">
+                      <%=data.salonname?data.salonname:""%>
+					  <span class="table-detail-sn">店铺编号：<%=data.sn?data.sn:""%></span>
+                    </td>
+                </tr>
+            </thead>
+		    <tbody>
+			    <%var type=["","业务投资款返还","交易代收款返还"]%>
+				<%var status=["","待确认","已确认"]%>
+				<%var paymentStyle=["","银行存款","账扣返还","现金","支付宝","财付通"]%>
+
+			    <%if(query.id){%>
+                <tr>
+					  <td>收款单号： </td>
+					  <td><%=data.singleNumber%></td>
+                </tr>
+				<%}%> 
+
+				<%if(query.id && (data.paymentStyle==2)&&(data.type==1)){%>				 
+				<tr>
+					  <td>关联付款单号：</td>
+					  <td><%=data.payCode%></td>
+                </tr>
+				<%}%>
+
+				<%if(query.id && (data.type==2)){%>		
+				<tr>
+					  <td>关联转付单号：</td>
+					  <td><%=data.paySingleCode%></td>
+                </tr>
+				<%}%>
+				
+                <tr>
+					  <td>收款类型：</td>
+					  <td><%=type[data.type]%></td>
+                </tr>
+
+                <tr>
+					  <td><%= data.type==1 ? "应收投资款金额" : "应收代收款金额"%> </td>
+					  <td> <%=data.money%> </td>
+                </tr>
+
+                <tr>
+					  <td>收款方式：</td>
+					  <td><%=paymentStyle[data.paymentStyle]%></td>
+                </tr>
+
+				 <tr>
+					  <td> 收款金额： </td>
+					  <td> <%=data.money%> </td>
+                </tr>
+
+				 <tr>
+					  <td>创建日期：</td>
+					  <td>
+						<%=data.addTime && lib.tools.getDate(data.addTime)%>
+					  </td>
+                </tr>
+                <tr>
+					  <td>制单人：</td>
+					  <td><%=data.preparedByName%></td>
+               </tr>
+			     <tr>
+					  <td>出纳：</td>
+					  <td><%=data.cashierName%></td>
+               </tr>
+
+			    <tr>
+					  <td>收款日期：</td>
+                      <%if(isNaN(data.receiptDate)){%>
+                          <td><%=data.receiptDate%></td>
+                      <%}else{%> 
+                          <td><%= data.receiptDate ? lib.tools.getDate(data.receiptDate) : "" %></td>
+                      <%}%> 
+                </tr>
+
+                <tr>
+					  <td>状态：</td>
+					  <td><%=status[data.status]%></td>
+                </tr>
+
+                <tr>
+                  <td>备注：</td>
+                  <td><%=data.remark%></td>
+                </tr>
+            </tbody>
+         </table>
+	   </script>
+     </div> 
+  </div>
+   <script type="text/javascript">
+	$(document).on('remove','#form-remove',function(){
+		history.back();
+	})
+   </script>
+  </body>
+</html>

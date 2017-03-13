@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span>定妆中心介绍
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4>定妆中心介绍</h4>
+			</div>
+		 </div>		 
+        </div>		
+        <div class="wrapper">
+			<form action="beauty/edit" class="form-vertical" data-role="form" id="form" novalidate="novalidate" ajat="beauty/index#domid=form&tempid=form-t">
+				<script type="text/template" id="form-t">
+				<div class="table makeup-item-image-list">
+					<table>
+						<thead>
+							<tr>
+								<th>名称</th>
+								<th>内容</th>
+								<th>图片</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<%=lib.ejs.render({url:"item/table-t"},{data:JSON.parse(data)})%>
+						</tbody>
+					</table>
+					<textarea name="data" style="display:none" class="json-hidden" required requiredmsg="定妆中心介绍不能为空"><%=JSON.stringify(data)%></textarea>
+					<br />
+					<a class="link add">+新增定妆中心介绍</a>
+				</div>
+				</script>
+            </form>
+        </div>
+		<script type="text/javascript" src="item/edit.js"></script>
+		<script type="text/javascript">
+			$('#form').on('_ready',function(){
+				$('table').on('datachange',function(){
+					setTimeout(function(){
+						$('form').submit();
+					},500);
+				});
+				this.goback=function(){}
+			});
+		</script>
+    </body>
+</html>

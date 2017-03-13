@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <link rel="stylesheet" href="income.css" />
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>收入管理</a>
+            <span>&gt;</span><a href="index.html">返佣单</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>返佣单</h4>
+                </div>
+                <div class="flex-item">
+                    <a class="btn-primary fr" href="add.html?type=add" data-slug="rebate.create">
+                        <i class="fa fa-plus"></i> 新增
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="wrapper">
+            <form data-role="hash" id="form">
+                <div class="input-group input-switch">
+                    <select>
+                      <option value="0">店铺搜索</option>
+                      <option value="1">店铺编号</option>
+                      <option value="2">商户名称</option>
+                    </select>
+                    <input type="text" class="input-search" name="salonname" placeholder="请输入店铺名称" 
+                    maxlength="16"/>
+                    <input type="text" class="input-search hide" name="salonsn" placeholder="请输入店铺编号" 
+                    maxlength="16"/>
+                    <input type="text" class="input-search hide" name="merchantname" placeholder="请输入商户名称" maxlength="16"/>
+                </div>   
+
+                <div class="form-group">
+                     <span>确认日期:</span>
+                     <input type="date" name="start"/>
+                     <span style="margin:0 10px">至</span>
+                     <input type="date" name="end"/>   
+                     <button class="btn" type="submit">搜索</button>
+                </div>            
+            </form>
+
+            <form action="rebate/export" data-role="export">
+                <button class="btn mr-5" type="submit" data-slug="rebate.export">
+                    <i class="fa fa-file-excel-o"></i> 导出
+                </button>
+            </form> 
+
+<!--             <a class="btn mr-5" href="/Book1.xltx">
+                <i class="fa fa-file-excel-o"></i> 下载模板
+            </a> -->
+
+            <button id="import" class="btn mr-5" type="button" style="position:relative" data-slug="rebate.upload">
+                <i class="fa fa-file-excel-o"></i> 导入
+            </button>
+
+            <div class="table" id="table" ajat="rebate/index?<%=query._%>#domid=table&tempid=table-t">
+                <script type="text/template" id="table-t">
+                    <table>
+                        <thead>
+                            <th style="width:50px">
+                                <label class="select-all"><input type="checkbox"/><span>全选</span></label>
+                            </th>
+                            <th>序号</th>                       
+                            <th>店铺编号</th>
+                            <th>店铺名称</th>
+                            <th>返佣单号</th>  
+                            <th>结算起始日</th>
+                            <th>结算截止日</th>                                       
+                            <th>金额</th>
+                            <th>
+                                <a data-role="hash" href="#page=1&sort_key=created_at&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">                            
+                                    创建日期
+                                    <i class="fa fa-sort"></i>
+                                </a>    
+                            </th>
+                            <th>确认日期</th>
+                            <th>制单人</th>
+                            <th>                            
+                                <a data-role="hash" href="#page=1&sort_key=note&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">                            
+                                    备注
+                                    <i class="fa fa-sort"></i>
+                                </a>                              
+                            </th>                               
+                            <th>
+                                <a data-role="hash" href="#page=1&sort_key=status&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">                            
+                                    状态
+                                    <i class="fa fa-sort"></i>
+                                </a>                                                          
+                            </th>
+                            <th>操作</th>                                
+                        </thead>
+
+                        <tbody>
+                        <% data.data && data.data.forEach(function(item,i){ %>
+                            <tr>
+                                <td>
+                                <label>
+                                    <input type="checkbox" data-id="<%=item.id%>" data-amount="<%=item.amount%>" 
+                                    <%=item.status=="1" ? "disabled" : ""%>/>
+                                    <span></span>
+                                </label>
+                                </td>                        
+                                <td><%=i+1%></td>                        
+                                <td><%=item.salonsn%></td>                        
+                                <td><%=item.salonname%></td>                        
+                                <td><%=item.sn%></td>                        
+                                <td><%=item.start_at && new Date(item.start_at).format("yyyy-MM-dd")%></td>  
+                                <td><%=item.end_at && new Date(item.end_at).format("yyyy-MM-dd")%></td>
+                                <td><%=item.amount%></td>                        
+                                <td><%=item.created_at && new Date(item.created_at).format("yyyy-MM-dd")%></td>
+                                <td><%=item.confirm_at && new Date(item.confirm_at).format("yyyy-MM-dd")%></td>
+                                <td><%=item.created_by%></td>                        
+                                <td><%=item.note%></td>                        
+                                <td><%=item.status=="1" ? "已确认" : "待确认"%></td>                       
+                                <td><a class="link" href="detail.html?type=detail&id=<%=item.id%>"
+                                data-slug="rebate.show,rebate.update">查看&gt</a></td> 
+                            </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                    <%if(data.data && data.total > 0){%>
+                    <div class="table-bottom">
+                        <label class="select-all"><input type="checkbox"/><span>全选</span></label>
+                        <button class="btn" type="button" data-slug="rebate.confirm">确认</button>
+                    </div>
+                     <%}%>
+
+                    <div class="pager"> </div>              
+                </script>  
+            </div>
+        </div>
+        <script src="list.js"></script>
+    </body>
+</html>

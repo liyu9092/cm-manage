@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <style>
+      h3{
+          font-weight: bold;
+          font-size: 15px;
+          width: 150px;
+          text-align: right;
+          padding-right: 20px;        
+      }
+      </style>   
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>店铺管理</a>
+            <span>&gt;</span>
+            <a href="index.html">店铺列表</a>
+            <span>&gt;</span><%=query.type=="add"?"新增店铺":"编辑店铺"%>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4><%=query.type=="add" ? "新增店铺" : "编辑店铺"%></h4>
+                </div>
+            </div>
+            <hr />
+        </div>
+        <div class="wrapper">
+            <div class="detail-operation form-vertical">
+                <button type="button" class="btn btn-cancel">取消</button>
+                <span class="space"></span>
+                <button class="btn-primary submit">提交</button>
+            </div>
+
+            <ul class="nav-step flex-box">
+                <li class="flex-item">
+                    <a href="add.html">
+                        <i class="fa fa-check-circle"></i>
+                        <span>1.店铺基本信息</span>
+                    </a>
+                </li>
+
+                <li class="flex-item active">
+                    <span class="arrow">2.店铺图片信息</span>
+                </li>                
+
+                <li class="flex-item">
+                    <span>3.银行账号信息</span>
+                </li>
+
+                <li class="flex-item">
+                    <span>4.准入评估信息</span>
+                </li>
+
+                <li class="flex-item">
+                    <span>5.附件上传</span>
+                </li>
+
+                <li class="flex-item">
+                    <span>6.财务结算</span>
+                </li>
+            </ul>
+
+            <table style="margin-top:20px;">
+                <tbody>
+                    <tr>
+                        <td>
+                            <h3>店铺LOGO：</h3>
+                        </td>
+                        <td id="con_wrapper" class="td-wrapper">
+                            <div class="control-image">
+                                <div class="control-thumbnails" id="control-thumbnails1" data-max="1">
+                                    <div class="control-image-upload">
+                                        <div id="logoUpload">
+                                            <i class="fa fa-image"></i>
+                                            <em>上传店铺LOGO</em>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <h3>店铺图片集：</h3>
+                        </td>
+                        <td id="lic_wrapper" class="td-wrapper">
+                            <div class="control-image">
+                                <div class="control-thumbnails" id="control-thumbnails2" data-max="4">
+                                    <div class="control-image-upload">
+                                        <div id="shopUpload">
+                                            <i class="fa fa-image"></i>
+                                            <em>上传店铺图片集</em>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <h3>团队照片：</h3>
+                        </td>
+                        <td id="cor_wrapper" class="td-wrapper">
+                            <div class="control-image">
+                                <div class="control-thumbnails" id="control-thumbnails3" data-max="1">
+                                    <div class="control-image-upload">
+                                        <div id="teamUpload">
+                                            <i class="fa fa-image"></i>
+                                            <em>上传团队照片</em>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>                                
+                </tbody>            
+            </table>  
+
+            <div style="margin:50px 170px;" class="form-vertical">
+                <button class="btn preview" type="button" style="margin-right:20px">预览</button>
+                <button class="btn-primary submit" >下一步</button>              
+            </div>
+        </div> 
+        <script type="text/javascript" src="picture.js"></script>  
+    </body>
+</html>

@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+    </head>	
+    <body>
+        <div class="breadcrumb">
+           <a>店铺结算 </a><span>&gt;</span><a href="index.html">转付单</a>
+		   <div class="flex-box">
+			<div class="flex-item">
+				<h4>转付单</h4>
+			</div>
+			<!--
+			<div>
+				<a class="btn-primary" href="edit.html" data-slug="shop_count.create"><i class="fa fa-plus" ></i>新增</a>
+			</div>-->
+		</div>
+        </div>
+        <div class="wrapper">
+			<form data-role="hash">
+				 <div class="input-group placeholder-switch">
+					<select  name="key">
+						<option value="1" data-placeholder="请输入店铺名称">店铺名称</option>
+						<option value="2" data-placeholder="请输入商户名称">商户名称</option>
+						<option value="3" data-placeholder="请输入店铺编号">店铺编号</option>
+					</select>
+					<input type="text" placeholder="请输入店铺名" name="keyword">		
+				 </div>	
+					<span class="space"></span>				 
+					<label>实际付款日期：</label>
+					<span class="date-group">
+					  <input type="date" data-role="start"  name="pay_time_min" placeholder="YYYY-MM-DD"/>到<input type="date" data-role="end"  name="pay_time_max" placeholder="YYYY-MM-DD"/>
+					</span>
+				 
+					<button class="btn">搜索</button>
+					<button class="btn" form="export" data-slug="shop_count.export"><i class="fa fa-file-excel-o" ></i> 导出</button>			
+			</form>
+			  <form action="shop_count/export" data-role="export" id="export" ></form>   
+			  <div class="table" ajat="<%if(query._){%>shop_count/index?<%=query._%><%}%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+                 <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+								 <th>店铺编号</th>                       
+								<th>店铺名称</th>
+								 <th>付款单号</th>						 
+								<th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">付款类型<i class="fa fa-sort"></i></a></th>                          
+								 <th><a data-role="hash" href="#page=1&sort_key=pay_type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">付款方式<i class="fa fa-sort"></i></a></th>
+								<th>付款金额</th>                           
+								 <th><a data-role="hash" href="#page=1&sort_key=pay_day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">实际付款日期 <i class="fa fa-sort"></i></a></th>
+								<th><a data-role="hash" href="#page=1&sort_key=created_at&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">创建日期 <i class="fa fa-sort"></i></a></th>
+								<th>制单人</th>
+								<th>备注</th>
+								<th><a data-role="hash" href="#page=1&sort_key=state&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">状态 <i class="fa fa-sort"></i></a></th>
+								<th>操作</th>
+                        </tr>
+                    </thead>
+               <tbody>
+			<%if(data.data){%>
+				  <%var type=["","付交易代收款","付交易代收款","交易代收款返还"]%>
+				 <%var state=["","已付款","待提交","待审批","待付款"]%>
+				 <%var pay_type=["","银行存款","账扣返还","现金","支付宝","财付通"]%>
+				 <%data=data.data%>
+				 <%data.forEach(function(item,i){%>
+                 <tr>
+                 <td><%=i+1%></td>
+				
+					<td><%=item.salon?item.salon.sn:""%></td>
+					<td><%=item.salon?item.salon.salonname:""%></td>
+                  <td><%=item.code%></td>
+				  <td><%=type[item.type]%></td>
+				  <td><%=pay_type[item.pay_type]%></td>
+				  <td><%=item.pay_money%></td>
+				  <td><%=item.pay_day%></td>
+				  <td><%=item.created_at?new Date(item.created_at).format("yyyy-MM-dd"):""%></td>
+				  <td><%=item.user?item.user.name:""%></td>	
+				  <td title="<%=item.remark%>"><%=item.remark.length>7?item.remark.substring(0,7)+"...":""%></td>  
+				  <td><%=state[item.state]%></td>
+                   <td><a class="link" href="detail.html?id=<%=item.id%>" data-slug="shop_count.show,shop_count.update">查看</a>				   
+				   </td>
+                  </tr>
+				  <%})%>
+			  <%}%>
+              </tbody>
+            </table>          
+			  <div class="pager"> </div>
+			</script>
+        </div>
+    </div>
+	<script type="text/javascript">
+		document.onreadystatechange=function(){};
+		$(function(){			 
+			if(!lib.query._){
+				$('input[type="date"]').val(lib.tools.getDate());
+				$('form[data-role="hash"]').submit();
+			}
+		});
+		
+	</script>
+</body>
+</html>

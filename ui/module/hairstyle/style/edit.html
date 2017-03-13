@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+		<a>图片管理</a><span>&gt;</span><a href="index.html">风格分类</a><span>&gt;</span><span id="breadcrumb-current"><%=query._?"编辑风格":"新增风格"%></span>
+			<div class="flex-box">
+			<div class="flex-item">
+				<h4><%=query._?"编辑风格":"新增风格"%></h4>
+			</div>		 
+		</div>
+		<hr />
+	</div>	
+	
+	<div class="wrapper" ajat="<%if(query.id){%>user/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		<form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>user/update/<%=data.id%><%}else{%>user/create<%}%>">
+		 <div class="detail-operation">
+				<button class="btn btn-cancel" type="button"  >取消</button>
+				<span class="space"></span>
+				 <button class="btn-primary" >提交</button>
+			</div>
+		
+		<div class="control-group">
+					 
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>风格名称：</label>
+                    <div class="control">
+                        <input type="text"  value="<%=data.tel||""%>" maxlength="10" disabled>
+						<span class="weak">最多输入10个字</span>
+                    </div>
+                </div>
+			  
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>风格图片：</label>
+                    <div class="upload-btn" id="con_loader_button">
+                      <i class="fa fa-image"></i>
+                      <p class="btn-text">上传列表图片</p>
+					  <span class="weak" >(上传文件说明：512*512PX的jpg,png图片格式)</span>
+                    </div>
+                </div>				
+				<div class="control-group">
+					<label class="control-label" for=""></label>
+					<div class="control">
+					<button class="btn-primary">提交</button>
+					<span class="space"></span>
+					<button class="btn" type="button" onclick="history.back()">返回</button>
+			   </div>
+			</div>
+			</div>
+		  </form>
+		  </script>
+	</div>
+	 
+	 
+  </body>
+</html>

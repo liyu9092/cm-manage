@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <link rel="stylesheet" href="income.css" />
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>收入管理</a>
+            <span>&gt;</span><a href="list.html"><%=query.type=='add'? '新增' : '编辑'%>反佣单</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4><%=query.type=='add'? '新增' : '编辑'%>反佣单</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <form action="rebate/create" method="post" class="form-vertical" data-role="form">
+                <div class="detail-operation">
+                    <button type="button" class="btn btn-cancel">取消</button>
+                    <span class="space"></span>
+                    <button class="btn-primary">提交</button>
+                </div>    
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
+                    <div class="control complete">
+                        <input type="hidden" name="salon_id" id="salonid"/>
+                        <input type="hidden" id="salonsn"/>
+                        <input id="search" type="text" 
+							ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" autocomplete="off" required 
+							ajat-resources="/module/public/widget/autocomplete/index.js"
+							/>
+                        <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ></div>
+                        <span id="sn" class="weak"></span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
+                    <div class="control">
+                        <input type="text" id="merchantname" disabled >
+                        <input type="hidden" id="merchantId" required requiredmsg="没有找到店铺名称对应的商户" />
+                    </div>
+                </div>                
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>结算起始日：</label>
+                    <div class="control">
+                        <input type="date" id="start_at" name="start_at" required placeholder="YYYY-MM-DD">
+                    </div>
+                </div> 
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>结算截止日：</label>
+                    <div class="control">
+                        <input type="date" id="end_at" name="end_at" required placeholder="YYYY-MM-DD">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>金额：</label>
+                    <div class="control">
+                        <input type="text" id="amount" name="amount" pattern="float" patternMsg="金额有误" required>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="">备注：</label>
+                    <div class="control">
+                        <input type="text" id="note" name="note" maxlength="15">
+                    </div>
+                </div>                   
+
+                <div class="control-group">
+                    <label class="control-label" for=""></label>
+                    <button type="button" class="btn" id="perview_btn">预览</button>
+                    <button class="btn-primary mr-20">提交</button>
+                </div>
+            </form>       
+        </div>
+        <script>
+
+            var type = lib.query.type;
+
+            if(type == "edit"){
+                var obj = JSON.parse(sessionStorage.getItem('edit-rebate-data'));
+                $("#salonid").val(obj.salon_id);
+                $('#salonsn').val(obj.salonsn);
+                $("#sn").text(obj.salonsn);
+                $("#search").val(obj.salonname);
+                $("#start_at").val(new Date(obj.start_at).format("yyyy-MM-dd"));
+                $("#end_at").val(new Date(obj.end_at).format("yyyy-MM-dd"));
+                $("#amount").val(obj.amount);
+                $('#merchantId').val(obj.merchantid);
+                $("#merchantname").val(obj.merchantname);
+                $("#note").val(obj.note);
+                $("form").attr('action','rebate/update/'+obj.id);
+            }
+
+            $('#search').on('autoinput',function(e,data){
+                if(data){
+                    $('#salonsn').val(data.sn);
+                }
+            });
+
+            $("#perview_btn").on('click',function(){
+                var obj = {}; 
+                obj.salonsn  = $("#salonsn").val();                                
+                obj.salonname = $("#search").val();
+                obj.merchantname = $("#merchantname").val();
+                obj.start_at = $("#start_at").val(); 
+                obj.end_at   = $("#end_at").val();
+                obj.amount   = $("#amount").val();
+                obj.note   = $("#note").val();
+                if(type == "add"){
+                    sessionStorage.setItem("income-rebate-perview",JSON.stringify(obj));
+                }else{
+                    var data = JSON.parse(sessionStorage.getItem('edit-rebate-data'));
+                    sessionStorage.setItem("income-rebate-perview",JSON.stringify($.extend({},data,obj)));
+                }
+                window.open("detail.html?type=perview");
+            });
+        </script>
+    </body>
+</html>

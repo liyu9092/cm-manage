@@ -1,0 +1,85 @@
+﻿.login{
+	position:absolute;
+	top:-100px;
+	right:0;
+	left:0;
+	bottom:0;
+	margin:auto;
+	height:320px;
+	width:800px;
+	padding:1px;
+}
+.login form{
+	padding:15px;
+	border:1px solid #E6EAF2;
+	width:280px;
+}
+.login li{
+	margin:25px 0;
+	position:relative;
+}
+.login li i{
+	position: absolute;
+	left: 10px;
+	top: 9px;
+	color:#999;
+}
+.login input,.login button{
+	width:280px;
+	height:38px;
+	font-size:14px;
+}
+.login button{
+	font-size:16px;
+}
+.login input{
+	padding-left:34px;
+}
+.login input.code{
+	width:100px;
+}
+.login h4{
+	font-size:20px;
+}
+.login-field:focus+.fa{
+	color:#58A2EC!important;
+}
+.login .control-help{
+	display:none;
+	margin-top:10px;
+	margin-bottom:-10px;
+	padding:2px 10px;
+	text-align:center;
+	font-size:14px;
+}
+.slogan  img{
+	width:100px;
+	margin-bottom:10px;
+	opacity:0.01;
+	-webkit-transition:all 2s ease 0.1s;
+	-moz-transition:all 2s ease 0.1s;
+	transition:all 2s ease 0.1s;
+	display:inline-block;
+}
+.slogan  img.fadeIn{
+	opacity:1;
+}
+.slogan{
+	text-align:center;
+	font-size:26px;
+	padding-top:90px;
+	display:inline-block;
+	width:185px;
+}
+.slogan .fonts{
+	text-align:left;
+}
+.font{
+	opacity:1;
+	-webkit-transition:all 1s ease 0s;
+	-moz-transition:all 1s ease 0s;
+	transition:all 1s ease 0s;
+}
+.font:last-child{
+	opacity:0;
+}

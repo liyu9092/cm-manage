@@ -1,0 +1,9 @@
+<%if(data.length>0){%>
+<ul>
+<%data.forEach(function(item,i){%>
+<li class="complete-item" data-id="<%=item.id%>" data-name="<%=item.name%>" ><%=item.name%>（<%=item.number%>）</li>
+<%})%>
+</ul>
+<%}else{%>
+<div style="padding:5px 10px;">录入错误</div>
+<%}%>

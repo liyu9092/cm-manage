@@ -1,0 +1,17 @@
+<%data.forEach(function(item){%>
+<tr>
+	<td data-name="title" style="width:150px"><%=item.title%></td>
+	<td data-name="content"><%=item.content.replace(/\n/g,"<br/>")%></td>
+	<%if(item.image!==undefined){%>
+	<td data-name="image" style="width:30%">
+		<%var arr=[];
+		arr.operating=false;
+		item.image.forEach(function(image){
+			arr.push({img:image})
+		});%>
+		<%=lib.ejs.render({url:"/module/public/template/thumbnails"},{data:arr})%>
+	</td>
+	<%}%>
+	<td style="width:80px"><a class="link edit">编辑</a><span class="space"></span><a class="link remove">删除</a></td>
+</tr>
+<%})%>

@@ -1,0 +1,427 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+	  <style type="text/css">
+		.control-label{
+			width:200px;
+		}
+	  </style>
+  </head>
+  <body>
+		<div class="breadcrumb">
+		<a>系统配置</a><span>&gt;</span><a href="index.html">APP消息盒子</a><span>&gt;</span><a href="index.html"><%=query._?"编辑":"新增"%>消息</a> 
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4><%=query._?"编辑":"新增"%>消息</h4>
+			</div>
+		 </div>		
+		<hr />
+	</div>
+	
+	<div class="wrapper" ajat="<%if(query.id){%>messageBox/showMessage?pushId=<%=query.id%><%}%>#domid=form&tempid=form-t&xss=false" id="form">
+		<script type="text/template" id="form-t">
+		<form  method="post" class="form-vertical" data-role="form" action="<%=query._?"messageBox/editMessage":"messageBox/addPushConf"%>" data-xss="none">
+				<div class="detail-operation">
+					<button class="btn btn-cancel" type="button" >取消</button>
+					<span class="space"></span>
+					<button class="btn-primary" data-slug="<%if(query.id){%>messageBox.editMessage<%}else{%>messageBox.addPushConf<%}%>">提交</button>			
+				</div>
+				<%if(query.id){%>
+				<input type="hidden" name="pushId" value="<%=query.id%>" />
+				<%}%>
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>接收信息用户(编辑不可修改)：</label>
+                    <div class="control">
+						<label>
+							<input type="radio" name="receiveType" <%=!data.receiveType||data.receiveType=="REG"?"checked":""%> value="REG" <%=query.id?"disabled":""%>>
+							<span>所有注册用户</span>
+						</label>
+						<label>
+							<input type="radio" name="receiveType" <%=data.receiveType=="APP"?"checked":""%> value="APP" <%=query.id?"disabled":""%>>
+							<span>APP安装用户</span>
+						</label>
+						<label>
+							<input type="radio" name="receiveType" <%=data.receiveType=="APPNOTREG"?"checked":""%> value="APPNOTREG" <%=query.id?"disabled":""%>>
+							<span>安装APP未注册用户</span>
+						</label>
+						<label>
+							<input type="radio" name="receiveType" <%=data.receiveType=="CODE"?"checked":""%> value="CODE" <%=query.id?"disabled":""%>>
+							<span>指定三码用户</span>
+						</label>
+						
+                    </div>
+                </div>
+				<div class="control-group" id="code-group" style="margin-top:-20px;<%=data.receiveType!="CODE"?"display:none":""%>">
+					<label class="control-label" for="">&nbsp;</label>
+					 <div class="control">
+					 <div>
+					<label>
+						<input type="checkbox" name="companyCode" value="1" <%=query.id?"disabled":""%> <%=data.companyCodeArr&&data.companyCodeArr.length>0?"checked":""%>>
+						<span>指定集团用户</span>
+					</label>
+					<button class="link add-group" type="button" <%=!data.companyCodeArr||data.companyCodeArr.length==0?"disabled":""%>>+添加集团</button>
+					<input type="hidden" name="companyCodeArr" value="<%=data.companyCodeArr%>"/>
+					</div>
+					<div>
+					<label>
+						<input type="checkbox" name="activityCode" value="1" <%=query.id?"disabled":""%> <%=data.activityCodeArr&&data.activityCodeArr.length>0?"checked":""%>>
+						<span>指定活动用户</span>
+					</label>
+					<button class="link add-active"  type="button" <%=!data.activityCodeArr||data.activityCodeArr.length==0?"disabled":""%>>+添加活动</button>
+					<input type="hidden" name="activityCodeArr" value="<%=data.activityCodeArr%>"/>
+					</div>
+					<div>
+					<label>
+						<input type="checkbox" name="shopCode" value="1" <%=query.id?"disabled":""%> <%=data.shopCodeArr&&data.shopCodeArr.length>0?"checked":""%>>
+						<span>指定店铺用户</span>
+					</label>
+					<button class="link add-salon"  type="button" <%=!data.shopCodeArr||data.shopCodeArr.length==0?"disabled":""%>>+添加店铺</button>
+					<input type="hidden" name="shopCodeArr" value="<%=data.shopCodeArr%>"/>
+					<%if(data.salonInfo){localStorage.setItem("salonlist",JSON.stringify(data.salonInfo))}else{localStorage.removeItem("salonlist")}%>
+					</div>
+					</div>
+				</div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>消息标题：</label>
+                    <div class="control">
+                        <input type="text" required maxlength="16" minlength="2" name="title" placeholder="2~16个字" value="<%=data.title%>">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>消息内容：</label>
+                    <div class="control">
+					<input type="text" required maxlength="40" minlength="5" placeholder="5~40个字" name="content" value="<%=data.content%>">
+					</div>
+                </div>
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>发送时间：</label>
+                    <div class="control">
+					<input type="_datetime" required  name="sendTime" <%if(!query.id){%>min="<%=new Date().format('yyyy-MM-dd hh')%>"<%}%>value="<%=data.sendTime||new Date(new Date().getTime()+1000*60*60*5).format('yyyy-MM-dd hh:mm:ss')%>">
+					</div>
+                </div>
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>消息编辑：</label>
+					<div class="control">
+						<label>
+							<input type="radio" name="switch1" value="1" class="radio-editor"
+							<%=data.link||!data.detail ? "checked" : "" %>>
+							<span>信息链接</span>
+						</label>
+						<label>
+							<input type="radio" name="switch1" value="2" class="radio-editor"
+							<%=data.detail ? "checked" : "" %>>
+							<span>连接自动生成</span>
+						</label>
+						<div style="margin-top:10px">
+							<input type="text" name="link" placeholder="信息链接需以http或者https开头" required value="<%=data.link%>" style="<%=data.detail?"display:none":""%>" pattern="^(http|https)://" patternmsg="链接地址不正确"/>
+							<div id="editor-wrap">
+								<div id="editor" type="text/plain" style="width:800px;height:300px;"></div>
+								<div class="weak">详情中的图片建议尺寸：690x320px</div>
+								<textarea type="hidden" id="hidden" class="hide" name="detail" required ><%=data.detail%></textarea>	
+							</div>
+							<div class="hide">
+								<div id="edui_simpleupload" class="edui-box edui-button edui-for-simpleupload edui-default">
+									<div id="edui_simpleupload_state" class="edui-default">
+										<div class="edui-button-wrap edui-default">
+											<div id="edui15_body"  title="单图上传" class="edui-button-body edui-default" >
+												<div class="edui-box edui-icon edui-default" id="ueditor-upload">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+						
+						<br />
+					</div>
+                </div>
+				<div class="control-group" style="margin-top:-30px">
+					<label for="" class="control-label">&nbsp;</label>
+					<div class="control">
+						<label id="switch-push">
+							<input type="checkbox" <%=data.isPush=="N"?"":"checked"%>><span>消息推送</span>
+							<input type="hidden" value="<%=data.isPush=="N"?"N":"Y"%>" name="isPush" />
+						</label>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for=""></label>
+					<div class="control">
+						<button type="button" class="btn btn-cancel">取消</button>
+						<span class="space"></span>
+						<button class="btn-primary" data-slug="<%if(query.id){%>messageBox.editMessage<%}else{%>messageBox.addPushConf<%}%>">提交</button>
+					</div>
+				</div>
+		  </form>
+		  </script>
+		 
+	</div>
+		<script type="text/template" id="salon-t">
+			<style type="text/css">
+				.salon-box{
+					padding:10px 10px 0px 10px;
+					border:1px dotted #ccc;
+					margin-bottom:15px;
+					min-height:28px;
+				}
+				.salon-box span{
+					border:1px solid #ddd;
+					display:inline-block;
+					line-height:26px;
+					padding-left:8px;
+					margin-right:6px;
+					margin-bottom:10px;
+				}
+				.salon-box span a{
+					font-size:14px;
+					padding:0px 10px;
+				}
+				.large{
+					font-size:16px;
+				}
+				.popup-box{
+					line-height:28px;
+				}
+				.popup-box label span{
+					width:202px;
+					overflow:hidden;
+					height:22px;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
+			</style>
+			<h4 class="large">已选店铺</h4>
+			<div class="salon-box" id="box"></div>
+			<form>
+			所属区域
+			<select name="district" id="area"></select>
+			店铺名称
+			<input type="text" name="salonName" />
+			邀请码
+			<input type="text" name="recommendCode" />
+			<button class="btn">搜索</button>
+			</form>
+			<div class="table" id="table"></div>
+		</script>
+		<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+		<script type="text/javascript" src="/ueditor/ueditor.all.js"></script>
+		<script type="text/javascript" src="/ueditor/lang/zh-cn/zh-cn.js"></script>
+        <script type="text/javascript">
+			$('#form').one('_ready',function(e,data){
+				if(lib.query.disabled){
+					$('#form').find("input").each(function(){
+						this.disabled=true;
+					});
+					$('#form').find(".btn-primary").hide();
+				}
+				$("#switch-push input").on("click",function(){
+					$(this).siblings("input").val(this.checked?"Y":"N");
+				})
+				var form=$(this).find('form');
+				form[0]._getFormData=function(){
+					var data=lib.tools.getFormData($(this));
+					if(data.shopCodeArr){
+						data.shopCodeArr=data.shopCodeArr.split(",");
+					}
+					if(data.activityCodeArr){
+						data.activityCodeArr=data.activityCodeArr.split(",");
+					}
+					if(data.companyCodeArr){
+						data.companyCodeArr=data.companyCodeArr.split(",");
+					}
+					if(data.switch1==1){
+						delete data.detail;
+					}
+					if(data.switch1==2){
+						delete data.link;
+					}
+					return data;
+				}
+				//编辑器
+				window.ue = UE.getEditor('editor');
+				window.ue.addListener("keyup",function(){
+					$('#hidden').val(window.ue.getContent());
+				})
+				window.ue.ready(function(){
+					$('#edui14').after($('#edui_simpleupload'));
+					lib.puploader.image({
+						browse_button: 'ueditor-upload',
+						auto_start:true,
+						filters: {
+							mime_types : [
+								{ title : "Image files", extensions : "jpg,gif,png,jpeg" }
+							]
+						}
+					},function(uploader){
+						uploader.bind('FileUploaded',function(up,file,res){
+							if(res&&res.response&&typeof res.response=='string'){
+								var data=JSON.parse(res.response);
+								if(data.code==0&&data.response)
+								UE.getEditor('editor').execCommand('insertHtml','<img src="'+data.response.img +'"/>');
+								$('#hidden').val(window.ue.getContent());
+							}
+						});
+					});
+					if(!data.response.id||!data.response.detail){
+						$('#editor-wrap').hide();
+					}
+					if(data.response.detail){
+						UE.getEditor('editor').setContent(data.response.detail);
+						if(lib.query.disabled){
+							window.ue.setDisabled();
+						}
+					}
+					
+				});
+				$('.add-group').on("click",function(){
+					var $this=$(this);
+					var sid=$this.next().val();
+					var disabled=lib.query.id?true:false;
+					parent.lib.popup.box({
+						title:"在线集团列表",
+						content:'<div id="group"></div>',
+						confirm:true,
+						width:912,
+						complete:function(){
+							var ajat="messageBox/getCompanyCode#domid=group&tempid=/module/config/message/group&sid="+sid;
+							if(disabled){
+								ajat+="&disabled=true"
+							}
+							parent.lib.ajat(ajat).render();
+						},
+						define:function(){
+							if(disabled) return;
+							var array=[];
+							$(this).closest(".popup").find('input:checked').each(function(){
+								array.push(this.value);
+							});
+							$this.next().val(array);
+						}
+					})
+				});
+				$('.add-active').on("click",function(){
+					var $this=$(this);
+					var sid=$this.next().val();
+					var disabled=lib.query.id?true:false;
+					parent.lib.popup.box({
+						title:"在线活动列表",
+						content:'<div id="activity"></div>',
+						confirm:true,
+						width:912,
+						complete:function(){
+							var ajat="messageBox/getActivityCode#domid=activity&tempid=/module/config/message/activity&sid="+sid;
+							if(disabled){
+								ajat+="&disabled=true"
+							}
+							parent.lib.ajat(ajat).render();
+						},
+						define:function(){
+							if(disabled) return;
+							var array=[];
+							$(this).closest(".popup").find('input:checked').each(function(){
+								array.push(this.value);
+							});
+							$this.next().val(array);
+						}
+					})
+				});
+				$('.add-salon').on("click",function(){
+					var $this=$(this);
+					var sid=$this.next().val();
+					var disabled=lib.query.id?true:false;
+					parent.lib.popup.box({
+						title:"添加店铺",
+						content:$('#salon-t').html(),
+						confirm:true,
+						width:$(window).width()-200,
+						height:$(window).height()-80,
+						complete:function(){
+							var popup=$(this);
+							if(!disabled){
+								parent.lib.ajat("salonList/getProvinces?type=3&areaId=1#domid=area&tempid=/module/config/message/area").render();
+								popup.find("form").on("submit",function(e){
+									e.preventDefault();
+									var data=lib.tools.getFormData($(this));
+									parent.lib.ajat("messageBox/addSalon?"+$.param(data)+"#domid=table&tempid=/module/config/message/salon-checked&sid="+sid).render();
+								});
+								popup.on('click','label',function(){
+									var $this=$(this);
+									var checked=$this.children("input")[0].checked;
+									var id=$this.attr('id').replace("search","checked");
+									var salon=popup.find('#'+id);
+									if(salon.length==0&&checked){
+										var name=$this.data("name");
+										var code=$this.data("code");
+										popup.find('.salon-box').append(lib.ejs.render({url:"/module/config/message/salon-item"},{data:[{recommendCode:code,salonName:name}]}));
+									}
+									if(salon.length==1&&!checked){
+										salon.remove();
+									}
+								});
+								popup.on('click','.salon-box a',function(){
+									var code=$(this).parent().data('recommendcode');
+									if(code){
+										popup.find('#salon-search-'+code).children("input").attr("checked",false);
+									}
+									$(this).parent().remove();
+								});
+							}else{
+								popup.find("form,#table").hide();
+							}
+							if(localStorage.getItem("salonlist")){
+								var salonlist=JSON.parse(localStorage.getItem("salonlist"));
+								salonlist.disabled=disabled
+								popup.find('.salon-box').append(lib.ejs.render({url:"/module/config/message/salon-item"},{data:salonlist}));
+							}
+						},
+						define:function(){
+							if(disabled) return;
+							var array=[];
+							var salonlist=[];
+							$(this).closest(".popup").find('.salon-box>span').each(function(){
+								var $this=$(this);
+								array.push($this.data('recommendcode'));
+								var data=$this.data();
+								salonlist.push(data);
+							});
+							localStorage.setItem('salonlist',JSON.stringify(salonlist));
+							$this.next().val(array);
+						}
+					})
+				})
+
+			});
+			$(document).on('change','.radio-editor',function(){
+				var editor=$('#editor-wrap');
+				if($(this).val()==1){
+					editor.hide().siblings("input[name='link']").show().attr('disabled',false);
+					editor.find('textarea').attr("disabled",true);
+				}else{
+					editor.show().siblings("input[name='link']").hide().attr('disabled',true).blur();
+					editor.find('textarea').attr("disabled",false);
+				}
+			}).on("click",'input[name="receiveType"]',function(){
+				if(this.value=="CODE"){
+					$('#code-group').show();
+				}else{
+					$('#code-group').hide();
+				}
+			}).on("click",'#code-group input',function(){
+				$(this).parent().siblings("button,input").attr("disabled",!this.checked);
+			})
+			$(document).on('click','.edui-for-fullscreen',function(){
+				if($(this).find('.edui-state-checked').length==1){
+					parent.lib.fullpage(true);
+				}else{
+					parent.lib.fullpage(false);
+				}
+			})
+			
+		</script>  
+  </body>
+</html>

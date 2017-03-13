@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+        <style type="text/css">
+            .tc{
+                text-align: center !important;
+            }
+            .hidden{
+              display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="index.html">定妆单查询</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4><%if(query.item_name){%><%=query.item_name%>的项目<%}%>定妆单查询 </h4>
+                </div>
+
+                <div class="flex-item">
+                    <div class="fr">
+                    <button id="add_book" class="btn-primary" data-slug="book.create">
+                        <i class="fa fa-plus"></i> 新增
+                    </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <form data-role="hash">
+              <div class="input-group placeholder-switch">
+                   <select name="key">
+                       <option value="1" data-placeholder="请输入手机号">手机号</option>
+                       <option value="2" data-placeholder="请输入预约号">预约号</option>
+                       <option value="3" data-placeholder="请输入推荐号">推荐号</option>
+                   </select>
+                   <input type="text" maxlength="15" class="input-search" name="keyword" placeholder="请输入手机号">
+               </div>
+               <span class="space"></span>
+               <span>预约日期：</span>
+               <span class="date-group">
+                   <input type="date" data-role="start" name="min_time" placeholder="YYYY-MM-DD"/>
+                   至
+                   <input type="date" data-role="end" name="max_time" placeholder="YYYY-MM-DD"/>
+               </span>
+              <span class="space"></span>
+              <div class="input-group">
+                   <select name="pay_type">
+                       <option value="0">支付方式</option>
+                       <option value="3" >微信</option>
+                       <option value="2" >支付宝</option>
+                       <option value="10" >易联支付</option>
+                   </select>
+               </div>
+               <span class="space"></span>
+               <div class="input-group">
+                    <select name="status">
+                        <option value="0">订单状态</option>
+                        <option value="PYD" >未消费</option>
+                        <option value="CSD">已完成</option>
+                        <option value="RFN">退款中</option>
+                        <option value="RFD" >已退款</option>
+                        <option value="Y" >已补色</option>
+                        <option value="FAILD" >退款失败</option>
+                    </select>
+                </div>
+
+                <button class="btn" type="submit" data-slug="book.index">查询</button>
+                </form>
+                <form action="book/export" data-role="export">
+                    <button class="btn " data-slug="book.export">
+                    <i class="fa fa-file-excel-o"></i> 导出
+                    </button>
+                </form>
+            
+           <div class="table" ajat="<%if (query._){%>book/index?<%=query._%><%}%>#domid=table&tempid=table-t" id="table">
+            <script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>手机号</th>
+                            <th>姓名</th>
+                            <th>预约项目</th>
+                            <th>实做项目</th>
+                            <th>预约金额</th>
+                            <th>预约单号</th>
+                            <th>预约日期</th>
+                            <th>推荐码</th>
+                            <th>支付方式</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                <%var pay_type_desc={
+                    "1":"网银",
+                    "2":"支付宝",
+                    "3":"微信",
+                    "4":"余额",
+                    "7":"积分",
+                    "10":"易联"
+                }%>
+                <%var status={
+                    'NEW':'未支付',
+                    'PYD':'未消费',
+                    'CSD':'已完成',
+                    'RFN':'退款中',
+                    'RFD':'已退款',
+                    'RFE':'退款失败',
+                    'RFD-OFL':'已退款',
+                }%>
+                <%data.data && data.data.forEach(function(item,index){%>
+                 <tr>
+                  <td><%=index+1%></td>
+                  <td><%=item.BOOKER_PHONE%></td>
+                  <td><%=item.BOOKER_NAME%></td>
+                  <td><%var orderItems=[];
+                  item.booking_order_item.forEach(function(orderItem){
+                      orderItems.push(orderItem.ITEM_NAME);
+                  })%><%=orderItems.join(",")%></td>
+                  <td><%var beauty_order_items=[];
+                  item.beauty_order_item.forEach(function(beauty_orderItem){
+                      beauty_order_items.push(beauty_orderItem.item_name);
+                  })%><%=beauty_order_items.join(",")%></td>
+                  <td><%=item.PAYABLE%></td>
+                  <td><%=item.BOOKING_SN%></td>
+                  <td><%=item.BOOKING_DATE%></td>
+                  <td><%=item.recommend_code ? item.recommend_code:item.RECOMMENDER%></td>
+                  <td><%=pay_type_desc[item.pay_type]%></td>
+                  <td><%= item.beauty_makeup_id &&item.STATUS=='CSD' ? '已补色' :status[item.STATUS]%></td>
+                  <td class="tc">
+                    <a class="link" data-slug="book.show" href="detail_order.html#id=<%=item.ID%>">查看</a>
+                  </td>
+                  </tr>
+                  <%})%>
+                </tbody>
+            </table>
+             <div class="pager"> </div>
+            </script>
+        </div>
+        </div>
+        <script>
+        $(document).ready(function(){
+            $("#add_book").on('click',function(){
+                parent.lib.popup.box({
+                    'title':'创建预约',
+                    'cancelText':'取消',
+                    'defineText':'确认预约',
+                    'height'    : $(window).height()-200,
+                    'content'   : lib.ejs.render({url:'./modal_add'}),
+                    'complete'  : function(){
+                         var form = $(this).find('form');
+                         var newForm = new parent.lib.Form(form[0]);
+                         var today = new Date().format('yyyy-MM-dd');
+                         form.find('input[type=date]').attr('min',today).val(today);
+                         newForm.el._getFormData = function(){
+                           var returnData = parent.lib.tools.getFormData($(this));
+                           returnData.item_ids = returnData.item_ids.join(",")
+                           return returnData
+                         }
+                         parent.lib.Form.prototype.success = function(data){
+                            parent.lib.popup.result({
+                              text:"添加成功",
+                              define:function(){
+                                location.reload();
+                              }
+                            });
+                         }
+                    }
+                });
+            });
+          });
+        </script>
+    </body>
+</html>

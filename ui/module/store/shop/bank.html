@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script> 
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>店铺管理</a>
+            <span>&gt;</span>
+            <a href="index.html">店铺列表</a>
+            <span>&gt;</span><%=query.type=="add"?"新增店铺":"编辑店铺"%>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4><%=query.type=="add" ? "新增店铺" : "编辑店铺"%></h4>
+				</div>
+			</div>
+			<hr />
+        </div>
+
+        <div class="wrapper">
+            <form class="form-vertical" data-role="form" id="form">
+                <script type="text/template" id="form-t">
+					<div class="detail-operation">
+						<button type="button" class="btn btn-cancel">取消</button>
+						<span class="space"></span>
+						<button class="btn-primary">提交</button>
+					</div>
+					<ul class="nav-step flex-box">
+						<li class="flex-item">
+							<a href="add.html">
+								<i class="fa fa-check-circle"></i><span>1.店铺基本信息</span>
+							</a>
+						</li>
+                        <li class="flex-item">
+                            <a href="picture.html">
+                                <i class="fa fa-check-circle"></i><span>2.店铺图片信息</span>
+                            </a>
+                        </li>
+						<li class="flex-item active"><span class="arrow">3.银行账号信息</span></li>
+						<li class="flex-item"><span>4.准入评估信息</span></li>
+						<li class="flex-item"><span>5.附件上传</span></li>
+                        <li class="flex-item"><span>6.财务结算</span></li>
+					</ul>
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span>银行名称：</label>
+                        <div class="control">
+                            <input type="text" name="bankName" value="<%=data.bankName%>" placeholder="银行名称" 
+                            maxlength="16" required 
+                            >
+                        </div>
+                    </div> 
+
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span>收款人：</label>
+                        <div class="control">
+                            <input type="text" name="beneficiary" value="<%=data.beneficiary%>" 
+                            placeholder="收款人" maxlength="8"  required>
+                        </div>
+                    </div> 
+
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span>银行卡号：</label>
+                        <div class="control">
+                            <input type="text" name="bankCard" value="<%=data.bankCard%>"  maxlength="20" required placeholder="银行卡号" pattern="^\d{1,20}$" patternMsg="银行卡号有误">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span>支行名称：</label>
+                        <div class="control">
+                            <input type="text" name="branchName" value="<%=data.branchName%>" 
+                            placeholder="支行名称" maxlength="25"  required>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span>账户类型：</label>
+
+                        <label class="radio">
+                            <input type="radio" name="accountType" <%=!data.accountType||data.accountType == 1 ? 'checked' : ''%> value="1" required>
+                            <span>对公账户</span>
+                        </label>
+
+                        <label class="radio">
+                            <input type="radio" name="accountType" value="2" required 
+                            <%=data.accountType == 2 ? 'checked' : ''%> >
+                            <span>对私账户</span>
+                        </label>
+
+                        <span class="control-help" style="display:none;"></span>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for=""></label>
+                        <button class="btn" type="button" id="preview-btn" style="margin-right:20px">预览</button>
+                        <button class="btn-primary">下一步</button>
+                    </div>                                                                  
+                </script>
+            </form>
+        </div>
+        <script type="text/javascript" src="bank.js"></script>           
+    </body>
+</html>

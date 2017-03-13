@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">     
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+           <a>系统管理 </a><span>&gt;</span><a href="index.html">系统日志</a>
+		   <div class="flex-box">
+			<div class="flex-item">
+				<h4>系统日志</h4>
+			</div>	 
+		</div>
+        </div>
+        <div class="wrapper">
+			<form data-role="hash">
+				<input type="text" placeholder="请输入登陆账号" name="username">
+				<span class="space"></span>
+				 <label>操作对象</label>
+				<input type="text" placeholder="操作对象名称" name="object">
+				<span class="space"></span>                           
+				<span class="space"></span>
+				操作时间 
+				<span class="date-group">
+				<input type="date" data-role="start" name="start" placeholder="YYYY-MM-DD"/>到<input type="date" data-role="end" name="end" placeholder="YYYY-MM-DD"/>
+				</span>
+				<button class="btn">搜索</button>
+			</form>
+			<form action="log/export" data-role="export"><button class="btn" data-slug="log.export"><i class="fa fa-file-excel-o"></i> 导出</button></form>
+            <div class="table" ajat="log/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>登录账号</th>
+                            <th>用户角色</th>
+                            <th>操作类型</th>
+                            <th>操作模块</th>
+                            <th>操作对象</th>
+                            <th>操作ip</th>
+                            <th class="sort">操作时间</th>
+                        </tr>
+                    </thead>
+                <tbody>
+				<%var data=data.data%>
+				<%for(var i=0;i<data.length;i++){%>
+                 <tr>
+                 <td><%=data[i].username%></td>
+                  <td><%=data[i].roles%></td>				  
+                  <td><%=data[i].operation%></td>				                     
+				  <td><%=data[i].slug%></td>
+				  <td><%=data[i].object%></td>
+				  <td><%=data[i].ip%></td>				  
+                <td><%=data[i].created_at%></td>	
+                  </tr>
+				  <%}%>
+				</tbody>
+            </table>         
+            <div class="pager"> </div>
+			</script>
+        </div>
+    </div>
+</body>
+
+</html>

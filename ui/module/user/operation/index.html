@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>用户操作 </a><span>&gt;</span><a href="index.html">反馈列表 </a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>反馈列表</h4>
+				</div>
+			</div>
+		</div>
+		<div class="wrapper">
+			<form data-role="hash">
+				反馈日期
+				<input type="date"  placeholder="YYYY-MM-DD" name="date"/>
+				<span class="space"></span>
+				反馈内容
+				<input type="text" name="keyword" />
+				<button class="btn">搜索</button>
+			</form>
+			<div class="table" ajat="feed/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+			<table>
+              <thead>
+                <tr>
+				  <th width="50px"><label class="select-all"><input type="checkbox"/><span>全选</span></label></th>
+                  <th>ID</th>
+                  <th>联系方式</th>
+                  <th>反馈内容</th>
+                  <th>反馈来源</th>
+				  <th width="120px">反馈时间</th>
+				  <th width="50px">操作</th>
+                </tr>
+              </thead>
+              <tbody>			  
+				<%var data=data.data%>
+				<%data.forEach(function(item,i){%>
+                <tr>
+				  <td><label><input type="checkbox" name="feed" form="destroy" form="form" value="<%=item.id%>"/><span></span></label></td>
+                  <td><%=item.id%></td>
+                  <td><%=item.contact%></td>
+                  <td><%=item.content%></td>
+				  <td><%=item.source%></td>
+				  <td><%=item.add_time%></td>
+				  <td>
+					 <form action="feed/destroy" data-role="normal" onsuccess="remove">
+						<input type="checkbox" value="<%=item.id%>" name="feed" class="hide" checked />
+						<button class="link">删除</button>
+					 </form>
+				  </td>
+                </tr>
+				<%})%>
+              </tbody>
+            </table>
+			
+			<div class="table-bottom">
+				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
+				<form disabled data-slug="feed.destroy" action="feed/destroy" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+					<button class="btn">批量删除</button>
+				</form>
+			</div>
+			<div class="pager">
+			</div>
+			</script>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$('#table').on('click','input',function(){
+			if($('tbody label input:checked').length>0){
+				$('.table-bottom form').attr('disabled',false);
+			}else{
+				$('.table-bottom form').attr('disabled',true);
+			}
+		})
+	</script>
+  </body>
+</html>

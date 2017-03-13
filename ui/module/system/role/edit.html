@@ -1,0 +1,204 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+	  <style type="text/css">
+		.tree li{
+			margin-bottom:15px;
+		}
+		.child{
+			padding-left:30px;
+			display:none;
+		}
+		.child li{
+			margin-bottom:0px;
+		}
+		.tree .child label{
+			margin:4px 0;
+		}
+		.fa-minus-square-o,.fa-plus-square-o{
+			font-size:16px;
+			margin-right:5px;
+			vertical-align:middle;
+		}
+		.fa-minus-square-o,.toggle>.square>.fa-plus-square-o{
+			display:none;
+		}
+		.toggle>.square>.fa-minus-square-o{
+			display:inline-block;
+		}
+		.toggle>.child{
+			display:block;
+		}
+	  </style>
+  </head>
+  <body>
+	<div class="breadcrumb">
+		<a>系统管理</a><span>&gt;</span><a href="index.html">角色管理</a><span>&gt;</span><span id="breadcrumb-current"><%=query._?"编辑角色":"新增角色"%></span>
+		<div class="flex-box">
+			<div class="flex-item">
+				<h4><%=query._?"编辑角色":"新增角色"%></h4>
+			</div>
+		</div>
+		<hr />
+	</div>
+	<div class="wrapper" ajat="<%if(query.id){%>role/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		<form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>role/update/<%=data.id%><%}else{%>role/create<%}%>" <%=data.status==3?"disabled":""%>>
+			<div class="detail-operation">
+				<button type="button" class="btn btn-cancel">取消</button>
+				<span class="space"></span>
+				<button data-slug="<%=query._?"role.update":"role.create"%>" class="btn-primary">提交</button>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>角色名称：</label>
+				<div class="control">
+					<%if(data.name){%>
+					<%=data.name||""%>
+					<%}else{%>
+					<input type="text" required name="name" value="<%=data.name||""%>" nospace >
+					<%}%>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>所属部门：</label>
+				<div class="control">
+					<select required name="department_id"  ajat="list/department#domid=department&tempid=/module/public/template/department&sid=<%=data.department_id||""%>"  id="department"></select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>所属城市：</label>
+				<div class="control">
+					<select required name="city_id"  ajat="list/city#domid=city&tempid=/module/public/template/city&sid=<%=data.city_id%>" id="city" >
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>角色状态：</label>
+				<div class="control">
+					<select required name="status">
+						<option value="1" <%=data.status==1?"selected":""%>>正常</option>
+						<option value="2" <%=data.status==2?"selected":""%>>停用</option>
+						<option value="3" <%=data.status==3?"selected":""%>>注销</option>
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>角色说明：</label>
+				<div class="control"><textarea required name="description"><%=data.description||""%></textarea></div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>配置权限：</label>
+				<%var sids=[];
+				if(data.permissions){
+				for(var i=0;i<data.permissions.length;i++){
+					sids.push(data.permissions[i].id);
+				}
+				sessionStorage.setItem("permissions",JSON.stringify(sids));
+				}%>
+				<div class="control" id="permission">
+					<ul class="tree">
+						<li>
+							<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
+							<label for="base_00">基本权限</label>
+							<label>
+								<input id="base_00" type="checkbox" class="checkbox" checked disabled>
+								<span></span>
+							</label>
+							<ul class="child">
+								<li class="super2">
+									<label for="base_01">默认首页</label>
+									<label>
+										<input id="base_01" type="checkbox" class="checkbox" checked disabled>
+										<span></span>
+									</label>
+									<label for="base_02">修改信息</label>
+									<label>
+										<input id="base_02" type="checkbox" class="checkbox" checked disabled>
+										<span></span>
+									</label>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="">信息备注：</label>
+				<div class="control"><textarea name="note"><%=data.note||""%></textarea></div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""></label>
+				<div class="control">
+					<button data-slug="<%=query._?"role.update":"role.create"%>" class="btn-primary">提交</button>
+				</div>
+			</div>
+		  </form>
+		  </script>
+	</div>
+	<script type="text/template" id="p-t">
+		<%if(data.child&&data.child.length){%>
+		<li>
+			<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
+			<label for="tree_<%=data.id%>"><%=data.title%></label>
+			<label>
+				<input id="tree_<%=data.id%>" <%=sids.indexOf(data.id)>-1?"checked":""%> type="checkbox" name="permissions" value="<%=data.id%>">
+				<span></span>
+			</label>
+			<ul class="child"></ul>
+		</li>
+		<%}else{%>
+		<li style="display:inline-block;">
+			<label for="tree_<%=data.id%>"><%=data.title%></label>
+			<label>
+				<input id="tree_<%=data.id%>" <%=sids.indexOf(data.id)>-1?"checked":""%> type="checkbox" name="permissions" value="<%=data.id%>">
+				<span></span>
+			</label>
+		</li>
+		<%}%>
+	</script>
+	<script type="text/javascript">
+		$('#form').one("_ready",function(e,data){
+			var sids=JSON.parse(sessionStorage.getItem("permissions"))||[];
+			sessionStorage.removeItem("permissions");
+			var each=function($dom,data){
+				data.forEach(function(item){
+					var $item=$(lib.ejs.render({text:$('#p-t').html()},{data:item,sids:sids}));
+					$dom.append($item);
+					if(item.child&&item.child.length>0){
+						each($item.children("ul"),item.child);
+					}
+				})
+			}
+			lib.ajax({url:"list/permission"}).done(function(data){
+				if(data.result==1){
+					data=data.data;
+					each($('#permission>ul'),data);
+					if((data&&data.response&&data.response.status==3)||lib.query.id==22){
+						$('#form').find('input,select,textarea').each(function(){
+							this.disabled=true;
+						});
+						$('#form').find('.btn-primary').hide();
+					}
+				}
+			});
+			
+		});
+		$('.wrapper').on('click','.square',function(){
+			$(this).closest('li').toggleClass('toggle');
+		}).on('change',"li",function(e){
+			if(e.target.checked===true){
+				$(this).children('label').children('input')[0].checked=true;
+			}
+		}).on('change',"input",function(){
+			var checked=this.checked;
+			$(this).parent().siblings("ul").find('input').each(function(){
+				this.checked=checked;
+			})
+		})
+		
+	</script>
+  </body>
+</html>

@@ -1,0 +1,122 @@
+<%
+var action =  protocol.custom.action
+if (action == 'edit'){%>
+    <form action="book/change/<%=query.id%>" data-role="form">
+    <table>
+        <tbody>
+            <tr>
+                <td colspan="2" class="pad-n bor-n">
+                    <table class="inner-table bor-n">
+                        <tbody>
+                            <tr>
+                                <td>出生日期：</td>
+                                <td><input type="date" value="<%=orderInfo.booking_receive && orderInfo.booking_receive.birthday%>" name="birthday" max="<%=new Date().format('yyyy-MM-dd')%>"></td>
+                                <td>年龄：</td>
+                                <td><input type="text" value="<%=orderInfo.booking_receive.age%>" name="age" pattern="number"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="pad-n bor-n">
+                    <table class="inner-table bor-n">
+                        <tbody>
+                            <tr>
+                                <td>微信号：</td>
+                                <td><input type="text" value="<%=orderInfo.booking_receive.wx_code%>" name="wx_code"></td>
+                                <td>姓名：</td>
+                                <td><input type="text" value="<%=orderInfo.booking_receive.name%>" name="name"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            
+            <tr>
+                <td class="td">实做项目：</td>
+                <td>
+                    <%orderInfo.beauty_order_item &&orderInfo.beauty_order_item.forEach(function(item,index){%>
+                    <label class="label remove">
+                        <input type="radio" checked="checked" disabled="disabled" class="label" required>
+                        <span><%=item.item_name%></span>
+                        <form action="book/remove_item/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({text:'删除项目成功',define:function(){location.reload()}});">
+                        <input type="hidden" name="ids" value="<%=item.id%>">
+                        <button class="btn-remove"><i class="fa fa-times"></i></button>
+                        </form>
+                    </label>
+                    <%})%>
+                    <label class="label">
+                        <a class="btn" data-modal="receive">选择项目</a>
+                    </label>
+                </td>
+            </tr>
+        </tbody>
+    </table></form>
+    
+<%}else if (action == 'view'){%>
+<table>
+    <tbody>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>出生日期：</td>
+                            <td><%=orderInfo.booking_receive && orderInfo.booking_receive.birthday%></td>
+                            <td>年龄：</td>
+                            <td><%= orderInfo.booking_receive && orderInfo.booking_receive.age%></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>微信号：</td>
+                            <td><%=orderInfo.booking_receive && orderInfo.booking_receive.wx_code%></td>
+                            <td>姓名：</td>
+                            <td><%=orderInfo.booking_receive && orderInfo.booking_receive.name%></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">实做项目：</td>
+            <td>
+                <%orderInfo.beauty_order_item && orderInfo.beauty_order_item.forEach(function(item,index){%>
+                <label class="label remove">
+                    <input type="radio" checked="checked" disabled="disabled" class="label" required>
+                    <span><%=item.item_name%></span>
+                    <form action="book/remove_item/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({text:'删除项目成功',define:function(){location.reload()}});">
+                    <input type="hidden" name="ids" value="<%=item.id%>">
+                    <button class="btn-remove"><i class="fa fa-times"></i></button>
+                    </form>
+                </label>
+                <%})%>
+                <label class="label">
+                    <a class="btn" data-modal="receive">选择项目</a>
+                </label>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<%}%>
+<style type="text/css">
+    .label.remove{
+        position: relative;
+    }
+    .label.remove .btn-remove{
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        display: none;
+    }
+    .label.remove:hover .btn-remove{
+        display: block;
+    }
+</style>

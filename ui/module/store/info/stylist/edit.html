@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <style>
+        .border-dash{
+            width: 100%;
+            border-top: 1px dashed #ddd;
+            margin: 10px auto;            
+        }
+
+        .tab{
+            width:70%;
+        }
+        .tab th{
+            text-align: center;
+        }
+        .tab td{
+            padding:0;
+        }
+        .tab input[type="date"] {
+            min-width:20%!important;
+            width:100%;
+            border: none;
+            opacity: 0;
+        }
+        .tab input[type="text"] {
+            min-width:20%!important;
+            width:100%;
+            border: none;
+        }
+        .tab td{
+            cursor: pointer;
+        }
+        .show{
+            opacity: 1!important;
+        }
+
+      </style>
+  </head>
+  <body>
+    <div class="breadcrumb">
+        <a>店铺管理 </a><span>&gt;</span><a href="../index.html">店铺资料</a>
+        <div class="flex-box">
+            <div class="flex-item">
+                <h4 id="title"></h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrapper">
+        <form class="form-vertical" data-role="form" id="form">
+        <script type="text/template" id="form-t">
+            <div class="detail-operation">
+                <button type="button" class="btn btn-cancel">取消</button>
+                <span class="space"></span>
+                <button class="btn-primary">提交</button>
+            </div>  
+
+            <%if(lib.query.id){%>
+            <div>
+               <p><strong>所属店铺</strong></p>
+            </div> 
+
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
+                <div class="control complete">
+                    <input type="hidden" name="salon_id" id="salonid" value="<%=data.salonId%>"/>
+                    <input type="hidden" name="salonname" id="salonname" value="<%=data.salonname%>"/>
+                    <input id="search" type="text" value="<%=data.salonname%>" 
+                        ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" 
+                        ajat-resources="/module/public/widget/autocomplete/index.js" 
+                        autocomplete="off" disabled required>
+                    <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;"></div>
+                    <label>
+                        <input type="checkbox" value="<%=data.reward%>"/>
+                        <span>修改所属店铺</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
+                <div class="control">
+                    <input type="text"  id="merchantname" value="<%=data.name%>" disabled required requiredmsg="没有找到店铺名称对应的商户">
+                </div>
+            </div>                           
+            <%}%>
+
+            <div>
+               <p><strong>图片</strong></p>
+               <p class="border-dash"></p>
+            </div> 
+
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>个人图片：</label>
+                <div class="control">
+                    <div class="control-thumbnails" id="control-thumbnails1" data-max="1">
+                        <div class="control-image-upload" style="width:150px;height:150px;line-height:145px">
+                            <div id="personImagesUpload">
+                                <i class="fa fa-image"></i>
+                                <em>上传个人图片</em>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="control-help upload-image-tip" style="display:none;">请上传个人图片</span> 
+                </div>
+            </div>                                 
+
+            <div>
+               <p><strong>个人资料</strong></p>
+               <p class="border-dash"></p>
+            </div> 
+
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>姓名：</label>
+                <div class="control">
+                    <input type="text" name="stylistName" placeholder="造型师姓名" maxlength="8"
+                    value="<%=data.stylistName%>" required="required">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>性别：</label>
+                <div class="control">
+                    <label>
+                        <input type="radio" name="sex" value="1" <%=(!data.sex||data.sex=="1")?"checked":""%>/>
+                        <span>男</span>
+                    </label>
+
+                    <label>
+                        <input type="radio" name="sex" value="2" <%=data.sex=="2"?"checked":""%>/>
+                        <span>女</span>
+                    </label>
+                    <span class="control-help" style="display:none;"></span>
+                </div>
+            </div> 
+
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>手机号码：</label>
+                <div class="control">
+                    <input type="text" name="mobilephone" placeholder="11位有效数字手机号码" value="<%=data.mobilephone%>" maxlength="11" pattern="mobile" patternmsg="请输入11位有效手机号" required>
+                </div>
+            </div> 
+
+            <div class="control-group">
+                <label class="control-label" for="">微信号：</label>
+                <div class="control">
+                    <input type="text" name="wechat" placeholder="微信号码" 
+                    value="<%=data.wechat%>" maxlength="25">
+                </div>
+            </div> 
+
+            <div class="control-group">
+                <label class="control-label" for="">QQ号：</label>
+                <div class="control">
+                    <input type="text" name="qq" placeholder="QQ号码" value="<%=data.qq%>" pattern='number'
+                    maxlength="25">
+                </div>
+            </div>  
+
+            <div class="control-group">
+                <label class="control-label" for="">邮箱：</label>
+                <div class="control">
+                    <input type="text" name="email" placeholder="邮箱地址" value="<%=data.email%>" pattern="email">
+                </div>
+            </div>  
+
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>出生日期：</label>
+                <%
+                var birthday = "1990-01-01";
+                if(data.birthday){
+                    birthday = new Date(data.birthday*1000).format('yyyy-MM-dd');
+                }
+                %>
+                <div class="control">
+                    <input type="date" name="birthday" value="<%=birthday%>" required>
+                </div>
+            </div> 
+
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>身份证件：</label>
+                <div class="control">                   
+                   <%
+                    var cardObj = {};
+                    if(data.IDcard){ 
+                        cardObj['index'] = 'IDcard';
+                        cardObj['value'] = data.IDcard;
+                    }
+                    if(data.officerCert){
+                        cardObj['index'] = 'officerCert';
+                        cardObj['value'] = data.officerCert;
+                    }
+                    if(data.drivingLicense){
+                        cardObj['index'] = 'drivingLicense';
+                        cardObj['value'] = data.drivingLicense;
+                    }
+                    if(data.passport){
+                        cardObj['index'] = 'passport';
+                        cardObj['value'] = data.passport;
+                    }                                      
+                   %>
+                    <select name="cardType" id="" style="min-width:100px;width:4%;" required>
+                        <option <%=cardObj.index=="IDcard" ? "selected" : ""%> value="IDcard">
+                            身份证
+                        </option>
+
+                        <option <%=cardObj.index=="officerCert" ? "selected" : ""%>  value="officerCert">
+                            军官证
+                        </option>
+
+                        <option <%=cardObj.index=="drivingLicense" ? "selected" : ""%>  value="drivingLicense">
+                            驾驶证
+                        </option>
+
+                        <option <%=cardObj.index=="passport" ? "selected" : ""%>  value="passport">
+                            护照
+                        </option>
+                    </select>
+
+                    <input type="text" name="cardNum" placeholder="证件编号" 
+                    style="min-width:140px;width:12.5%" value="<%=cardObj.value%>" maxlength="25" required>
+                    <span class="control-help" style="display:none;"></span>
+                </div>
+            </div> 
+
+            <div>
+               <p><strong>工作信息</strong></p>
+               <p class="border-dash"></p>
+            </div> 
+
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>在职编号：</label>
+                <div class="control">
+                    <input type="text" name="sNumber" placeholder="在职编号" value="<%=data.sNumber%>" pattern='number' maxlength="4" required>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>工作年限：</label>
+                <div class="control">
+                    <input type="text" name="workYears" placeholder="工作年限" value="<%=data.workYears%>" 
+                    pattern='number' maxlength="2" required>
+                </div>
+            </div> 
+
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>门店职位：</label>
+                <div class="control">
+                    <input type="text" name="job" placeholder="门店职位" value="<%=data.job%>" maxlength="8" required>
+                </div>
+            </div> 
+
+            <div class="control-group">
+                <label class="control-label" for="">悬赏等级：</label>
+                <div class="control">
+                    <select name="grade">
+                        <option value="">请选择</option>
+                        <option value="1,2" <%=(data.grade=="1"||data.grade=="2") ? 'selected':''%>>资深发型师</option>
+                        <option value="3" <%=(data.grade=="3") ? 'selected':''%>>设计总监</option>
+                        <option value="4" <%=(data.grade=="4") ? 'selected':''%>>美发大师</option>
+                    </select>
+                </div>
+            </div> 
+
+            <div class="control-group">
+                <label class="control-label" for="">快剪等级：</label>
+                <div class="control">
+                    <select name="fastGrade">
+                        <option value="">请选择</option>
+                        <option value="1" <%=data.fastGrade=="1" ? 'selected':''%> >普通快剪</option>
+                        <option value="2" <%=data.fastGrade=="2" ? 'selected':''%> >总监快剪</option>
+                    </select>
+                </div>
+            </div>  
+
+            <div>
+               <p><strong>个人说明</strong></p>
+               <p class="border-dash"></p>
+            </div> 
+
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>个性签名：</label>
+                <div class="control">
+                    <div class="keypress" maxlength="40">
+                        <textarea maxlength="40" data-helpid="textarea-help" name="signature" required><%=data.signature%></textarea>
+                    </div>
+                    <span class="control-help" style="display:none;" id="textarea-help"></span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="">自我描述：</label>
+                <div class="control">
+                    <div class="keypress" maxlength="50">
+                        <textarea maxlength="50" data-helpid="textarea-help2" name="description"><%=data.description%></textarea>
+                    </div>
+                    <div class="keypress-help" style="display:none;" id="textarea-help2"></div>
+                </div>
+            </div> 
+
+            <div class="control-group">
+                <label class="control-label" for="">教育经历：</label>
+                <div class="control">
+                    <table class="table tab">
+                        <thead>
+                            <th>起始日期</th>
+                            <th>截止日期</th>
+                            <th>教育院校(培训机构)</th>
+                        </thead>
+                        <tbody>
+                            <%if(query.id){%>
+                            <%
+
+                            var educateExp = JSON.parse(data.educateExp);                    
+                            %>
+                            <%for(var i = 1 ; i < 6 ; i++){%>
+                                <tr>
+                                    <td><input type="date" class="<%= educateExp['sTime'+i] ? 'show':'' %> start min" name="<%='sTime'+i%>" 
+                                    value="<%=educateExp['sTime'+i]%>"></td>
+                                    <td><input type="date" class="<%= educateExp['sTime'+i] ? 'show':'' %> start max" name="<%='eTime'+i%>"
+                                    value="<%=educateExp['eTime'+i]%>"></td>
+                                    <td><input type="text" name="<%='name'+i%>" class="start"
+                                    value="<%=educateExp['name'+i]%>" maxLength="16"></td>
+                                </tr>
+                            <%}%> 
+                            <%}%> 
+
+                            <%if(query.salonid){%>
+                            <%for(var j = 1 ; j < 6 ; j++){%>
+                                <tr>
+                                    <td>
+                                        <input type="date" class="start min" name="<%='sTime'+j%>">
+                                    </td>
+                                    <td>
+                                        <input type="date" class="start max" name="<%='eTime'+j%>">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="start" name="<%='name'+j%>" maxLength="16">
+                                    </td>
+                                </tr>
+                            <%}%>
+                            <%}%>                                                                                                    
+                        </tbody>    
+                    </table>
+                    <span class="control-help" style="display:none;"></span>
+                </div>
+            </div> 
+
+            <div class="control-group">
+                <label class="control-label" for="">工作经验：</label>
+                <div class="control">
+                    <table class="table tab">
+                        <thead>
+                            <th>起始日期</th>
+                            <th>截止日期</th>
+                            <th>门店名称</th>
+                            <th>门店职位</th>
+                            <th>工作地点</th>
+                        </thead>
+                        <tbody>
+                            <%if(query.id){%>
+                            <%
+                            var workExp = JSON.parse(data.workExp);                                                    
+                            %>                        
+                            <%for(var k = 1 ; k < 6 ; k++){%>
+                                <tr>
+                                    <td>
+                                        <input type="date" class="<%= workExp['wsTime'+k] ? 'show':'' %> start min" placeholder="yyyy-MM-dd" name="<%='wsTime'+k%>" 
+                                        value="<%=workExp['wsTime'+k]%>">
+                                    </td>
+
+                                    <td>
+                                        <input type="date" class="<%= workExp['weTime'+k] ? 'show':'' %> start max" placeholder="yyyy-MM-dd" name="<%='weTime'+k%>" 
+                                        value="<%=workExp['weTime'+k]%>"></td>
+                                    <td>
+                                        <input type="text" name="<%='wname'+k%>" class="start" value="<%=workExp['wname'+k]%>"
+                                        maxLength="16">
+                                    </td>
+
+                                    <td>
+                                        <input type="text" name="<%='wjob'+k%>" class="start" value="<%=workExp['wjob'+k]%>"
+                                        maxLength="8">
+                                    </td>
+
+                                    <td>
+                                        <input type="text" name="<%='waddress'+k%>" class="start" value="<%=workExp['waddress'+k]%>"
+                                        maxLength="8">
+                                    </td>
+                                </tr>
+                            <%}%>
+                            <%}%>
+
+                            <%if(query.salonid){%>
+                            <%for(var t = 1 ; t < 6 ; t++){%>
+                                <tr>
+                                    <td>
+                                        <input type="date" placeholder="yyyy-MM-dd" class="start min" name="<%='wsTime'+t%>">
+                                    </td>
+                                    <td>
+                                        <input type="date" placeholder="yyyy-MM-dd" class="start max" name="<%='weTime'+t%>">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="start" name="<%='wname'+t%>"  maxLength="16">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="start" name="<%='wjob'+t%>"  maxLength="8">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="start" name="<%='waddress'+t%>"  maxLength="8">
+                                    </td>
+                                </tr>
+                            <%}%>
+                            <%}%>
+
+                        </tbody>   
+                    </table>
+                </div>
+            </div> 
+
+            <div class="control-group">
+                <label class="control-label" for=""></label>
+                <button class="btn" type="button" id="preview-btn" style="margin-right:20px">取消</button>
+                <button class="btn-primary">提交</button>
+            </div>                    
+        </script>
+        </form>
+    </div>
+    <script type="text/javascript" src="edit.js"></script>
+  </body>
+</html>

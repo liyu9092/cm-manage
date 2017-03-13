@@ -1,0 +1,215 @@
+<%
+var action =  protocol.custom.action
+if (action == 'edit'){%>
+<table>
+    <tbody>
+        <tr>
+            <td class="td">治疗部位</td>
+            <td>
+                <label>
+                    <input type="checkbox" name="useLimitTypes" value="2">
+                    <span>腰部</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="useLimitTypes" value="2">
+                    <span>腹部</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="useLimitTypes" value="2">
+                    <span>上腹部</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="useLimitTypes" value="2">
+                    <span>大腿</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="useLimitTypes" value="2">
+                    <span>小腿</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="useLimitTypes" value="2">
+                    <span>背部</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="useLimitTypes" value="2">
+                    <span>臀部</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">治疗前尺寸</td>
+            <td>
+                <label>
+                    <input type="text" name="useLimitTypes" value="2">
+                    <span>CM</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">治疗后尺寸</td>
+            <td>
+                <label>
+                    <input type="text" name="useLimitTypes" value="2">
+                    <span>CM</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>治疗能力发数</td>
+                            <td>
+                                <label>
+                                    <input type="text" name="useLimitTypes" value="2">
+                                    <span>发</span>
+                                </label>
+                            </td>
+                            <td>治疗时间</td>
+                            <td><label>
+                                    <input type="text" name="useLimitTypes" value="2">
+                                    <span>分钟</span>
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">备注</td>
+            <td>
+                <input type="text">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>美导</td>
+                            <td><div class="control"><input class="searchInput" id="search" type="text" ajat-complete="assistant/search/${value}#domid=complete-position-assistantId&tempid=/module/makeup/order/template/list-t" autocomplete="off" />
+                            <input type="hidden" name="assistantId" class="inputId" value="" required>
+                            <div class="complete-position" id="complete-position-assistantId" style="width:20%;min-width:250px;" ></div>
+                            <span id="sn" class="weak"></span></div></td>
+                            <td>美容师</td>
+                            <td><div class="control"><input class="searchInput" id="search" type="text" ajat-complete="assistant/search/${value}#domid=complete-position-assistantId&tempid=/module/makeup/order/template/list-t" autocomplete="off" />
+                            <input type="hidden" name="assistantId" class="inputId" value="" required>
+                            <div class="complete-position" id="complete-position-assistantId" style="width:20%;min-width:250px;" ></div>
+                            <span id="sn" class="weak"></span></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">操作日期</td>
+            <td><input type="_datetime"></td>
+        </tr>
+        </tbody>
+    </table>
+    <%}else if (action == 'view'){%>
+    <table>
+    <tbody>
+        <tr>
+            <td class="td">治疗部位</td>
+            <td>
+                <label>
+                    <input type="checkbox" disabled="disabled" name="useLimitTypes" value="2">
+                    <span>腰部</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" name="useLimitTypes" value="2">
+                    <span>腹部</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" name="useLimitTypes" value="2">
+                    <span>上腹部</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" name="useLimitTypes" value="2">
+                    <span>大腿</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" name="useLimitTypes" value="2">
+                    <span>小腿</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" name="useLimitTypes" value="2">
+                    <span>背部</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" name="useLimitTypes" value="2">
+                    <span>臀部</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">治疗前尺寸</td>
+            <td>
+                <label>
+                    234
+                    <span>CM</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">治疗后尺寸</td>
+            <td>
+                <label>
+                    234
+                    <span>CM</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>治疗能力发数</td>
+                            <td>
+                                <label>
+                                    234
+                                    <span>发</span>
+                                </label>
+                            </td>
+                            <td>治疗时间</td>
+                            <td><label>
+                                    34
+                                    <span>分钟</span>
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">备注</td>
+            <td>
+                <input type="text">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>美导</td>
+                            <td><div class="control">sdfd</div></td>
+                            <td>美容师</td>
+                            <td><div class="control">sdfds</div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">操作日期</td>
+            <td><input type="_datetime"></td>
+        </tr>
+        </tbody>
+    </table>
+    <%}%>

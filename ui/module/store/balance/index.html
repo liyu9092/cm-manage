@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>店铺结算 </a><span>&gt;</span><a href="index.html">往来余额</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>往来余额</h4>
+				</div>
+				
+			</div>
+		</div>
+		<div class="wrapper">
+			<div class="position-group">
+			<form data-role="hash">
+				<div class="input-group placeholder-switch">
+					<select name="key">
+						<option value="1" data-placeholder="请输入店铺名称">店铺名称</option>
+						<option value="2" data-placeholder="请输入商户名称">商户名称</option>
+						<option value="3" data-placeholder="请输入店铺编号">店铺编号</option>
+					</select>
+					<input class="input-search" type="text" placeholder="请输入店铺名称" name="keyword" maxlength="16">
+					<button class="btn btn-search">
+						<i class="fa fa-search"></i>
+					</button>
+				</div>
+			</form>
+			<form action="shop_count/balance_export" data-role="export" data-slug="shop_count.balance_export">
+				<button class="btn"><i class="fa fa-file-excel-o"></i> 导出</button>
+			</form>
+			</div>
+			<div class="table" id="table" ajat="shop_count/balance?<%=query._%>#domid=table&tempid=table-t">
+			<script type="text/template" id="table-t">
+			<table>
+              <thead>
+                <tr>
+                  <th>序号</th>
+				  <th>店铺编号</th>
+				  <th>店铺</th>
+				  <th>店铺类型</th>
+                  <th class="colswrap"><a data-role="hash" href="#page=1&sort_key=pay_money&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">付款 <i class="fa fa-sort"></i></a></th>
+				  <th><a data-role="hash" href="#page=1&sort_key=spend_money&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">收款（已消费） <i class="fa fa-sort"></i></a></th>
+				  <th><a data-role="hash" href="#page=1&sort_key=commission_money&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">应收佣金 <i class="fa fa-sort"></i></a></th>
+				  <th><a data-role="hash" href="#page=1&sort_key=commission_return_money&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">佣金返还 <i class="fa fa-sort"></i></a></th>
+				  <th><a data-role="hash" href="#page=1&sort_key=balance_money&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">应收余额 <i class="fa fa-sort"></i></a></th>
+				  <th>付投资款</th>
+				  <th>投款款返还</th>
+				  <th>投资余额</th>
+				  <th>付借款</th>
+				  <th>借款返还</th>
+				  <th>借款余额</th>
+                </tr>
+              </thead>
+              <tbody>
+				<%data=data.data%>
+				<%var types=["预付款店","投资店","金字塔店"]%>
+				<%data.forEach&&data.forEach(function(item,i){%>
+                <tr>
+                  <td><%=i+1%></td>
+				  <td><%=item.salon?item.salon.sn:""%></td>
+                  <td class="colswrap">
+					<strong><%=item.salon?item.salon.salonname:""%></strong><br />
+					<span class="weak">所属商户：<%=item.merchant?item.merchant.name:""%></span>
+				  </td>
+                  <td><%=item.salon?types[item.salon.shopType-1]:""%></td>
+                  <td><%=item.pay_money%></td>
+				  <td><%=item.spend_money%></td>
+				  <td><%=item.commission_money%></td>
+				  <td><%=item.commission_return_money%></td>
+                  <td><%=item.balance_money%></td>
+				  <td><%=item.invest_money||"0.00"%></td>
+                  <td><%=item.invest_return_money||"0.00"%></td>
+                  <td><%=item.invest_balance_money||"0.00"%></td>
+				  <td><%=item.borrow_money||"0.00"%></td>
+				  <td><%=item.borrow_return_money||"0.00"%></td>
+				  <td><%=item.borrow_balance_money||"0.00"%></td>
+                </tr>
+				<%})%>
+              </tbody>
+            </table>
+			<div class="pager">
+			</div>
+			</script>
+		</div>
+	</div>
+	<script type="text/javascript">
+
+	</script>
+  </body>
+</html>

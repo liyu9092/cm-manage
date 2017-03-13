@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <style>.first-td{width: 15%;padding-left: 30px!important;}</style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>交易管理</a>
+            <span>&gt;</span><a href="index.html">赏金单退款</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>赏金单退款详情</h4>
+                </div>
+                <div class="flex-item">
+                   <button type="button" class="btn fr" onclick="history.back()">取消</button>
+                </div>                
+            </div>
+        </div>
+        <div class="wrapper" id="table-wrapper" 
+        ajat="<%if(query.no){%>bounty/refundShow?<%=query._%><%}%>#domid=table-wrapper&tempid=table-t">
+        <script type="text/template" id="table-t">
+            <div class="table">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td class="first-td">赏金单号</td>
+                            <td><%=data.btSn%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">赏金单状态</td>
+                            <td><%=data.btStatus%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">第三方流水号</td>
+                            <td><%=data.tn%></td>                            
+                        </tr> 
+
+                        <tr>
+                            <td class="first-td">申请时间</td>
+                            <td><%=data.endTime%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">用户臭美号</td>
+                            <td><%=data.userName%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">用户手机号</td>
+                            <td><%=data.userMobile%></td>                            
+                        </tr> 
+
+                        <tr>
+                            <td class="first-td">支付方式</td>
+                            <td><%=data.payType%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">赏金金额</td>
+                            <td><%=data.money%></td>                            
+                        </tr> 
+
+                        <tr>
+                            <td class="first-td">退款金额</td>
+                            <td><%=data.money%></td>                            
+                        </tr>  
+
+                        <tr>
+                            <td class="first-td">退款方式</td>
+                            <td><%=data.refundType%></td>                            
+                        </tr>
+                        <% 
+                        var statusObj={"5":"申请退款","6":"退款中","7":"已退款","8":"拒绝退款","9":"失败"}
+                        %>
+                        <tr>
+                            <td class="first-td">退款状态</td>
+                            <td><%=statusObj[data.refundStatus]%></td>                            
+                        </tr>  
+
+                    </tbody>                     
+                </table>
+            </div>
+        </script>
+        </div>
+    </body>
+</html>

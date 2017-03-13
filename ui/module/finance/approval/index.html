@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+		<meta charset="utf-8"/>
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+           <a>付款管理 </a><span>&gt;</span><a href="index.html">付款审批</a>
+		   <div class="flex-box">
+			<div class="flex-item">
+				<h4>付款审批</h4>
+			</div>
+			<div>
+				
+			</div>
+		</div>
+        </div>
+        <div class="wrapper">
+			<form data-role="hash">	
+				<div class="input-group placeholder-switch">			
+					<select  name="key">
+						<option value="1" data-placeholder="请输入店铺名称">店铺名称</option>
+						<option value="3" data-placeholder="请输入店铺编号">店铺编号</option>
+						<option value="2" data-placeholder="请输入商户名称">商户名称</option>
+
+					</select>
+					<input type="text" placeholder="请输入店铺名称" name="keyword">
+				</div>
+				<label>要求付款日期：</label>
+				<span class="date-group">
+					<input type="date" data-role="start"  name="pay_time_min" placeholder="YYYY-MM-DD"/>
+					到<input type="date" data-role="end"  name="pay_time_max" placeholder="YYYY-MM-DD"/>
+				</span>
+				<button class="btn">搜索</button>
+			</form>
+           <div class="table" ajat="pay_manage/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+							<th width="50px"><label class="select-all"><input type="checkbox"/><span>全选</span></label></th>
+                            <th>序号</th>
+							<th>店铺编号</th>                       
+							<th>店铺名称</th>
+							<th>付款单号</th>						 
+                            <th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">付款类型 <i class="fa fa-sort"></i></a></th>                          
+                            <th>付款金额</th>
+							<th><a data-role="hash" href="#page=1&sort_key=pay_type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">付款方式 <i class="fa fa-sort"></i></a></th>							
+							<th><a data-role="hash" href="#page=1&sort_key=require_day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">要求付款日期 <i class="fa fa-sort"></i></a></th>			       
+							<th>创建日期</th>
+                            <th>制单人</th>
+							<th>备注</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+               <tbody>
+			   <%if(data.data){%>
+				<%var type=["","付交易代收款","付业务投资款"]%>
+				<%var pay_type=["","银行存款","账扣返还","现金","支付宝","财付通"]%>
+				<%var state=["","待提交","待审批","待付款","已付款"]%>
+				<%data.data.forEach(function(item,i){%>
+				<tr>
+					<td><label><input type="checkbox" name="_ids" value="<%=item.id%>"/><span></span></label></td>
+					<td><%=i+1%></td>
+					<td><%=item.salon?item.salon.sn:""%></td>
+					<td><%=item.salon?item.salon.salonname:""%></td>
+					<td><%=item.code%></td>
+					<td><%=type[item.type]%></td>
+					<td><%=item.money%></td>
+					<td><%=pay_type[item.pay_type]%></td>
+					<td><%=item.require_day%></td>				 
+					<td><%=new Date(item.created_at).format("yyyy-MM-dd")%></td>
+					<td>
+						<%if(item.from==1){%>
+							<%=item.make_user?item.make_user.name:""%>
+						<%}else{%>
+							<%=item.salon_user?item.salon_user.username:""%>
+						<%}%>
+					</td>			
+					<td title="<%=item.remark%>"><%=item.remark&&item.remark.length>7?item.remark.substring(0,7)+"...":item.remark%></td>
+					<td><%=item.state==1&&item.from==2?"审批不通过":state[item.state]%></td>
+					<%
+						var page="invest";
+						if(item.type==1){
+							if(item.pay_type==2){
+								page="pay-account";
+							}else{
+								page="collection";
+							}
+						}
+					%>
+					<td><a class="link" href="detail-<%=page%>.html?id=<%=item.id%>" data-slug="shop_count.show,shop_count.update">查看</a></td>
+                  </tr>
+				  <%})%>
+				  <%}%>
+              </tbody>
+            </table>
+			<%if(data.data&&data.data.length>0){%>
+			<div class="table-bottom">
+				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
+				<form action="pay_manage/check" disabled action="pay_manage/check" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+					<button class="btn">审批通过</button>
+					<input type="hidden" name="do" value="1" />
+					<input type="hidden" name="ids" />
+				</form>
+				<span class="space"></span>
+				<form action="pay_manage/check" disabled action="pay_manage/check" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+					<button class="btn">审批不通过</button>
+					<input type="hidden" name="do" value="0" />
+					<input type="hidden" name="ids" />
+				</form>
+			</div>
+			<%}%>
+            <div class="pager"> </div>
+			</script>
+        </div>
+    </div>
+	<script type="text/javascript">
+		$(function(){
+			$('#table').on('change','tbody label input',function(){
+				var forms=$('.table-bottom form');
+				if($('tbody label input:checked').length>0){
+					forms.attr('disabled',false);
+				}else{
+					forms.attr('disabled',true);
+				}
+				var checked=$('tbody label input:checked');
+				var ids=[];
+				checked.each(function(){
+					ids.push(this.value);
+				});
+				$('.table-bottom input[name="ids"]').val(ids.toString());
+			})
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>系统配置</a><span>&gt;</span><a>反欺诈</a><span>&gt;</span><a>登录查询</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>登录查询</h4>
+				</div>
+			</div>
+		</div>
+    <style media="screen">
+       .table th{
+         min-width: 100px;
+       }
+    </style>
+		<div class="wrapper">
+        <form data-role="hash">
+          <div class="input-group input-switch">
+              <select>
+                <option value="1">用户臭美号</option>
+                <option value="0">用户手机号</option>
+                <option value="2">用户设备号</option>
+                <option value="3">微信OpenId</option>
+              </select>
+              <input type="text" class="input-search " name="username"
+              placeholder="请输入用户臭美号"/>
+              <input type="text" class="input-search hide" name="mobilephone"
+              placeholder="请输入用户手机号"/>
+              <input type="text" class="input-search hide" name="device_uuid"
+              placeholder="请输入用户设备号" />
+              <input type="text" class="input-search hide" name="openid"
+              placeholder="请输入微信OpenId" />
+          </div>
+
+          <div class="date-group">
+              <span style="padding:0 5px 0 15px">APP版本</span>
+              <input type="text" class="input-search" name="version" placeholder="输入版本号进行模糊查询">
+          </div>
+
+          <span class="date-group">
+              <span style="padding:0 5px 0 15px">登录时间</span>
+              <input type="date" name="minTime" data-role="start" placeholder="YYYY-MM-DD"/>
+              <span style="padding:0 10px">到</span>
+              <input type="date" name="maxTime" data-role="end" placeholder="YYYY-MM-DD"/>
+          </span>
+
+          <button class="btn" type="submit">搜索</button>
+        </form>
+
+        <form action="requestLog/export" data-role="export" data-slug="requestLog.export">
+          <button class="btn" type="submit">
+            <i class="fa fa-file-excel-o"></i> 导出
+          </button>
+        </form>
+
+			<div class="table" ajat="requestLog/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+        <table>
+        <thead>
+        <tr>
+        <th>序号</th>
+        <th>用户手机号</th>
+        <th>用户臭美号</th>
+        <th>用户设备号</th>
+        <th>微信OpenId</th>
+        <th>登录时间</th>
+        <th>手机系统</th>
+        <th>APP版本</th>
+        </tr>
+        </thead>
+        <tbody>
+        <%data.data && data.data.forEach(function(item,i){%>
+          <tr>
+            <td><%=i+1%></td>
+            <td><%=item.mobilephone%></td>
+            <td><%=item.username%></td>
+            <td><%=item.device_uuid%></td>
+            <td><%=item.openid%></td>
+            <td><%=item.update_time%></td>
+            <td><%=item.device_os%></td>
+            <td><%=item.version%></td>
+          </tr>
+        <%})%>
+        </tbody>
+        </table>
+        <div class="pager">
+        </div>
+			</script>
+		</div>
+	</div>
+  </body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+    <div class="breadcrumb">
+        <a>付款管理 </a><span>&gt;</span><a href="index.html">付款列表</a><span>&gt;</span><span id="breadcrumb-current">查看付款单</span>
+		<div class="flex-box">
+			<div class="flex-item">
+				<h4> 查看付款单</h4>
+			</div>	
+		</div>
+		<hr />
+    </div>	
+   <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		<%
+			if(query.preview=="preview"){
+				data=JSON.parse(localStorage.getItem("preview"));
+			}
+		%>
+		<div class="detail-operation">
+			<button class="btn" onclick="window.close()">关闭预览</button>
+		</div>
+        <div class="table-detail">
+        <table>
+            <thead>
+                <tr>
+                    <td colspan="2">
+                      <%=data.salon?data.salon.salonname:""%>
+					  <span class="table-detail-sn">店铺编号：<%=data.salon?data.salon.sn:""%></span>
+                    </td>
+                </tr>
+            </thead>
+              <tbody>
+			    <%var state=["","待提交","待审批","待付款","已付款"]%>
+			   <%var type=["","付交易代收款","付业务投资款"]%>
+			   <%var pay_type=["","银行存款","账扣支付","现金","支付宝","财付通"];%>
+                <tr>
+                  <td>付款单号：</td>
+                  <td><%=data.code%></td>
+                </tr>
+                <tr>
+                  <td>付款类型：</td>
+                  <td><%=type[data.type]%></td>
+                </tr>
+				<tr>
+                  <td>付款金额：</td>
+                  <td><%=data.money%></td>
+                </tr>
+				<%if(data.type==2){%>
+				<tr>
+                  <td>回款周期：</td>
+                  <td><%=data.cycle||0%>个月</td>
+                </tr>
+				<tr>
+                  <td>回款日期：</td>
+                  <td><%=data.cycle_day||0%>号/月 <span class="space"></span><span class="weak">当月无此日期时顺延至下月1号</span></td>
+                </tr>
+				 <tr>
+                  <td>周期回款金额：</td>
+                  <td><%=data.cycle_money||0%> <span class="space"></span><span class="weak">尾差金额在最后一个回款周期补回</span></td>
+                </tr>
+				<%}%>
+				<tr>
+                  <td>备注：</td>
+                  <td><%=data.remark%></td>
+                </tr>
+              </tbody>
+        </table>
+		  </script>
+        </div>
+    </div>
+   <script type="text/javascript">
+
+   </script>
+  </body>
+</html>

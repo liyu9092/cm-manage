@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+		<style type="text/css">
+			.format-group .red{
+				top:0;
+			}
+			.format-group{
+				margin:10px 0;
+			}
+			.format-group .table-box{
+				width:auto;
+			}
+			.format-group .table-item{
+				width:150px;
+			}
+			.format-group .table-item:first-child{
+				width:180px;
+			}
+			.item-input{
+				padding-top:20px;
+			}
+			.format-group input{
+				min-width:0!important;
+				width:98%;
+				margin-bottom:5px;
+			}
+			.format-group .link{
+				min-width:50px;
+				margin-top:6px;
+			}
+			#format-group{
+				margin-left:100px;
+			}
+		</style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="index.html">韩式半永久</a><span>&gt;</span>编辑项目
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4>编辑项目</h4>
+			</div>
+		 </div>		
+		<hr />		 
+        </div>		
+        <div class="wrapper" ajat="<%if(query.p=='index'){%>beautyItem/show<%}else{%>beautyItem/showFashion<%}%>?<%=query._%>#domid=form&tempid=form-t" id="form">
+			<script type="text/template" id="form-t">
+			<form action="<%if(query.p=='index'){%>beautyItem/update<%}else{%>beautyItem/updateFashion<%}%>" class="form-vertical" data-role="form" >
+				
+				<input type="hidden" name="item_id" value="<%=data.item_id%>" />
+				<input type="hidden" name="type" value="<%=data.type%>" />
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>项目名称：</label>
+                    <div class="control">
+                        <input type="text" name="name" value="<%=data.name%>" placeholder="1-20个字符" maxlength="20" required data-value="<%=data.name%>" unique="beautyItem/checkName?item_id=<%=query.item_id%>&name=${value}" uniquemsg="已经存在此项目名">
+                    </div>
+                </div>
+				<%if(data.is_gift==1){%>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>赠送说明：</label>
+                    <div class="control">
+						<textarea class="large" maxlength="500" name="present_explain" required placeholder="1~500个字"><%=data.present_explain%></textarea>
+                    </div>
+                </div>
+				<%}%>
+				<%if(query.p=="index"){%>
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>项目icon：</label>
+                    <div class="control">
+						<div class="control-image">
+							<div class="control-single-image">
+								<img src="<%=data.logo%>" alt="" />
+								<div class="control-image-ud">
+									<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
+								</div>
+								<input type="hidden" name="logo" class="original" value="<%=data.logo%>" required requiredmsg="请上传项目icon" data-helpid="image-help1">
+							</div>
+						</div>
+						<div class="weak">上传任意尺寸，裁剪成140*140JPG或PNG格式的图标，可编辑修改裁剪，此图标将显示在项目列表中，最多为一张图片</div>
+						<div class="control-help" style="display:none" id="image-help1"></div>
+                    </div>
+                </div>
+				<%}%>
+				<%if(query.p=="fashion"){%>
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>详情H5地址：</label>
+                    <div class="control">
+                        <input type="text" placeholder="信息链接需以http或者https开头" name="content_url" required  pattern="^(http|https)://" patternmsg="链接地址不正确" value="<%=data.content_url%>"/>
+                    </div>
+                </div> 
+				<div id="format-group">
+				<div class="control-group format-group">
+					<ul class="table-box">
+						<li class="table-item">
+							<span class="red">*</span>规格：<br />
+						</li>
+						<li class="table-item">
+							<span class="red">*</span>次数(次)：<br />
+						</li>
+						<li class="table-item">
+							<span class="red">*</span>平均缩减尺寸(参考数)：<br />
+						</li>
+						<li class="table-item">
+							<span class="red">*</span>市场价：<br />
+						</li>
+						<li class="table-item">
+							<span class="red">*</span>酬宾价：<br />
+						</li>
+						<li class="table-item"><span class="red">*</span>特价：<br /><div class="weak" style="height:0;margin-top:-5px"><span class="space"></span>小于等于原价</div></li>
+						<li class="table-item"></li>
+					</ul>
+				</div>
+				</div>
+				<br />
+				<textarea name="more_prices" id="more_prices" style="display:none"><%=typeof data.more_prices=="string"?data.more_prices:JSON.stringify(data.more_prices)%></textarea>
+				<%}else{%>
+				 <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>项目类别：</label>
+                    <div class="control">
+						<select name="level" required>
+							<option <%=data.level==1?"selected":""%> value="1">明星院长</option>
+							<option <%=data.level==2?"selected":""%> value="2">院长</option>
+						</select>
+                    </div>
+                </div>
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>市场价：</label>
+                    <div class="control">
+						<input type="text" placeholder="1~99999整数" pattern="number" min="1" max="99999" value="<%=data.price?data.price:""%>" required name="price"/>
+                    </div>
+                </div>
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>酬宾价：</label>
+                    <div class="control">
+						<input type="text" placeholder="1~99999整数，必须≤市场价" pattern="number" max="99999" min="1" value="<%=data.vip_price?data.vip_price:""%>" required name="vip_price"/>
+                    </div>
+                </div>
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>特价：</label>
+                    <div class="control">
+						<input type="text" placeholder="1~99999整数" pattern="number" max="99999" min="1" value="<%=data.bargain_price?data.bargain_price:""%>" required name="bargain_price"/>
+                    </div>
+                </div>
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>详情H5地址：</label>
+                    <div class="control">
+                        <input type="text" placeholder="信息链接需以http或者https开头" name="content_url" required  pattern="^(http|https)://" patternmsg="链接地址不正确" value="<%=data.content_url%>"/>
+                    </div>
+                </div> 
+				<%}%>
+				 
+                <div class="control-group">
+                    <label class="control-label" for=""></label>
+                    <a class="btn" href="<%=query.p=="index"?"index.html":"fashion.html"%>">取消</a>
+					<span class="space"></span>
+                    <button class="btn-primary">提交</button>
+                </div>
+            </form>
+			</script>
+        </div>
+		<script type="text/template" id="format-t">
+			<%data.forEach(function(item,i){%>
+			<div class="control-group format-group format-group-item">
+				<ul class="table-box">
+					<li class="table-item item-input">
+						<input type="text" placeholder="2~10个字" minlength="2" maxlength="10" value="<%=item.norm%>" required name="norm" />
+					</li>
+					<li class="table-item item-input">
+						<input type="text" placeholder="1~99整数" min="1" max="99" pattern="number"  value="<%=item.times?item.times:""%>" required name="times"/>
+					</li>
+					<li class="table-item item-input">
+						<input type="text"  value="<%=item.size%>" required name="size" placeholder="1~20个字" maxlength="20"/>
+					</li>
+					<li class="table-item item-input">
+						<input type="text" placeholder="1~99999整数" min="1" max="99999" pattern="number"  value="<%=item.price?item.price:""%>" required name="price"/>
+					</li>
+					<li class="table-item item-input">
+						<input type="text" placeholder="1~99999整数，小于等于市场价" min="1" max="99999"pattern="number"  value="<%=item.vip_price%>" required name="vip_price"/>
+					</li>
+					<li class="table-item item-input">
+						<input type="text" placeholder="1~99999整数" min="1" max="99999" pattern="number"  value="<%=item.bargain_price?item.bargain_price:""%>" required name="bargain_price"/>
+					</li>
+					<li class="table-item item-input">
+						<%if(data.init&&i==0){%>
+						<%if(query.is_gift!=1){%>
+							<button type="button" class="link add-format">添加</button>
+						<%}%>
+						<%}else{%>
+						<button type="button" class="link remove-format">删除</button>
+						<%}%>
+					</li>
+				</ul>
+			</div>
+			<%})%>
+		</script>
+		<script type="text/javascript">
+			$('#form').on('_ready',function(e,data){
+				data=data.response;
+				lib.puploader.image({
+					browse_button: 'imageUpload',
+					auto_start:true,
+					//imageLimitSize:"300*300",
+					filters: {
+						mime_types : [
+							{ title : "Image files", extensions : "jpg,png,jpeg" },
+						]
+					},
+					max_file_size:'2mb',
+					crop:true
+				},function(uploader){
+					uploader.bind('ImageUploaded',function(up,response){
+						lib.cropper.create({
+							src:response.img,
+							aspectRatio : 1,
+							thumbnails  : ["140x140"],
+							define:function(data){
+								up.preview($('#imageUpload').closest('.control-single-image'),{
+									img:data["140x140"],
+								});
+							}
+						});	
+					});						
+				});
+				
+				/**
+				*规格加载，添加，删除
+				*/
+				if(lib.query.p=='fashion'){
+					var formatGroup=$('#format-group');
+					$('#format-group').on('click','.remove-format',function(){
+						var $this=$(this);
+						parent.lib.popup.confirm({
+							text:"确认删除此规格？",
+							define:function(){
+								$this.closest('.format-group').remove();	
+							}
+						});
+					}).on('click','.add-format',function(){
+						createFormat([{}]);
+					}).on('blur','input[name="price"]',function(){
+						$(this).closest('li').next().find('input').attr('max',$.trim(this.value));
+					})
+					var createFormat=function(data){
+						formatGroup.append(lib.ejs.render({text:$('#format-t').html()},{data:data}));
+					}
+					var more_prices=JSON.parse($('#more_prices').val());
+					more_prices.init=true;
+					more_prices.genre=data.genre
+					if(more_prices.length==0){
+						more_prices.push({});
+					}
+					createFormat(more_prices);
+				}else{
+					$('input[name="price"]').on('blur',function(){
+						$('input[name="vip_price"]').attr('max',$.trim(this.value));
+					});
+				}
+				
+				$(this).find('form')[0]._getFormData=function(){
+					var data=lib.tools.getFormData($(this));
+					if(lib.query.p=='fashion'&&$('#format-group').length>0){
+						data.more_prices=[];
+						$('.format-group-item').each(function(){
+							var temp={};
+							$(this).find("input").each(function(){
+								if(this.name){
+									temp[this.name]=$.trim(this.value);
+								}
+							});
+							data.more_prices.push(temp);
+						});
+					}
+					data.more_prices=JSON.stringify(data.more_prices);
+					return data;
+				}
+			});
+			
+		</script>
+    </body>
+</html>

@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+        <div class="breadcrumb">
+            <a>交易管理</a><span>&gt;</span><a href="index.html">赏金单查询</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>赏金单查询</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <form data-role="hash">          
+                <div class="input-group placeholder-switch">
+                    <select name="keywordType">
+                      <option value="0" data-placeholder="请输入赏金单号">赏金单号</option>
+                      <option value="1" data-placeholder="请输入用户臭美号">用户臭美号</option>
+                      <option value="2" data-placeholder="请输入用户手机号" selected="selected">用户手机号</option>
+                      <option value="3" data-placeholder="请输入店铺名称">店铺名称</option>
+                    </select>
+                    <input type="text" class="input-search" name="keyword" maxlength="16"
+                    placeholder="请输入用户手机号"/>
+                </div>  
+
+                <span class="date-group">
+                    <span style="padding:0 5px 0 15px">支付方式</span>
+                    <select name="payType" >
+                        <option value="0">全部</option>
+                        <option value="3">微信</option>
+                        <option value="2">支付宝</option>
+                        <option value="10">易联</option>
+                    </select>
+                </span>
+
+                <span class="date-group">
+                    <span style="padding:0 5px 0 15px">支付状态</span>
+                    <select name="isPay" >
+                        <option value="">全部</option>
+                        <option value="1">未付款</option>
+                        <option value="2">已付款</option>
+                    </select>
+                </span>
+
+                <span class="date-group">
+                    <span style="padding:0 5px 0 15px">订单状态</span>
+                    <select name="btStatus" >
+                        <option value="">全部</option>
+                        <option value="1">待抢单</option>
+                        <option value="2">待服务</option>
+                        <option value="3">已服务</option>
+                        <option value="4">已打赏</option>
+                        <option value="5">不打赏</option>
+                        <option value="9">取消</option>
+                    </select>
+                </span>
+
+                <span class="date-group">
+                    <span style="padding:0 5px 0 20px">下单时间</span>
+                    <input type="date" name="minAddTime" data-role="start" placeholder="YYYY-MM-DD"/>
+                    <span style="padding:0 10px">到</span>
+                    <input type="date" name="maxAddTime" data-role="end" placeholder="YYYY-MM-DD"/>
+                </span>
+                <button class="btn" type="submit">搜索</button>
+            </form>
+
+            <form action="bounty/exportBounty" data-role="export" data-slug="bounty.exportBounty">
+                <button class="btn" type="submit">
+                    <i class="fa fa-file-excel-o"></i> 导出
+                </button>
+            </form>
+
+            <div class="table" ajat="bounty/index?isRefund=1&<%=query._%>#domid=table&tempid=table-t" id="table">
+            <script type="text/template" id="table-t">
+            
+              <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">
+              <%if(data.total == 0){%>
+                当前页面下所有赏金金额统计为：0.00元
+              <%}else{ var amount=0;%> 
+                  <%data.data && data.data.forEach(function(item,i){
+                         amount += item.money*100;
+                  })%>   
+                  当前页面下所有赏金金额统计为：<%=amount/100%>元
+              <%}%> 
+              </div>  
+
+            <table>
+              <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>赏金单号</th>
+                  <th>三方流水号</th>
+                  <th>支付方式</th>
+                  <th>赏金金额</th>
+                  <th>下单时间</th>
+                  <th>造型师手机号</th>
+                  <th>用户手机号</th>
+                  <th>店铺名称</th>
+                  <th>支付状态</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>             
+                <%data.data && data.data.forEach(function(item,i){%>
+                <tr>
+                  <td><%=i+1%></td>
+                  <td><%=item.btSn%></td>
+                  <td><%=item.tn%></td>
+                  <td><%=item.payType%></td>
+                  <td><%=item.money%></td>
+                  <td><%=item.addTime%></td>
+                  <td><%=item.hairStylistMobile%></td>
+                  <td><%=item.userMobile%></td>
+                  <td><%=item.salonName%></td>
+                  <td><%=item.isPay%></td>
+                  <td>
+                     <a class="link" data-slug="bounty.show"  href="detail.html?no=<%=item.btSn%>">
+                     查看&gt
+                     </a>
+                  </td>
+                </tr>
+                <%})%>
+              </tbody>
+            </table>
+            <div class="pager">
+            </div>
+            </script>
+        </div>
+    </div>
+  </body>
+</html>

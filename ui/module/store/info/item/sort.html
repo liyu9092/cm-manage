@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+	  <style type="text/css">
+		#table tbody tr:first-child button:first-child,#table tbody tr:last-child button:last-child{
+			display:none;
+		}
+	  </style>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>店铺管理 </a><span>&gt;</span><a href="../index.html">店铺资料</a><span>&gt;</span><a href="index.html#p=<%=query.p%>&salonid=<%=query.salonid%>&salonname=<%=query.salonname%>">项目列表</a><span>&gt;</span><a href="sort.html">项目排序</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>项目排序</h4>
+				</div>
+				<div>
+					<a href="#sort_key=sort_in_type&sort_type=DESC" data-role="hash" class="btn btn-sort">降序 <i class="fa fa-caret-down"></i></a>
+					<a href="#sort_key=sort_in_type&sort_type=ASC" data-role="hash" class="btn btn-sort">升序 <i class="fa fa-caret-up"></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="wrapper">
+			<div class="position-group">
+				<form data-role="hash">
+					<select name="typeid" ajat-one="true" ajat="item/type#domid=type&tempid=type-t" style="min-width:300px" id="type">
+						<script type="text/template" id="type-t">
+							<%data.forEach(function(item){%>
+								<option <%=query.typeid==item.typeid?"selected":""%> value="<%=item.typeid%>"><%=item.typename%></option>
+							<%})%>
+						</script>
+					</select>
+				</form>
+			 </div>
+			 <form action="item/sort" data-role="normal" id="sortform"></form>
+			<div class="table" ajat="item/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+			<table>
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>项目名称</th>
+						<th>项目分类</th>
+						<th>规格</th>
+						<th>原价</th>
+						<th>臭美价</th>
+						<th>集团价</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<%data=data.data%>
+					<%
+						if(query.sort_type=="ASC"){
+							data.sort(function(x,y){
+								return x.minPrice>y.minPrice?1:-1;
+							});
+						}else if(query.sort_type=="DESC"){
+							data.sort(function(x,y){
+								return x.minPrice<y.minPrice?1:-1;
+							});
+						}
+					%>
+					<%data.forEach(function(item,i){%>
+					 <tr>
+						<td><%=i+1%></td>
+						<td><%=item.itemname%><input type="hidden" name="itemid" value="<%=item.itemid%>" /></td>
+						<td><%=item.typename%></td>
+						<td><%=item.norms_cat_id==1?"有规格":"无规格"%></td>
+						<td><%=item.minPriceOri%></td>
+						<td><%=item.minPrice%></td>
+						<td><%=parseInt(item.minPriceGroup)%></td>
+						<td>
+							<button class="link" form="sortform" type="button" data-slug="salon.save" type="button" data-goto="up" >上移<span class="space"></span></button>
+							
+							<button class="link" form="sortform" type="button" data-slug="salon.save" type="button" data-goto="down">下移</button>
+						</td>
+					</tr> 
+					<%})%>
+				</tbody>
+			</table>
+			</script>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$('#type').on("_ready",function(){
+			setTimeout(function(){
+				$('#type').on('change',function(){
+					$(this).closest('form').submit();
+				});
+			},1000)
+		})
+		var $form=$('#sortform');
+		$form[0]._getFormData=function(){
+			var sort=[];
+			var input=$('input[name="itemid"]');
+			input.each(function(i){
+				sort.push({itemid:this.value,sort_in_type:input.length-i});
+			});
+			return {sort:sort};
+		}
+		$('#table').on('click','.link',function(){
+			var $this=$(this);
+			if($this.data('goto')=='up'){
+				$this.closest('tr').after($this.closest('tr').prev());
+			}
+			if($this.data('goto')=='down'){
+				$this.closest('tr').before($this.closest('tr').next());
+			}
+			$form.submit();
+		});
+		$form.on("success",function(){
+			parent.lib.popup.result();
+			var $trs=$('#table tbody tr');
+			$trs.each(function(i){
+				$(this).children('td:first').text(i+1);
+			});
+		});
+		$(document.body).on('click',".btn-sort",function(){
+			$('#table').one("_ready",function(){
+				$form.submit();
+			})
+		});
+	</script>
+  </body>
+</html>

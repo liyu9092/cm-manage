@@ -1,0 +1,18 @@
+<%
+var url = protocol.custom.url;
+var name = protocol.custom.name;
+var chidlrenId = 0;
+var config = {
+	'id' : generateId()+'.'+generateId(chidlrenId),
+	'url' : url || 'others/searchNameAndNumber/1/',
+	'name' : name
+}
+%>
+<td><%=config.name%></td>
+<%
+var autoComplete = config.url+"${value}#domid=complete-position-"+config.id+"&tempid=/module/makeup/order/template/list-t";
+%>
+<td><div class="control"><input class="searchInput" id="search" type="text" ajat-complete="<%=autoComplete%>" autocomplete="off" />
+<input type="hidden" name="assistantId" class="inputId" value="" required>
+<div class="complete-position" id="complete-position-<%=config.id%>" style="width:20%;min-width:250px;" ></div>
+<span id="sn" class="weak"></span></div></td>

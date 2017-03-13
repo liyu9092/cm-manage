@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+        <style type="text/css">
+            .tc{
+                text-align: center !important;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理</a><span>&gt;</span><a href="index.html">兑换活动列表</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4> 兑换活动 </h4>
+                </div>
+                <div class="flex-item">
+                    <a class="btn-primary fr" id="add_new" data-slug="coupon.add">
+                        <i class="fa fa-plus"></i> 新增兑换活动
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <form data-role="hash">
+               <div class="input-group placeholder-switch">
+                    <select name="selectItem">
+                        <option value="0" data-placeholder="请选择">请选择</option>
+                        <option value="1" data-placeholder="活动编号">活动编号</option>
+                        <option value="2" data-placeholder="活动名称">活动名称</option>
+                    </select>
+                    <input type="text" class="input-search" name="keyword" placeholder="请选择">
+                </div>
+
+                <span class="space"></span>
+                <label>活动状态：</label>
+                <select name="status">
+                    <option value="">全部</option>
+                    <option value="1">进行中</option>
+                    <option value="2">下线</option>
+                    <option value="3">已关闭</option>
+                    <option value="4">已结束</option>
+                </select>
+
+                <span class="space"></span>
+                <label>申请部门</label>
+                <select name="department" ajat-one="true" id="department" ajat="list/department#domid=department&amp;tempid=department-t">
+                    <script type="text/template" id="department-t">
+                        <option value="">全部</option>
+                        <%data.forEach(function(item){%>
+                            <option value="<%=item.id%>"><%=item.title%></option>
+                        <%})%>
+                    </script>
+                </select>
+
+                <span class="space"></span>
+                <span>活动时间：</span>
+                <span class="date-group">
+                    <input type="date" data-role="start" name="startTime" placeholder="YYYY-MM-DD"/>
+                    到
+                    <input type="date" data-role="end" name="endTime" placeholder="YYYY-MM-DD"/>
+                </span>
+                <button class="btn" type="submit">查询</button>
+            </form>
+
+            <form action="coupon/exportList" data-role="export">
+                <button class="btn" data-slug="coupon.exportList">
+                <i class="fa fa-file-excel-o"></i> 导出
+                </button>
+            </form>
+           <div class="table" ajat="coupon/list?<%=query._%>#domid=table&tempid=table-t" id="table">
+            <script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>活动名称</th>
+                            <th>活动编码</th>
+                            <th>券总数</th>
+                            <th>已兑换数</th>
+                            <th>已使用数</th>
+                            <th>创建时间</th>
+                            <th>活动时间</th>
+                            <th>申请部门</th>
+                            <th>活动状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                <%var status=["","进行中","下线","已关闭","已结束"]%>
+                <%var data=data.data%>
+                <%data.forEach(function(item,index){%>
+                 <tr>
+                  <td><%=index+1%></td>
+                  <td><%=item.vcTitle%></td>
+                  <td><%=item.vcSn%></td>
+                  <td><%=item.totalNum%></td>
+                  <td><%=item.useNum%></td>
+                  <td><%=item.allNum%></td>
+                  <td><%=item.addTime%></td>
+                  <td><%=item.actTime%></td>
+                  <td><%=item.department%></td>
+                  <td><%=status[item.status]%></td>
+                  <td class="tc">
+                    <a class="link" data-slug="coupon.actView" href="detail.html#id=<%=item.vcId%>">查看</a>
+                    <%if (item.status != 3 && item.status != 4) {%>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <%if (item.status == 1) {%>
+                    <a class="link" id='offline' data-slug="coupon.offlineConf" data-id='<%=item.vcId%>'>下线</a>
+                    <%}else{%>
+                    <a class="link" id='online' data-slug="coupon.upConf" data-id='<%=item.vcId%>'>上线</a>
+                    <%}%>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="link" id='close' data-slug="coupon.closeConf" data-id='<%=item.vcId%>'>关闭</a>
+                    <%}%>
+                  </td>
+                  </tr>
+                  <%})%>
+                </tbody>
+            </table>
+             <div class="pager"> </div>
+            </script>
+            <script type="text/javascript">
+
+               var clearTmpData  = function(){
+                   window.localStorage.removeItem('couponTmpData');
+               }
+
+               var confirmBox = function(options){
+                    lib.popup.confirm({
+                        text:options.text,
+                        define: function(){
+                            lib.ajax({
+                                url : options.url+options.id
+                            }).done(function(data, status, xhr){
+                                if(data.result == 1){
+                                    parent.lib.popup.result({
+                                        text:options.resultText,
+                                        define:function(){
+                                            location.reload();
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+               }
+               var confirmBoxConfig = {
+                    'offline':{
+                        text:'确定将该活动下线吗？',
+                        url:'coupon/offlineConf/',
+                        resultText:'活动下线成功'
+                    },
+                    'online':{
+                        text:'确定将该活动上线吗？',
+                        url:'coupon/upConf/',
+                        resultText:'活动正在上线中...'
+                    },
+                    'close':{
+                        text:'确定将该活动关闭吗？',
+                        url:'coupon/closeConf/',
+                        resultText:'活动关闭成功'
+                    }
+               }
+               $('body').on('click','#offline',function(){
+                    var id = $(this).attr('data-id');
+                    confirmBoxConfig['offline'].id = id;
+                    confirmBox(confirmBoxConfig['offline']);
+
+               }).on('click','#online',function(){
+                    var id = $(this).attr('data-id');
+                    confirmBoxConfig['online'].id = id;
+                    confirmBox(confirmBoxConfig['online']);
+
+               }).on('click','#close',function(){
+                    var id = $(this).attr('data-id');
+                    confirmBoxConfig['close'].id = id;
+                    confirmBox(confirmBoxConfig['close']);
+               }).on('click','#add_new',function(){
+                    clearTmpData();
+                    window.location.href="addBase.html";
+               });
+            </script>
+        </div>
+            </div>
+    </body>
+</html>

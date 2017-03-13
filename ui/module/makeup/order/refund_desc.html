@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆 </a>
+            <span>&gt;</span><a href="refund_list.html">定妆单退款查询</a>
+            <span>&gt;</span>定妆单退款详情
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>定妆单退款详情</h4>
+                </div>
+                <link rel="stylesheet" type="text/css" href="./list-group.css">
+                <div class="flex-item fr">
+                  <div class="fr">
+                      <span id="breadcrumb">
+                      <script type="text/template" id="breadcrumb-t">
+                          <form data-slug="beautyrefund.accept" <%if (data.order.STATUS == 'RFD' || data.order.STATUS == 'RFD-OFL'){%>disabled='disabled'<%}%> action="beautyrefund/accept" id="destroy" data-role="normal" onsuccess="refund(data)">
+                              <input type="hidden" name="booking_sn" value="<%=query.booking_sn%>">
+                          <button class="btn" <%if(data.order.STATUS == 'RFD' || data.order.STATUS == 'RFD-OFL'){%>disabled='disabled'<%}%>  data-slug="beautyrefund.accept">
+                               确认退款
+                          </button>
+                          </form>
+                          <form data-slug="beautyrefund.reject" action="beautyrefund/reject" <%if (data.order.STATUS == 'RFD' || data.order.STATUS == 'RFD-OFL'){%>disabled='disabled'<%}%> id="destroy" data-role="normal" onsuccess="lib.popup.result({text:'拒绝退款成功',define:function(){location.href='refund_list.html';}});">
+                              <input type="hidden" name="booking_sn" value="<%=query.booking_sn%>">
+                          <button class="btn" <%if (data.order.STATUS == 'RFD' || data.order.STATUS == 'RFD-OFL'){%>disabled='disabled'<%}%>  data-slug="beautyrefund.reject">
+                               拒绝退款
+                          </button>
+                          </form>
+                      </script>
+                      </span>
+                      <a href="refund_list.html" class="btn">
+                           返回
+                      </a>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <style>
+        .inner-table tbody td:nth-child(2n+1){
+            background-color: #F6F8F9;
+        }
+        .inner-table tbody td:nth-child(2n){
+            width: 35%;
+            background-color: #fff;
+        }
+        .white-bg{
+            background-color: #fff !important;
+        }
+        .inner-table{
+            margin: -1px;
+        }
+        .inner-table tbody td:nth-child(4n){
+            border-right: 0px;
+        }
+        .pad-n{
+            padding:0px !important;
+        }
+        .bor-n{
+            border:0px !important;
+        }
+        td.td{
+            background-color: #F6F8F9;
+        }
+        </style>
+        <span ajat="#domid=alipay&tempid=/module/makeup/order/template/alipay" id="alipay"></span>
+        <div class="wrapper">
+            <div class="table table-detail" style="margin:0" ajat="beautyrefund/show/<%=query.id%>#domid=table&tempid=table-t" id="table">
+                 <script type="text/template" id='table-t'>
+                 <%var pay_type_desc={
+                        "1":"网银",
+                        "2":"支付宝",
+                        "3":"微信",
+                        "4":"余额",
+                        "7":"积分",
+                        "10":"易联"
+                    }
+                    var status={
+                        'NEW':'未支付',
+                        'PYD':'已支付',
+                        'CSD':'已完成',
+                        'RFN':'退款中',
+                        'RFD':'已退款',
+                        'RFE':'退款失败',
+                        'RFD-OFL':'已退款'
+                    }
+                    var cash_type_desc={
+                         '1':'微信',
+                         '2':'支付宝',
+                         '3':'POS机',
+                         '4':'现金',
+                         '5':'微信+现金' ,
+                         '6':'支付宝+现金' ,
+                         '7':'POS机+现金'
+                    }
+                    var back_to_desc=[,'微信','支付宝','银联','现金']
+                    %>
+                 <div class="list-group">
+                     <div class="list active">
+                         <div class="list-header">
+                             <span class="list-title">定妆单信息</span>
+                         </div>
+                         <div class="list-content">
+                             <table >
+                                 <tbody>
+                                     <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>订单号：</td>
+                                                         <td><%=data.order.ORDER_SN%></td>
+                                                         <td>预约号：</td>
+                                                         <td><%=data.order.BOOKING_SN%></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>手机号：</td>
+                                                         <td><%=data.order.BOOKER_PHONE%></td>
+                                                         <td>姓名：</td>
+                                                         <td><%=data.order.BOOKER_NAME%></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                      <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>性别：</td>
+                                                         <td><%= data.order.BOOKER_SEX == 'M' ?'男':'女' %></td>
+                                                         <td>预约项目：</td>
+                                                         <td><%var orderItems=[];
+                                data.order_item.forEach(function(orderItem){
+                                    orderItems.push(orderItem.ITEM_NAME);
+                                })%><%=orderItems.join(",")%></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>项目价格：</td>
+                                                         <td><%=data.order.item_amount%></td>
+                                                         <td>预约日期：</td>
+                                                         <td><%=data.order.BOOKING_DATE%></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>推荐码：</td>
+                                                         <td><%= (data.recommend && data.recommend.recommend_code) ? data.recommend.recommend_code : data.order.RECOMMENDER%></td>
+                                                         <td>订单状态：</td>
+                                                         <td><%= data.order.STATUS == 'CSD' && data.makeup ? '已补色':status[data.order.STATUS]%></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                 </tbody>
+                             </table>
+                         </div>
+                     </div>
+                     <div class="list active">
+                         <div class="list-header">
+                             <span class="list-title">代预约方信息</span>
+                         </div>
+                         <div class="list-content">
+                             <table >
+                                 <tbody>
+                                     <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>推荐码：</td>
+                                                         <td><%= data.help_info &&data.help_info.recommend_code%></td>
+                                                         <td>渠道：</td>
+                                                         <td><%=data.help_info &&data.help_info.from%></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <td>手机号：</td>
+                                         <td><%=data.help_info && data.help_info.mobilephone%></td>
+                                     </tr>
+                                 </tbody>
+                             </table>
+                         </div>
+                     </div>
+                     <%if (data.booking_cash){%>
+                     <div class="list active">
+                        <div class="list-header list-multiple-header">
+                            <span class="list-title">收银信息</span>
+                        </div>
+                        <div class="list-content">
+                        <%}%>
+                     <div class="list active">
+                         <div class="list-header">
+                             <span class="list-title">预约金支付信息</span>
+                         </div>
+                         <div class="list-content">
+                             <table >
+                                 <tbody>
+                                     <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>支付方式：</td>
+                                                         <td><%var payment_list=[];
+                                                         data.fundflow.forEach(function(payment_item){
+                                                             payment_list.push(pay_type_desc[payment_item.pay_type]);
+                                                         })%><%=payment_list.join(",")%></td>
+                                                         <td>流水号：</td>
+                                                         <td><%=data.payment_log && data.payment_log.tn%></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>支付金额：</td>
+                                                         <td><%= data.order.PAYABLE%></td>
+                                                         <td>支付时间：</td>
+                                                         <td><%=data.order.PAIED_TIME%></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <td>支付状态：</td>
+                                         <td><%=status[data.order.STATUS]%></td>
+                                     </tr>
+                                 </tbody>
+                             </table>
+                         </div>
+                     </div>
+                     <%if (data.booking_cash){%>
+                     <div class="list active">
+                         <div class="list-header">
+                             <span class="list-title">现场收银信息</span>
+                         </div>
+                         <div class="list-content">
+                             <table >
+                                 <tbody>
+                                     <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>项目总额：</td>
+                                                         <td><%=data.order.item_amount%></td>
+                                                         <td>已付订金：</td>
+                                                         <td><%=data.order.PAYABLE%></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>应收金额：</td>
+                                                         <td><%= data.order.item_amount-data.order.PAYABLE%></td>
+                                                         <td>支付方式：</td>
+                                                         <td><%=pay_type_desc[data.booking_cash.pay_type]%></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>现金支付：</td>
+                                                         <td><%= data.booking_cash.cash_money%></td>
+                                                         <td><%if (data.booking_cash.pay_type == 5){%>微信<%}%><%if (data.booking_cash.pay_type == 6){%>支付宝<%}%><%if (data.booking_cash.pay_type == 7){%>POS机<%}%>支付：</td>
+                                                         <td><%=data.booking_cash.other_money%></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>收银人：</td>
+                                                         <td><%= data.booking_cash.manager.name%></td>
+                                                         <td>收银时间：</td>
+                                                         <td><%=data.booking_cash.created_at%></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                 </tbody>
+                             </table>
+                         </div>
+                     </div>
+                     <%}%>
+                     <%if (data.booking_cash){%>
+                     </div>
+                     </div>
+                     <%}%>
+                      <%if (data.booking_salon_refund){%>
+                     <div class="list active">
+                        <div class="list-header list-multiple-header">
+                            <span class="list-title">退款信息</span>
+                        </div>
+                        <div class="list-content">
+                        <%}%>
+                     <div class="list active">
+                         <div class="list-header">
+                             <span class="list-title">预约金退款信息</span>
+                         </div>
+                         <div class="list-content">
+                             <table >
+                                 <tbody>
+                                     <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>发起退款：</td>
+                                                         <td><%= data.order_refund ? '用户':''%></td>
+                                                         <td>退款原因：</td>
+                                                         <td><%=data.order_refund &&data.order_refund.rereason%></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                        <td>退款说明：</td>
+                                        <td><%=data.order_refund &&data.order_refund.refund_desc%></td>
+                                     </tr>
+                                     <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>退款方式：</td>
+                                                         <td><%=payment_list.join(",")%></td>
+                                                         <td>退款金额：</td>
+                                                         <td><%=data.order_refund &&data.order_refund.money%></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <td>退款状态：</td>
+                                         <td><%=status[data.order.STATUS]%></td>
+                                     </tr>
+                                     <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>退款人：</td>
+                                                         <td><%= data.order_refund &&data.order_refund.manager&&data.order_refund.manager.name%></td>
+                                                         <td>退款时间：</td>
+                                                         <td><%=data.order_refund &&data.order_refund.add_time%></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>审批人：</td>
+                                                         <td><%= data.order_refund&&data.order_refund.manager&&data.order_refund.manager.name%></td>
+                                                         <td>审批时间：</td>
+                                                         <td><%=data.order_refund &&data.order_refund.opt_time%></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                 </tbody>
+                             </table>
+                         </div>
+                     </div>
+                     <%if (data.booking_salon_refund){
+                        var refundInfo = data.booking_salon_refund;
+                        %>
+                     <div class="list active">
+                         <div class="list-header">
+                             <span class="list-title">现场退款信息</span>
+                         </div>
+                         <div class="list-content">
+                             <table >
+                                 <tbody>
+                                     <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>发起退款：</td>
+                                                         <td>臭美人员</td>
+                                                         <td>退款原因：</td>
+                                                         <td>用户不想做了</td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>退款方式：</td>
+                                                         <td><%=back_to_desc [refundInfo.back_to]%></td>
+                                                         <td>退款金额：</td>
+                                                         <td><%=refundInfo.money%></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                     <tr>
+                                         <td colspan="2" class="pad-n bor-n">
+                                             <table class="inner-table bor-n">
+                                                 <tbody>
+                                                     <tr>
+                                                         <td>退款人：</td>
+                                                         <td><%=refundInfo.manager && refundInfo.manager.name%></td>
+                                                         <td>退款时间：</td>
+                                                         <td><%=refundInfo.created_at%></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                 </tbody>
+                             </table>
+                         </div>
+                     </div>
+                     <%}%>
+                     <%if (data.booking_salon_refund){%>
+                     </div>
+                     </div>
+                     <%}%>
+                 </div>
+                 </script>
+                 <script>
+                    $('#table').on('_ready',function(e,res){
+                        lib.ajat('#domid=breadcrumb&tempid=breadcrumb-t').template(res.response);
+                    })
+                    var refund = function(response){
+                        var data = response.data;
+                        if(data.alipay && data.alipay.form_args){
+                          $.each($("#alipaysubmit").serializeArray(),function(i,field){
+                            $("input[name='"+field.name+"']").val(data.alipay.form_args[field.name]);
+                          })
+                          $("#alipaysubmit").submit();
+                        }
+                        var msg = "退款成功";
+                        if(data.wx)       msg = data.wx.info;
+                        if(data.balance)  msg = data.balance.info;
+                        if(data.yilian)   msg = data.yilian.info;
+
+                        lib.popup.result({
+                            text:msg,
+                            define:function(){
+                                location.reload();
+                            }
+                        });
+                    }
+                 </script>
+            </div>
+        </div>
+    </body>
+</html>

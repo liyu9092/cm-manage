@@ -1,0 +1,29 @@
+<form action="book/add_item/<%=query.id%>" data-role="form">
+<div class="control-group">
+    <label class="control-label" for=""><span class="red">*</span>韩式半永久：</label>
+    <div class="control" id="item_<%=query.id%>" >
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for=""><span class="red">*</span>快时尚：</label>
+    <div class="control" id="item_<%=query.id%>_1" >
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for=""></label>
+    <button class="btn popup-alert-cancel" type="button">取消</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <button class="btn-primary">保存</button>
+</div> 
+
+<style type="text/css">
+    #laydate_box{
+        z-index: 9999 !important;
+    }
+</style>
+<script type="text/javascript">
+    lib.ajat("beautyItem/itemList?type=1#selected=,&domid=item_<%=query.id%>&tempid=/module/makeup/order/template/label").render();
+    lib.ajat("beautyItem/itemList?type=2#selected=,&domid=item_<%=query.id%>_1&tempid=/module/makeup/order/template/label").render();
+</script>
+</form>

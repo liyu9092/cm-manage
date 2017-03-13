@@ -1,0 +1,61 @@
+
+   <%
+   var selectedItems = protocol.custom.selected.split(',');
+   var required = protocol.custom.required;
+   var itemList = [];
+   data.forEach(function(item,index){
+       if (!item.more_prices || item.more_prices.length == 0){
+         itemList.push(item);
+       }else{
+        item.more_prices.forEach(function(more,index){
+          var moreItem = JSON.parse(JSON.stringify(item));
+          moreItem.moreId = more.id;
+          moreItem.norm = more.norm;
+          itemList.push(moreItem);
+        })
+       }
+    })
+   var defaultChecked={};
+    itemList.forEach(function(item,index){
+        for (var i = 0;i<selectedItems.length;i++){
+            if (item.item_id == selectedItems[i].split('_')[0]){
+              if (!item.moreId){
+                  item.selected = true;
+              }else if (item.moreId == selectedItems[i].split('_')[1]){
+                  item.selected = true;
+              }
+           }
+           if (!selectedItems[i].split('_')[1] && selectedItems[i].split('_')[0] == item.item_id){
+                if (!defaultChecked[item.item_id]){
+                  item.selected = true;
+                  defaultChecked[item.item_id]=item;
+                }
+           }
+        }
+    if (item.moreId){
+    %>
+   <label class="label">
+        <input type="checkbox" class="item_ids" <%if (item.selected){%>checked='checked'<%}%> value="<%=item.item_id%>_<%=item.moreId%>" >
+        <span><%=item.name+'&middot;'+item.norm%></span>
+  </label>
+    <%}else{%>
+     <label class="label">
+        <input type="checkbox" class="item_ids" <%if (item.selected){%>checked='checked'<%}%> value="<%=item.item_id%>" >
+        <span><%=item.name%></span>
+    </label>
+    <%}})%>
+    <input type="hidden"  <%if (required){%>required<%}%> name="item_ids"  id="item_ids" requiredmsg='请选择服务项目'>
+    <script>
+        $('.item_ids').on('change',function(){
+            initItemsValue()
+        })
+
+        var initItemsValue = function(){
+            var itemList = [];
+            $('.item_ids:checked').each(function(item){
+                itemList.push($(this).val());
+            })
+            $("#item_ids").val(itemList.join(','));
+        }
+        initItemsValue();
+    </script>

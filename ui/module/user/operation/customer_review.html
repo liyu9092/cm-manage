@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>用户操作</a><span>&gt;</span><a>用户评价</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>评价管理</h4>
+				</div>
+			</div>
+		</div>
+        <style>
+            .link .space{
+                color:#58A2EC!important;
+            }
+        </style>
+		<div class="wrapper">
+        <form data-role="hash">
+            <div class="input-group placeholder-switch">
+                <select name="itemMainNum">
+                  <option value="1" data-placeholder="请输入臭美劵密码">臭美劵密码</option>
+                  <option value="2" data-placeholder="请输入用户手机号">用户手机号</option>
+                  <option value="3" data-placeholder="请输入店铺名称">店铺名称</option>
+                </select>
+                <input type="text" class="input-search " name="keyword"
+                placeholder="请输入臭美劵密码"/>
+            </div>
+            <div class="date-group">
+                <span style="padding:0 5px 0 15px">评价日期</span>
+                <input type="date" name="date" placeholder="YYYY-MM-DD"/>
+            </div>
+            <div class="date-group">
+                <span style="padding:0 5px 0 15px">评价结果</span>
+                <select name="satisfyType">
+                  <option value="0">全部</option>
+                  <option value="1">很满意</option>
+                  <option value="2">满意</option>
+                  <option value="3">不满意</option>
+                </select>
+            </div>
+            <div class="date-group">
+                <span style="padding:0 5px 0 15px">状态</span>
+                <select name="status">
+                  <option value="0">全部</option>
+                  <option value="1">正常</option>
+                  <option value="2">已隐藏</option>
+                  <option value="3">已删除</option>
+                </select>
+            </div>
+          <button class="btn" type="submit">查询</button>
+        </form>
+
+		<div class="table" ajat="comment/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+                <%var statusStr = ['','正常','已隐藏','已删除']%>
+                <table>
+                <thead>
+                <tr>
+                <th>序号</th>
+                <th>用户手机号</th>
+                <th>臭美劵密码</th>
+                <th>店铺名称</th>
+                <th>评价时间</th>
+                <th>评价结果</th>
+                <th>状态</th>
+                <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <%data.data && data.data.forEach(function(item,index){%>
+                  <tr>
+                    <td><%=index+1%></td>
+                    <td><%=item.mobilePhone%></td>
+                    <td><%=item.ticketNo%></td>
+                    <td><%=item.salonName%></td>
+                    <td><%=item.time%></td>
+                    <td><%=item.satisfyType%></td>
+                    <td><%=statusStr[item.status]%></td>
+                    <td><a class='link'  href='review_info.html?id=<%=item.id%>' data-slug='comment.show'>查看<span class='space'>&gt;</span></a></td>
+                  </tr>
+                <%})%>
+                </tbody>
+                </table>
+                <div class="pager">
+                </div>
+			</script>
+		</div>
+        <script>
+        $('input[name=date]').val(new Date().format('yyyy-MM-dd'));
+        </script>
+	</div>
+  </body>
+</html>

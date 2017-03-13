@@ -1,0 +1,63 @@
+<form action="book/refund/<%=query.id%>" data-role="form">
+<div class="control-group">
+    <label class="control-label" for="">项目价格：</label>
+    <div class="control">
+            <label for=""><%=orderInfo.order.item_amount%></label>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for="">已付定金：</label>
+    <div class="control">
+            <label for=""><%=orderInfo.order.PAYABLE%></label>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for="">应收金额：</label>
+    <div class="control">
+            <label for=""><%= orderInfo.booking_cash.other_money*1 + orderInfo.booking_cash.cash_money*1 + orderInfo.booking_cash.deduction_money*1%></label>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for="">抵扣金额：</label>
+    <div class="control">
+            <label for=""><%=orderInfo.booking_cash.deduction_money%></label>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for="">实收金额：</label>
+    <div class="control">
+            <label for=""><span class="red"><%= orderInfo.booking_cash.other_money*1 + orderInfo.booking_cash.cash_money*1%></span></label>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for=""><span class="red">*</span>退款方式：</label>
+    <div class="control">
+            <select class="" name="back_to">
+                <option value="1">微信</option>
+                <option value="2">支付宝</option>
+                <option value="3">银联</option>
+                <option value="4">现金</option>
+            </select>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for=""><span class="red">*</span>退款金额：</label>
+    <div class="control">
+            <input type="text" pattern="float" name="money" max="<%= orderInfo.order.item_amount - orderInfo.order.PAYABLE-orderInfo.booking_cash.deduction_money%>" required/>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for="">退款说明：</label>
+    <div class="control">
+        <div class="keypress" maxlength="500">
+        <textarea maxlength="500" name="remark" placeholder="限制1~500个字符"  style="height:150px;width:500px"></textarea>
+        </div>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for=""></label>
+    <button class="btn popup-alert-cancel" type="button">取消</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <button class="btn-primary">保存</button>
+</div> 
+</form>

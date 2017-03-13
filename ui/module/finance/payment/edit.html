@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <title>臭美管理后台</title>
+        <script src="/js/include.js"></script>
+    </head>
+    <body>
+		<div class="breadcrumb">
+			<a>付款管理</a><span>&gt;</span><a href="index.html">付款列表</a><span>&gt;</span><span id="breadcrumb-current"><%=query._?"编辑付款单":"新增付款单"%></span>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4><%=query._?"编辑付款单":"新增付款单"%></h4>
+				</div>		 
+			</div>
+			<hr />
+		</div>			
+     <div class="wrapper" >
+		<div ajat="<%if(query.id){%>pay_manage/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		  <form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>pay_manage/update/<%=query.id%><%}else{%>pay_manage/create<%}%>">
+				<div class="detail-operation">
+					<button class="btn btn-cancel" type="button" >取消</button>
+					<span class="space"></span>
+					<button class="btn-primary" data-slug="<%if(query.id){%>pay_manage.update<%}else{%>pay_manage.create<%}%>">提交</button>			
+				</div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>付款类型：</label>
+                    <div class="control">
+                       <select id="type" required name="type"   style="width:20%;" <%=query.id?"disabled":""%>>
+							<option <%=data.type==1?"selected":""%> value="1">付交易代收款</option>
+							<option <%=data.type==2?"selected":""%> value="2">付业务投资款</option>
+                        </select>
+						<%if(query.id){%>
+							<input type="hidden" name="type" value="<%=data.type%>" />
+						<%}%>
+                    </div>
+                </div>
+                <div class="control-separation">
+                    <legend>付款详情</legend>
+					<hr />
+                </div>
+				<input type="hidden" name="salon_id" id="salonid" value="<%=data.salon?data.salon.salonid:""%>"/>
+				  <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
+                    <div class="control complete">
+						<input id="search" type="text" value="<%=data.salon?data.salon.salonname:""%>" 
+							ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" 
+							ajat-resources="/module/public/widget/autocomplete/index.js" autocomplete="off" required>
+						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ></div>
+						<span id="sn" class="weak"></span>
+                    </div>
+                </div>
+                 <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
+                    <div class="control">
+                        <input type="text" id="merchantname" value="<%=data.merchant?data.merchant.name:""%>" disabled>
+						<input type="hidden" name="merchant_id" id="merchantId" required requiredmsg="没有找到店铺名称对应的商户" value="<%=data.merchant?data.merchant.id:""%>"/>
+                    </div>
+                </div>
+				 <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>付款金额：</label>
+                    <div class="control">
+                        <input type="text" required name="money" value="<%=data.money||""%>" placeholder="预付交易款金额" pattern="float" id="pay_money">
+                    </div>
+                </div>
+			    <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>付款方式：</label>
+                    <div class="control">
+                        <select  name="pay_type">
+						  <option value="1" <%=data.pay_type==1?"selected":""%>>银行存款</option>
+						  <option value="2" <%=data.pay_type==2?"selected":""%>>账扣支付</option>
+						  <option value="3" <%=data.pay_type==3?"selected":""%>>现金</option>
+						  <option value="4" <%=data.pay_type==4?"selected":""%>>支付宝</option>
+						  <option value="5" <%=data.pay_type==5?"selected":""%>>财付通</option>
+						</select>
+                    </div>
+                </div>
+				<div id="dom" style="<%=data.type!=2?"display:none":""%>">
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>要求付款日期：</label>
+                    <div class="control">			 
+                        <input type="date" name="require_day" value="<%=data.require_day||""%>" required placeholder="YYYY-MM-DD"/>                              							  
+                    </div>
+                </div>
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>回款周期：</label>
+                    <div class="control">			 
+                        <input type="text" name="cycle" maxlength="5" min="1" value="<%=data.cycle||""%>" required pattern="number" /><span class="unit">个月</span>                              							  
+                    </div>
+                </div>
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>回款日期：</label>
+                    <div class="control">			 
+                        <input type="text" name="cycle_day" value="<%=data.cycle_day||""%>" min="1" max="31" required pattern="number" patternmsg="回款日期只能为数字且1-31之间"/><span class="unit">号/月</span> <span class="weak">当月无此日期时顺延至下月1号</span>                              							  
+                    </div>
+                </div>
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>周期回款金额：</label>
+                    <div class="control">			 
+                        <input type="text" name="cycle_money" value="<%=data.cycle_money||""%>" required pattern="float"/> <span class="weak">尾差金额在最后一个回款周期补回</span>                             							  
+                    </div>
+                </div>
+				</div>
+				<div class="control-group">
+                    <label class="control-label" for="">备注：</label>
+                    <div class="control">
+                        <input type="text" name="remark" value="<%=data.remark||""%>" maxlength="15"  >
+                    </div>
+                </div>
+               <div class="control-group">
+				<label class="control-label" for=""></label>
+				<div class="control">
+					<button class="btn preview" type="button">预览</button>
+					<%localStorage.setItem("preview",JSON.stringify(data))%>
+					<button class="btn-primary" data-slug="<%if(query.id){%>pay_manage.update<%}else{%>pay_manage.create<%}%>">提交</button>				 
+				</div>
+			</div>			 
+          </form>
+			</script>
+        </div>
+       </div>
+		<script type="text/javascript">
+		$('#form').on('_ready',function(){
+			$('form')[0]._getFormData=function(){
+				var data=lib.tools.getFormData($(this));
+				if(data.type==1){
+					delete data.require_day;
+					delete data.cycle;
+					delete data.cycle_day;
+					delete data.cycle_money;
+				}
+				return data;
+			}
+			$(document).on('blur','input[name="cycle_money"]',function(){
+				var $this=$(this);
+				var cycle_money=$this.val();
+				var money=$('input[name="money"]').val();
+				if(cycle_money&&money&&parseFloat(cycle_money)>=parseFloat(money)){
+					$this.trigger('error',{type:'error',errormsg:"周期回款金额不能大于付款金额"});
+				}
+			});
+			$('#type').on('change',function(){
+				if(this.value==2){
+					$('#dom').show();
+				}else{
+					$('#dom').hide();
+				}
+			});
+			$(document).on('click','.preview',function(){
+				var data=lib.tools.getFormData($(this).closest('form'));
+				data=$.extend(JSON.parse(localStorage.getItem("preview")),data);
+				data.salon=$.extend(data.salon,{salonname:$('#search').val(),sn:$('#sn').text()});
+				data.merchant=$.extend(data.merchant,{name:$('#merchantname').val()});
+				localStorage.setItem('preview',JSON.stringify(data));
+				window.open("preview.html?preview=preview");
+			})
+		});		
+	</script> 	
+    </body>
+</html>
+ 

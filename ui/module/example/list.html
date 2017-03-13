@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-status-bar-style" content="black">
+      <meta name="format-detection" content="telephone=no">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="../../js/include.js"></script>
+  </head>
+  <body>
+	<div class="breadcrumb">
+		<a href="ui.html">一级导航</a><span>&gt;</span><a href="ui.html">二级导航</a><span>&gt;</span>用户管理
+	</div>
+	<div class="wrapper">
+			<div class="flex-box">
+				<div class="flex-item">
+					<form data-role="hash">
+						<div class="input-group">
+							<select class="select border-none">
+								<option value="1">深圳</option>
+								<option value="2">上海</option>
+								<option value="3">北京</option>
+								<option value="4">天津</option>
+								<option value="5">广州</option>
+							</select>
+							<input type="text" class="border-none"/>
+							<button type="submit" class="fa fa-search"></button>
+						</div>
+					</form>
+				</div>
+				<a href="form.html">
+					<button class="btn-primary"><i class="fa fa-plus"></i> 新增</button>
+				</a>
+			</div>
+			
+			<div class="table">
+			<table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>邮箱</th>
+                  <th>手机号码</th>
+                  <th>性别</th>
+				  <th>城市</th>
+				  <th>描述</th>
+				  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+				
+				
+                <tr>
+                  <td>1</td>
+                  <td>yunfei.huang@qq.com800265</td>
+                  <td>15889750625</td>
+                  <td>男</td>
+				  <td>
+				  1
+				</td>
+				  <td>yunfei.huang@qq.com</td>
+				  <td>
+					 <a class="link" href="form.html?id=1000">编辑</a>
+					<span class="space"></span>
+					<a class="link delete">删除</a>
+				  </td>
+                </tr>
+				
+                <tr>
+                  <td>2</td>
+                  <td>yunfei.huang@qq.com625264</td>
+                  <td>15889750625</td>
+                  <td>男</td>
+				  <td>
+				  2
+				</td>
+				  <td>yunfei.huang@qq.com</td>
+				  <td>
+					 <a class="link" href="form.html?id=1000">编辑</a>
+					<span class="space"></span>
+					<a class="link delete">删除</a>
+				  </td>
+                </tr>
+				
+                <tr>
+                  <td>3</td>
+                  <td>yunfei.huang@qq.com776179</td>
+                  <td>15889750625</td>
+                  <td>男</td>
+				  <td>
+				  3
+				</td>
+				  <td>yunfei.huang@qq.com</td>
+				  <td>
+					 <a class="link" href="form.html?id=1000">编辑</a>
+					<span class="space"></span>
+					<a class="link delete">删除</a>
+				  </td>
+                </tr>
+				
+                <tr>
+                  <td>4</td>
+                  <td>yunfei.huang@qq.com29602</td>
+                  <td>15889750625</td>
+                  <td>男</td>
+				  <td>
+				  4
+				</td>
+				  <td>yunfei.huang@qq.com</td>
+				  <td>
+					 <a class="link" href="form.html?id=1000">编辑</a>
+					<span class="space"></span>
+					<a class="link delete">删除</a>
+				  </td>
+                </tr>
+				
+                <tr>
+                  <td>5</td>
+                  <td>yunfei.huang@qq.com155112</td>
+                  <td>15889750625</td>
+                  <td>男</td>
+				  <td>
+				  5
+				</td>
+				  <td>yunfei.huang@qq.com</td>
+				  <td>
+					 <a class="link" href="form.html?id=1000">编辑</a>
+					<span class="space"></span>
+					<a class="link delete">删除</a>
+				  </td>
+                </tr>
+              </tbody>
+            </table>
+			<div class="pager">共1000条&nbsp;<div class="pagination"><span class="current prev">&lt;&lt;</span><span class="current">1</span><a class="link">2</a><a class="link">3</a><a class="link">4</a><a class="link">5</a><a class="link">6</a><a class="link">7</a><a class="next link">&gt;&gt;</a></div><form data-role="hash"><input type="text" name="pageNo"><button class="go link" type="submit">go</button></form></div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$('#popup-alert').on('click',function(){
+			lib.popup.alert({text:'请完善用户信息'})
+		});
+		$('#popup-confirm').on('click',function(){
+			lib.popup.alert({text:'确认删除用户信息'})
+		});
+		$('#popup-loading').on('click',function(){
+			lib.popup.tips({text:'用户信息提交中',icon:'loading'})
+		});
+		$('#popup-success').on('click',function(){
+			lib.popup.tips({text:'用户信息提交成功',icon:'success'})
+		});
+		$('#popup-fail').on('click',function(){
+			lib.popup.tips({text:'用户信息提交失败',icon:'fail'})
+		});
+		$(document).on('click','[data-toggle-class]',function(){
+			var $this=$(this);
+			$this.parent().toggleClass($this.data('toggle-class'));
+		});
+		$(document).on('click',function(e){
+			if($(e.target).closest('.open').length==0){
+				$('.open').removeClass('open')
+			}
+		});
+	</script>
+  </body>
+</html>

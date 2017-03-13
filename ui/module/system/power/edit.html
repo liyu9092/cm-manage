@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">      
+      <title>臭美管理后台</title>
+      <script src="/js/include.js"></script>
+  </head>
+  <body>
+  
+    <div class="breadcrumb">
+        <a>系统管理</a><span>&gt;</span><a href="index.html">权限管理</a><span>&gt;</span>权限修改
+			<div class="flex-box">
+			<div class="flex-item">
+				<h4>权限修改</h4>
+			</div>		 
+		</div>
+		<hr />
+    </div>
+    <div class="wrapper" ajat="<%if(query.id){%>permission/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+	   <script type="text/template" id="form-t">
+        <form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>permission/update/<%=data.id%><%}%>" <%=data.status==3?"disabled":""%>>
+			<div class="detail-operation">
+				<button class="btn btn-cancel" type="button" style="<%=data.status==3?"display:none":""%>">取消</button>
+				<span class="space"></span>
+				 <button class="btn-primary" style=" <%=data.status==3?"display:none":""%>" data-slug="permission.update">提交</button>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>权限名称：</label> 
+				<div class="control"><%=data.title||""%></div>		
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>配置路径：</label>
+			   <div class="control">
+					<input type="text" required name="slug" value="<%=data.slug||""%>" disabled>
+					<span class="control-help" style="display: none;">未填写</span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>权限状态：</label>
+				<div class="control">
+					 <select required name="status"  <%=data.status==3?"disabled":""%>>
+						<option value="1" <%=data.status==1?"selected":""%>>正常</option>
+						<option value="2" <%=data.status==2?"selected":""%>>停用</option>
+						<option value="3" <%=data.status==3?"selected":""%>>注销</option>
+					</select>
+				</div>
+			</div>   
+			 <div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>权限说明：</label>
+				<div class="control">
+					<input type="text"  value="<%=data.description||""%>" name="description" <%=data.status==3?"disabled":""%>>
+					<span class="control-help" style="display: none;">未填写</span>
+				</div>
+			</div>
+			 <div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>信息备注：</label>
+				<div class="control">
+					<input type="text"  value="<%=data.note||""%>" name="note" <%=data.status==3?"disabled":""%>>
+					 <span class="control-help" style="display: none;">未填写</span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""></label>
+				<div class="control"><button class="btn-primary" style=" <%=data.status==3?"display:none":""%>" data-slug="permission.update">提交</button></div>
+			</div>
+		</form>
+    </div>
+  </body>
+</html>

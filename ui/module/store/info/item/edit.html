@@ -1,0 +1,457 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="template.js"></script>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+	<div class="breadcrumb">
+		<a>店铺管理 </a><span>&gt;</span><a href="../index.html">店铺资料</a><span>&gt;</span>
+		<%if(query.p=="warehouse"){%>
+		<a href="index.html#<%=query._%>">项目仓库</a>
+		<span>&gt;</span>
+		<%}%>
+		<%=query.id?"编辑":"新增"%><%=query.p=="special"?"闲时特价":"项目"%>
+		<div class="flex-box">
+			<div class="flex-item">
+				<h4><%=query.id?"编辑":"新增"%><%=query.p=="special"?"闲时特价":"项目"%>-<%=query.salonname%></h4>
+			</div>
+		</div>
+		<hr />
+	</div>
+	<div class="wrapper" >
+		<div class="form-vertical" id="special" ajat="#domid=special&tempid=special-t">
+			<script type="text/template" id="special-t">
+				<%
+					var updateSlug="itemInfo.update";
+					if(query.p=="warehouse"){
+						if(query.type=="special"){
+							updateSlug="itemInfo.updateSpecialItem"
+						}
+					}
+					if(lib.query.p=="special"){
+						updateSlug="itemInfo.updateSpecialItem"
+					}
+					var createSlug=query.p=="special"?"itemInfo.createSpecialItem":"itemInfo.create";
+				%>
+				<div class="detail-operation">
+					<button class="btn btn-cancel" type="button">取消</button>
+					<span class="space"></span>
+					<button form="_form" class="btn-primary" data-slug="<%=query.id?updateSlug:createSlug%>">提交</button>
+				</div>
+				<%if(query.p=="special"&&!query.id){%>
+				<legend>新增方式</legend>
+				<div class="control-group">
+					<label class="control-label" for="">选择分类：</label>
+					<div class="control">
+						<select ajat="item/type#domid=type1&tempid=type1-t" id="type1" 
+							ajat-change="itemInfo/getItems?salonid=<%=query.salonid%>&typeid=${value}#domid=project&tempid=project-t">
+						</select>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="">已有项目：</label>
+					<div class="control">
+						<select id="project">
+							
+						</select>
+					</div>
+				</div>
+				<hr />
+				<%}%>
+			</script>
+		</div>
+		<div id="form">
+		<script type="text/template" id="form-t">
+		<form method="post" id="_form" class="form-vertical" data-role="form" action="<%=query.id?"itemInfo/update":(query.p=="item"?"itemInfo/create":"itemInfo/createSpecialItem")%>">
+			<input type="hidden" name="itemType" value="<%=query.p=="special"?"2":"1"%>" />
+			<input type="hidden" name="salonid" value="<%=query.salonid%>" />
+			<input type="hidden" name="itemid" value="<%=query.id%>" />
+			<legend>项目资料</legend>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>项目名称：</label>
+				<div class="control">
+					<input type="text" required name="itemname" maxlength="15" nospace value="<%=data.itemname%>">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>项目分类：</label>
+				<div class="control">
+					<select ajat="item/type#domid=type&tempid=type-t&sid=<%=data.typeid%>" id="type" name="typeid"
+					ajat-change="itemInfo/getAddedService?salonid=<%=query.salonid%>&typeid=${value}#domid=service&tempid=service-t">
+					</select>
+				</div>
+			</div>
+			<div class="control-group" style="display:none" id="level">
+				<label class="control-label" for=""><span class="red">*</span>快剪等级：</label>
+				<div class="control">
+					<select name="fastGrade">
+						<option value="1">普通快剪</option>
+						<option value="2">总监快剪</option>				
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>项目图片：</label>
+				<div class="control">
+					<div class="control-image">
+						<div class="control-single-image">
+							<img src="<%=data.logo%>" alt="">
+							<div class="control-image-ud">
+								<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
+							</div>
+							<!--<a class="fa fa-times-circle control-image-single-remove"></a>-->
+							<input type="hidden" name="logo" class="original" value="<%=data.logo%>" required data-helpid="image-help" requiredmsg="请上传项目图片">
+						</div>
+					</div>
+					<div class="weak">请上传JPG或PNG格式的图标，此图标将显示在项目列表中</div>
+					<div class="control-help" style="display:none;" id="image-help"></div>
+				</div>
+			</div>
+			<div id="service">
+			
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>服务详情：</label>
+				<div class="control">
+					<div class="keypress" maxlength="500">
+						<textarea name="desc" data-helpid="textarea-help" required><%=data.desc%></textarea>
+					</div>
+					<div class="control-help" style="display:none;" id="textarea-help"></div>
+					<div id="template"></div>
+				</div>
+			</div>
+			<hr />
+			<legend>项目限制</legend>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>项目有效期：</label>
+				<div class="control">
+					<input type="date" required name="expTimeInput" <%if(!query.id){%>min="<%=new Date(new Date().getTime()+1000*60*60*24).format("yyyy-MM-dd")%>"<%}%> <%if(data.exp_time){%>value="<%=new Date(data.exp_time*1000).format("yyyy-MM-dd")%>"<%}else{%>disabled<%}%>>
+					<span>
+					<label><input type="checkbox" <%=!data.exp_time?"checked":""%> class="limit"/><span>无限制</span></label>
+					</span>
+					<span class="control-help" style="display:none;"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>定时上架：</label>
+				<div class="control">
+					<input type="_datetime" format="YYYY-MM-DD hh:mm" required name="timingAdded" <%if(data.timingAdded){%>value="<%=new Date(data.timingAdded*1000).format("yyyy-MM-dd hh:mm")%>" <%=data.status==1?"disabled":""%><%}else{%>disabled min="<%=new Date().format("yyyy-MM-dd hh:mm")%>"<%}%>>
+					<span>
+					<label><input <%=data.status==1?"disabled":""%> type="checkbox" <%=!data.timingAdded?"checked":""%> class="limit"/><span>无限制</span></label>
+					</span>
+					<span class="control-help" style="display:none;"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>定时下架：</label>
+				<div class="control">
+					<input type="_datetime" format="YYYY-MM-DD hh:mm" required name="timingShelves" <%if(data.timingShelves){%>value="<%=new Date(data.timingShelves*1000).format("yyyy-MM-dd hh:mm")%>"<%}else{%>disabled min="<%=new Date().format("yyyy-MM-dd hh:mm")%>"<%}%>>
+					<span>
+					<label><input type="checkbox" <%=!data.timingShelves?"checked":""%> class="limit"/><span>无限制</span></label>
+					</span>
+					<span class="control-help" style="display:none;"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>限制购买：</label>
+				<div class="control">
+					<input type="text" required pattern="number" max="99999999"  name="timeLimitInput" placeholder="单人限制购买数"  <%if(data.limit_time){%>value="<%=data.limit_time%>"<%}else{%>disabled<%}%>>
+					<span>	
+					<label><input type="checkbox" <%=!data.limit_time?"checked":""%> class="limit"/><span>无限制</span></label>
+					</span>
+					<span class="control-help" style="display:none;"></span>
+				</div>
+			</div>
+			<%if(query.p=="item"){%>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>库存数量：</label>
+				<div class="control">
+					<input type="text" required pattern="number" max="99999999" min="1" name="totalRepInput"  placeholder="限制销售数量" <%if(data.total_rep){%>value="<%=data.total_rep%>"<%}else{%>disabled<%}%>>
+					<span>
+					<label><input type="checkbox" <%=!data.total_rep?"checked":""%> class="limit" /><span>无限制</span></label>
+					</span>
+					<span class="control-help" style="display:none;"></span>
+					<%if(query.id){%>
+					<p class="weak">已售<%=data.sold%>份</p>
+					<%}%>
+				</div>
+			</div>
+			<%}%>
+			<%if(query.p=="special"){%>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>项目日库存：</label>
+				<div class="control">
+					<input type="text" required pattern="number" max="99999999" min="1" name="repertory" placeholder="限制当日销售数量" value="<%=data.repertory?data.repertory:""%>">
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="">消费限制：</label>
+				<div class="control">
+					<input type="text" max="99999999" min="1" name="useLimit" maxlength="15" placeholder="用户使用限制说明" value="<%=data.useLimit%>">
+				</div>
+			</div>
+			<%}%>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>限制资格：</label>
+				<div class="control">
+					<label><input type="checkbox" name="inviteLimit" value="1" <%=!data.limit_invite?"disabled":""%>/><span>限推荐用户购买</span></label>
+					<label><input type="checkbox" name="firstLimit" value="1" <%=!data.limit_first?"disabled":""%>/><span>限首次下单可购买</span></label>
+					<span>
+					<label><input type="checkbox" <%=!data.limit_invite&&!data.limit_first?"checked":""%> class="limit"/><span>无限制</span></label>
+					</span>
+				</div>
+			</div>
+			<hr />
+			<legend>价格设置</legend>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>定价方式：</label>
+				<div class="control">
+					<label><input class="price-choose" type="radio" name="priceStyle" <%=data.norms_cat_id==undefined||data.norms_cat_id==0||data.userId==0?"checked":""%> value="1" /><span>无规格，统一价</span></label>
+					<label><input class="price-choose" type="radio" name="priceStyle" <%=!(data.norms_cat_id==undefined||data.norms_cat_id==0||data.userId==0)?"checked":""%> value="2"/><span>有规格，区间价</span></label>
+				</div>
+			</div>
+			<div class="price-group" style="<%=!(data.norms_cat_id==undefined||data.norms_cat_id==0||data.userId==0)?"display:none":""%>">
+				<div class="control-group">
+					<label class="control-label" for=""><span class="red">*</span>原价：</label>
+					<div class="control">
+						<span>
+						<input type="text" data-helpid="help5" required requiredmsg="请输入原价" pattern="number" maxlength="5" min="1" name="price" <%if(data.norms_cat_id==0){%>value="<%=data.prices&&data.prices[0]&&parseInt(data.prices[0].price)?Math.ceil(data.prices[0].price):""%>" <%}%>>
+						</span>
+						<span>
+						<input type="text" pattern="number" max="100" class="choumei-discount" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;">
+						<span class="unit">%</span>
+						</span>
+						<span class="control-help" id="help5" style="display:none"></span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for=""><span class="red">*</span>臭美价：</label>
+					<div class="control">
+						<span>
+						<input type="text" data-helpid="help6" required requiredmsg="请输入臭美价" pattern="number" maxlength="5" min="1" name="priceDis" <%if(data.norms_cat_id==0){%> value="<%=data.prices&&data.prices[0]&&parseInt(data.prices[0].price_dis)?Math.ceil(data.prices[0].price_dis):""%>"  <%}%>>
+						</span>
+						<span>
+						<input type="text" pattern="number" class="group-discount"  max="100" placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;">
+						<span class="unit">%</span>
+						</span>
+						<span class="control-help" id="help6" style="display:none"></span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="">集团价：</label>
+					<div class="control">
+						<input type="text" pattern="number" maxlength="5" min="1" name="priceGroup" <%if(data.norms_cat_id==0){%> value="<%=data.prices&&data.prices[0]&&parseInt(data.prices[0].price_group)?Math.ceil(data.prices[0].price_group):""%>"  <%}%>>
+					</div>
+				</div>
+			</div>
+			<div class="control-group format-group" style="<%=data.norms_cat_id==undefined||data.norms_cat_id==0||data.userId==0?"display:none":""%>">
+				<label class="control-label" for="">规格选择：</label>
+				<div class="form-item">
+					<style type="text/css">
+						.form-vertical div.control-label{
+							width:100px;
+							text-align:left;
+						}
+						.form-item hr{
+							margin-top:10px;
+							margin-bottom:10px;
+							border-style:dotted;
+							border-color:#ddd;
+						}
+						.form-vertical .btn-plus{
+							width:30px;
+							border-radius:50%;
+							min-width:0;
+							color:#999;
+							border-color:#999;
+							height:30px;
+							padding:0;
+							vertical-align:top;
+						}
+						.btn-plus i{
+							font-size: 28px;
+							line-height: 31px;
+						}
+						.form-item .input-small{
+							width:140px!important;
+							min-width:0!important;
+							margin-bottom:5px;
+						}
+						.form-item .table input{
+							margin-top:-5px;
+							margin-bottom:-5px;
+							box-shadow:none;
+							width:60px;
+						}
+						.form-item .table input.err{
+							border-color:red;
+						}
+					</style>
+					<div id="format-form">
+						<div class="control-label" >
+							<label><input type="checkbox" class="item-checkbox" value="sex" /><span>性别</span></label>
+						</div>
+						<div class="control">
+							<label><input type="checkbox" disabled name="sex" value="男" required/><span>男</span></label>
+							<label><input type="checkbox" disabled name="sex" value="女" required/><span>女</span></label>
+						</div>
+						<hr />
+						<div class="control-label" >
+							<label><input type="checkbox" class="item-checkbox" value="hairstylist" /><span>造型师</span></label>
+						</div>
+						<div class="control">
+							<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
+							<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
+							<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
+							<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
+							<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
+							<button type="button" class="btn btn-plus" disabled><i class="fa fa-plus"></i></button>
+							<span class="control-help" style="display: none;">请输入造型师</span>
+						</div>
+						<hr />
+						<div class="control-label" >
+							<label><input type="checkbox" class="item-checkbox" value="longhair" /><span>发长</span></label>
+						</div>
+						<div class="control">
+							<label><input type="checkbox" disabled name="longhair" value="长发" required/><span>长发</span></label>
+							<label><input type="checkbox" disabled name="longhair" value="中发" required/><span>中发</span></label>
+							<label><input type="checkbox" disabled name="longhair" value="短发" required/><span>短发</span></label>
+							<label><input type="checkbox" disabled name="longhair" value="超长发" required/><span>超长发</span></label>
+							<label><input type="checkbox" disabled name="longhair" value="超短发" required/><span>超短发</span></label>
+						</div>
+						<hr />
+						<div class="control-label" >
+							<label><input type="checkbox" class="item-checkbox" value="solution" /><span>药水</span></label>
+						</div>
+						<div class="control">
+							<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
+							<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
+							<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
+							<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
+							<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
+							<button type="button" class="btn btn-plus" disabled><i class="fa fa-plus"></i></button>
+							<span class="control-help" style="display: none;">请输入药水</span>
+						</div>
+						<hr />
+						<button type="button" class="btn link" id="btn-price" >生成价格表</button>
+						<input type="text" pattern="number" id="choumei-precent" placeholder="臭美价折扣"  max="100" class="input-unit" style="width:110px;min-width:0;"/>
+						<span class="unit">%</span>
+						<input type="text" pattern="number" id="group-precent"placeholder="集团价折扣"  max="100" class="input-unit" style="width:110px;min-width:0;"/>
+						<span class="unit">%</span>
+						
+					</div>
+					<span>
+						<input type="hidden" name="normMenu" required requiredmsg="请生成价格表"/>
+					</span>
+					<div class="table" id="format-table">
+						
+					</div>
+				</div>
+			</div>
+			<div class="control-group">
+				<%
+					var updateSlug="itemInfo.update";
+					if(query.p=="warehouse"){
+						if(query.type=="special"){
+							updateSlug="itemInfo.updateSpecialItem"
+						}
+					}
+					if(lib.query.p=="special"){
+						updateSlug="itemInfo.updateSpecialItem"
+					}
+					var createSlug=query.p=="special"?"itemInfo.createSpecialItem":"itemInfo.create";
+				%>
+				<label class="control-label" for=""></label>
+				<div class="control">
+					<button class="btn-primary" data-slug="<%=query.id?updateSlug:createSlug%>">提交</button>
+				</div>
+			</div>
+		</form>
+		</script>
+		</div>
+	</div>
+	<script type="text/template" id="type-t">
+		<%data.forEach(function(item){%>
+			<option <%=item.typeid==protocol.custom.sid?"selected":""%> value="<%=item.typeid%>"><%=item.typename%></option>
+		<%})%>
+	</script>
+	<script type="text/template" id="service-t">
+		<%if(data.length>0){%>
+			<div class="control-group" id="service">
+				<label class="control-label" for="">增值服务：</label>
+				<div class="control" >
+				<%data.forEach&data.forEach(function(item){%>
+					<label><input type="checkbox" name="addedService" value="<%=item.sId%>" checked /><span><%=item.sName%></span></label>
+				<%})%>
+				</div>
+			</div>
+		<%}%>
+	</script>
+	<script type="text/template" id="type1-t">
+		<option value="">可选择已有项目新增闲时特价</option>
+		<%data.forEach(function(item){%>
+			<option value="<%=item.typeid%>"><%=item.typename%></option>
+		<%})%>
+	</script>
+	<script type="text/template" id="project-t">
+		<%data.forEach(function(item){%>
+			<option value="<%=item.itemid%>"><%=item.itemname%></option>
+		<%})%>
+	</script>
+	<script type="text/template" id="format-table-t">
+	<table>
+		<thead>
+			<tr>
+				<%if(normMenu.indexOf("sex")>-1){%>
+				<th>性别</th>
+				<%}%>
+				<%if(normMenu.indexOf("hairstylist")>-1){%>
+				<th>造型师</th>
+				<%}%>
+				<%if(normMenu.indexOf("longhair")>-1){%>
+				<th>发长</th>
+				<%}%>
+				<%if(normMenu.indexOf("solution")>-1){%>
+				<th>药水</th>
+				<%}%>
+				<th>原价</th>
+				<th>臭美价</th>
+				<th>集团价</th>
+			</tr>
+		</thead>
+		<tbody>
+			<%data.forEach(function(item){%>
+			<tr>
+				<%if(normMenu.indexOf("sex")>-1){%>
+				<td data-name="sex"><%=item.type.sex%></td>
+				<%}%>
+				<%if(normMenu.indexOf("hairstylist")>-1){%>
+				<td data-name="hairstylist"><%=item.type.hairstylist%></td>
+				<%}%>
+				<%if(normMenu.indexOf("longhair")>-1){%>
+				<td data-name="longhair"><%=item.type.longhair%></td>
+				<%}%>
+				<%if(normMenu.indexOf("solution")>-1){%>
+				<td data-name="solution"><%=item.type.solution%></td>
+				<%}%>
+				<td data-name="price"><input type="text" value="<%=item.price%>" class="format-price" pattern="number" min="1" maxlength="5"/></td>
+				<td data-name="priceDis"><input type="text" value="<%=item.priceDis%>" class="format-price-dis" pattern="number" min="1" maxlength="5"/></td>
+				<td data-name="priceGroup"><input type="text" value="<%=item.priceGroup%>" class="format-price-group" pattern="number" min="1" maxlength="5"/></td>
+			</tr>
+			<%})%>
+		</tbody>
+	</table>
+	<input type="hidden" name="normarr" required requiredmsg="<%if(data.length<2){%>只有一个规格，请通过项目名称标识<%}else{%>请录入两个以上的规格价格，否则请用项目名称体现规格<%}%>"/>
+	</script>
+	<script type="text/template" id="template-t">
+		<%data&&data.forEach(function(item){%>
+			<a class="link" data-value="<%=item.value%>"><%=item.name%></a><span class="space"></span>
+		<%})%>
+	</script>
+	<script type="text/javascript" src="edit.js"></script>
+  </body>
+</html>

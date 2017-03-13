@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <title>臭美管理后台</title>
+		<meta charset="utf-8"/>
+        <script type="text/javascript" src="/js/include.js"></script>
+        <script type="text/javascript" src="/js/validator.js"></script>
+        <style>
+        td input{
+            border:none;
+        }
+        .save{
+            display: none;
+        }  
+        .cancel{
+            display: none;
+        } 
+        td input{
+            display:none;
+        }
+        .space{
+          display: none;
+        } 
+        .show{
+            display:inline-block!important;
+        }         
+        th{
+          width:20%;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>系统配置</a>
+            <span>&gt;</span><a href="score.html">评分对应分值配置</a>
+             <div class="flex-box">
+                <div class="flex-item">
+                    <h4>评分对应分值配置</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">        
+              <div class="table" ajat="scoreconf/index#domid=table&tempid=table-t" id="table">
+              <script type="text/template" id="table-t">
+              <table>
+                <thead>
+                    <tr>
+                        <th>合法情况</th>
+                        <th>很满意</th>
+                        <th>满意</th>
+                        <th>不满意</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                <% data && data.forEach(function(item,i){ %>
+                  <tr>
+                      <td><%=item.description%></td>
+
+                      <td>
+                          <span class="num"><%=item.very_satisfied%></span>
+                          <input type="text" class="vSatisfy" value="<%=item.very_satisfied%>" pattern="number" maxlength="9"/>
+                          <span class="control-help" style="display:none">未填写</span>
+                      </td>
+
+                      <td>
+                          <span class="num"><%=item.satisfied%></span>
+                          <input type="text" class="satisfy" value="<%=item.satisfied%>" pattern="number" maxlength="9"/>
+                          <span class="control-help" style="display:none">未填写</span>
+                      </td>
+
+                      <td>
+                          <strong>减</strong>
+                          <span class="num"><%=Math.abs(item.unsatisfied)%></span>
+                          <input type="text" class="unsatisfy" value="<%=Math.abs(item.unsatisfied)%>" pattern="number" maxlength="9"/>
+                          <span class="control-help" style="display:none">未填写</span>
+                      </td>
+
+                      <td>
+                         <button class="link edit" data-slug="scoreconf.update">编辑</button>
+                         <button class="link save" data-id="<%=item.id%>">保存</button>
+                         <span class="space">|</span>
+                         <a class="link cancel">取消</a>
+                      </td>
+                  </tr>
+                  <%})%> 
+                </tbody>
+              </table>
+              </script>          
+              </div>                     
+        </div>
+            <script src="score.js"></script>
+    </body>
+</html>

@@ -1,0 +1,400 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-status-bar-style" content="black">
+      <meta name="format-detection" content="telephone=no">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="../../js/include.js"></script>
+	  <style type="text/css">
+		h4{
+			margin:20px 0px 10px 0;
+			font-size:16px;
+		}
+		.wrapper{
+			margin:25px;
+		}
+		.drop-menu-list .flex-box{
+			margin:15px;
+		}
+		.drop-menu-list .label+label{
+			margin-bottom:10px;
+		}
+	  </style>
+  </head>
+  <body>
+	<div class="breadcrumb">
+		<a href="ui.html">一级导航</a><span>&gt;</span><a href="ui.html">二级导航</a><span>&gt;</span>UI示例
+	</div>
+	<div class="wrapper">
+		<h4>按钮</h4>
+		<div>
+			<button class="btn">搜索</button>
+			<button class="btn-primary">提交</button>
+			<button class="btn-warn">删除</button>
+			<button class="btn"><i class="fa fa-print"></i> 打印</button>
+			<button class="btn-primary"><i class="fa fa-plus"></i> 新增</button>
+			<button class="btn"><i class="fa fa-map-marker"></i> 添加定位</button>
+			<button class="btn"><i class="fa fa-cloud-upload"></i> 上传文件</button>
+			<button class="btn"><i class="fa fa-file-excel-o"></i> 导出</button>
+			<button class="btn" disabled><i class="fa fa-file-excel-o"></i> 导出</button>
+			<br />
+			<br />
+			<span class="btn btn-image-upload">
+				<i class="fa fa-image"></i>
+				上传合同图片
+				<input type="file" />
+			</span>
+		</div>
+		<h4>输入框</h4>
+		<div>
+			<input type="text" />
+			<input type="text" disabled value="禁用状态"/><br /><br />
+			<textarea style="min-width:400px"></textarea>
+		</div>
+		<h4>组合输入框</h4>
+		<div>
+			<div class="input-group">
+				<select>
+					<option value="1">深圳</option>
+					<option value="2">上海</option>
+					<option value="3">北京</option>
+					<option value="4">天津</option>
+					<option value="5">广州</option>
+				</select>
+				<input type="text"/>
+				<button class="btn">
+					搜索
+				</button>
+			</div>
+			<br />
+			<br />
+			<div class="input-group">
+				<select>
+					<option value="1">深圳</option>
+					<option value="2">上海</option>
+					<option value="3">北京</option>
+					<option value="4">天津</option>
+					<option value="5">广州</option>
+				</select>
+				<input type="text"/>
+				<button class="btn btn-search">
+					<i class="fa fa-search"></i>
+				</button>
+			</div>
+			<br />
+			<br />
+		</div>
+		<h4>日期</h4>
+		<div>
+			日期控件<input type="date" /><br /><br />
+			
+			日期区间<span class="date-group"><input type="date" data-role="start" />到<input type="date" data-role="end"/></span>
+			<br /><br />
+		</div>
+		<h4>下拉框</h4>
+		<div>
+			<select >
+				<option value="1">深圳</option>
+				<option value="2">上海</option>
+				<option value="3">北京</option>
+				<option value="4">天津</option>
+				<option value="5">广州</option>
+			</select>
+		</div>
+		<h4>单选按钮</h4>
+		<div>
+			<label>
+				<input type="radio" name="radio" /><span>男</span>
+			</label>
+			<label>
+				<input type="radio" name="radio" /><span>女</span>
+			</label>
+		</div>
+		<h4>复选按钮</h4>
+		<div>
+			<label>
+				<input type="checkbox" name="checkbox" /><span>篮球</span>
+			</label>
+			<label>
+				<input type="checkbox" name="checkbox" /><span>足球</span>
+			</label>
+		</div>
+		<h4>开关按钮</h4>
+		<div>
+			<label class="switch">
+				<input type="checkbox" name="checkbox" /><span></span>
+			</label>
+		</div>
+		<h4>过滤条件</h4>
+		<div>
+			<button type="button" class="btn" id="filter-toggle-btn">
+				筛选条件 <i class="fa fa-angle-down"></i>
+			</button>
+			<div class="filter-box" style="display:none">
+					<div class="flex-box">
+						<div class="filter-title">付款类型：</div>
+						<div class="flex-item">
+							<label data-role="hash"><input type="radio" name="type" value="0" checked=""><span>全部</span></label>
+							<label data-role="hash"><input type="radio" name="type" value="1"><span>预付交易款返还</span></label>
+							<label data-role="hash"><input type="radio" name="type" value="2"><span>业务投资款返还</span></label>              
+						</div>
+					</div>
+					<div class="flex-box">
+						<div class="filter-title">付款方式：</div>
+						<div class="flex-item">
+							<label data-role="hash"><input type="radio" name="pay_type" value="0" checked=""><span>全部</span></label>
+							<label data-role="hash"><input type="radio" name="pay_type" value="1"><span>银行存款</span></label>
+							<label data-role="hash"><input type="radio" name="pay_type" value="2"><span>账扣返还</span></label>              
+							<label data-role="hash"><input type="radio" name="pay_type" value="3"><span>现金</span></label>              
+							<label data-role="hash"><input type="radio" name="pay_type" value="4"><span>支付宝</span></label>              
+							<label data-role="hash"><input type="radio" name="pay_type" value="5"><span>财付通</span></label>              
+						</div>
+					</div>
+					<div class="flex-box">
+						<div class="filter-title">付款状态：</div>
+						<div class="flex-item">
+							<label data-role="hash"><input type="radio" name="state" value="0" checked=""><span>全部</span></label>
+							<label data-role="hash"><input type="radio" name="state" value="1"><span>待提交</span></label>
+							<label data-role="hash"><input type="radio" name="state" value="2"><span>待审批</span></label>
+							<label data-role="hash"><input type="radio" name="state" value="3"><span>待付款</span></label>
+							<label data-role="hash"><input type="radio" name="state" value="4"><span>已付款</span></label>              
+						</div>
+					</div>
+				</div>
+		</div>
+		<h4>下拉菜单</h4>
+		<div>
+			<span class="drop-menu">
+				<a class="drop-menu-toggle btn">菜单列表 <i class="fa fa-angle-down"></i></a>
+				<ul class="drop-menu-list">
+					<li class="drop-menu-item"><a>菜单1</a></li>
+					<li class="drop-menu-item"><a>菜单2</a></li>
+					<li class="drop-menu-item"><a>菜单3</a></li>
+					<li class="drop-menu-item"><a>菜单4</a></li>
+				</ul>
+			</span>
+			<span class="space"></span>
+			<span class="drop-menu">
+				<a class="drop-menu-toggle link">菜单列表 <i class="fa fa-angle-down"></i></a>
+				<ul class="drop-menu-list">
+					<li class="drop-menu-item"><a>菜单1</a></li>
+					<li class="drop-menu-item"><a>菜单2</a></li>
+					<li class="drop-menu-item"><a>菜单3</a></li>
+					<li class="drop-menu-item"><a>菜单4</a></li>
+				</ul>
+			</span>
+		</div>
+
+		
+		<h4>选项卡</h4>
+		<ul class="tab">
+			<li><a class="active">选项卡1</a></li>
+			<li><a>选项卡2</a></li>
+			<li><a>选项卡3</a></li>
+			<li><a>选项卡4</a></li>
+		</ul>
+		<h4>提示框</h4>
+		<div>
+			<a class="link" id="popup-alert">确定框</a><span class="space"></span>
+			<a class="link" id="popup-confirm">确认框</a><span class="space"></span>
+			<a class="link" id="popup-loading">提交数据提示</a><span class="space"></span>
+			<a class="link" id="popup-success">提交数据成功提示</a><span class="space"></span>
+			<a class="link" id="popup-fail">提交数据失败提示</a>
+		</div>
+		
+		<h4>icon图标</h4>
+		<div><a class="link" target="_blank" href="http://fortawesome.github.io/Font-Awesome/icons/">http://fortawesome.github.io/Font-Awesome/icons/</a></div>
+		<h4>表格</h4>
+		<div>
+			<div class="table">
+			<table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>邮箱</th>
+                  <th>手机号码</th>
+                  <th>性别</th>
+				  <th><a>城市 <i class="fa fa-sort"></i></a></th>
+				  <th>描述</th>
+				  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>yunfei.huang@qq.com800265</td>
+                  <td>15889750625</td>
+                  <td>男</td>
+				  <td>
+				  1
+				</td>
+				  <td>yunfei.huang@qq.com</td>
+				  <td>
+					 <a class="link" href="form.html?id=1000">编辑</a>
+					<span class="space"></span>
+					<a class="link delete">删除</a>
+				  </td>
+                </tr>
+				
+                <tr>
+                  <td>2</td>
+                  <td>yunfei.huang@qq.com625264</td>
+                  <td>15889750625</td>
+                  <td>男</td>
+				  <td>
+				  2
+				</td>
+				  <td>yunfei.huang@qq.com</td>
+				  <td>
+					 <a class="link" href="form.html?id=1000">编辑</a>
+					<span class="space"></span>
+					<a class="link delete">删除</a>
+				  </td>
+                </tr>
+				
+                <tr>
+                  <td>3</td>
+                  <td>yunfei.huang@qq.com776179</td>
+                  <td>15889750625</td>
+                  <td>男</td>
+				  <td>
+				  3
+				</td>
+				  <td>yunfei.huang@qq.com</td>
+				  <td>
+					 <a class="link" href="form.html?id=1000">编辑</a>
+					<span class="space"></span>
+					<a class="link delete">删除</a>
+				  </td>
+                </tr>
+				
+                <tr>
+                  <td>4</td>
+                  <td>yunfei.huang@qq.com29602</td>
+                  <td>15889750625</td>
+                  <td>男</td>
+				  <td>
+				  4
+				</td>
+				  <td>yunfei.huang@qq.com</td>
+				  <td>
+					 <a class="link" href="form.html?id=1000">编辑</a>
+					<span class="space"></span>
+					<a class="link delete">删除</a>
+				  </td>
+                </tr>
+				
+                <tr>
+                  <td>5</td>
+                  <td>yunfei.huang@qq.com155112</td>
+                  <td>15889750625</td>
+                  <td>男</td>
+				  <td>
+				  5
+				</td>
+				  <td>yunfei.huang@qq.com</td>
+				  <td>
+					 <a class="link" href="form.html?id=1000">编辑</a>
+					<span class="space"></span>
+					<a class="link delete">删除</a>
+				  </td>
+                </tr>
+              </tbody>
+            </table>
+			</div>
+			<div class="table-detail">
+		<table>
+			<thead>
+				<tr>
+					<td colspan="4">
+                      发丝缘（宝安店）
+                    </td>
+				</tr>
+			</thead>
+              <tbody>
+                <tr>
+                  <td>代收单号：</td>
+                  <td>DS-15060300001</td>
+				  <td>代收单号：</td>
+                  <td>DS-15060300001</td>
+                </tr>
+				<tr>
+                  <td>代收类型：</td>
+                  <td colspan="3">DS-15060300001</td>
+                </tr>
+				<tr>
+                  <td>代收金额：</td>
+                  <td colspan="3">DS-15060300001</td>
+                </tr>
+				<tr>
+                  <td>代收日期：</td>
+                  <td colspan="3">DS-15060300001</td>
+                </tr>
+              </tbody>
+        </table>
+		</div>
+		</div>
+		<h4>分页</h4>
+		<div class="pager">
+			<div class="pagination">
+				<span class="current prev">&lt;&lt;</span>
+				<span class="current">1</span>
+				<a class="link">2</a>
+				<a class="link">3</a>
+				<a class="link">4</a>
+				<a class="link">5</a>
+				<a class="link">6</a>
+				<a class="link">7</a>
+				<a class="next link">&gt;&gt;</a>
+			</div>
+			&nbsp;&nbsp;
+			<form data-role="hash">
+				1-20&nbsp;/&nbsp;500条，每页
+				<select>
+					<option value="10">10</option>
+					<option value="15">15</option>
+					<option value="20">20</option>
+					<option value="30">30</option>
+					<option value="50">50</option>
+					<option value="100">100</option>
+					<option value="200">200</option>
+				</select>条
+				&nbsp;&nbsp;
+				到第
+				<input type="text" name="pageNo">页
+				<button class="go link">确定</button>
+			</form>
+		</div>
+		<h4>表单示例</h4>
+		<a href="form.html" class="link">表单示例</a>
+		<h4>分步流程</h4>
+		<ul class="nav-step flex-box">
+			<li class="flex-item"><span>1.店铺基本信息</span></li>
+			<li class="flex-item active"><span class="arrow">2.银行账号信息</span></li>
+			<li class="flex-item"><span>3.准入评估信息</span></li>
+			<li class="flex-item"><span>4.附件上传</span></li>
+		</ul>
+	</div>
+	<script type="text/javascript">
+		$('#popup-alert').on('click',function(){
+			lib.popup.alert({text:'请完善用户信息'})
+		});
+		$('#popup-confirm').on('click',function(){
+			lib.popup.confirm({text:'确认删除用户信息'})
+		});
+		$('#popup-loading').on('click',function(){
+			lib.popup.loading({text:'数据正在提交...'})
+		});
+		$('#popup-success').on('click',function(){
+			lib.popup.result({text:'用户信息提交成功'})
+		});
+		$('#popup-fail').on('click',function(){
+			lib.popup.result({bool:false,text:'用户信息提交失败'})
+		});
+		
+	</script>
+  </body>
+</html>

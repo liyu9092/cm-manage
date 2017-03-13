@@ -1,0 +1,3 @@
+﻿<%data.forEach(function(item){%>
+<span data-salonName="<%=item.salonName||item.salonname%>" data-recommendCode="<%=item.recommendCode||item.recommendcode%>" id="salon-checked-<%=item.recommendCode||data.recommendcode%>"><%=item.salonName||item.salonname%>(<%=item.recommendCode||item.recommendcode%>)<%if(!data.disabled){%><a class="link">X</a><%}else{%>&nbsp;<%}%></span>
+<%})%>

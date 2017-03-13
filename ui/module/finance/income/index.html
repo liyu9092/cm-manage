@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <link rel="stylesheet" href="income.css" />
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>收入管理</a>
+            <span>&gt;</span><a href="index.html">佣金单</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>佣金单</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="wrapper">
+            <form data-role="hash" id="form">
+                <div class="input-group input-switch">
+                    <select>
+                      <option value="0">店铺搜索</option>
+                      <option value="1">店铺编号</option>
+                      <option value="2">商户名称</option>
+                    </select>
+                    <input type="text" class="input-search" name="salonname" placeholder="请输入店铺名称" 
+                    maxlength="16"/>
+                    <input type="text" class="input-search hide" name="salonsn" placeholder="请输入店铺编号" 
+                    maxlength="16"/>
+                    <input type="text" class="input-search hide" name="merchantname" placeholder="请输入商户名称" maxlength="16"/>
+                </div>   
+
+                <div class="form-group">
+                    <span>确认日期:</span>
+                    <span class="date-group">
+                    <input type="date" name="start"/>
+                    <span style="margin:0 10px">至</span>
+                    <input type="date" name="end"/>   
+                    </span>
+
+                    <span class="space"></span>
+
+                    <label>
+                    <input type="radio" name="group" value="day" checked>
+                    <span>按日统计</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" name="group" value="month">
+                    <span>按月统计</span>
+                    </label>
+
+                    <button id="search_btn" class="btn" type="submit">搜索</button>
+                </div> 
+
+            </form>            
+
+            <form action="commission/export" data-role="export">
+                <button class="btn" type="submit" data-slug="commission.export">
+                  <i class="fa fa-file-excel-o"></i> 导出
+                </button>
+            </form> 
+
+            <div class="table" id="table">
+              <script type="text/template" id="table-t" ajat="<%if(query._){%>commission/index?<%=query._%><%}%>#domid=table&tempid=table-t">
+                <table>
+                  <thead>
+                    <th>序号</th>                       
+                    <th>店铺编号</th>
+                    <th>店铺名称</th>
+                    <th>佣金单号</th>                       
+                    <th>金额</th>
+                    <th>
+                      <a data-role="hash" href="#page=1&sort_key=date&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">                            
+                          确认日期
+                          <i class="fa fa-sort"></i>
+                      </a>                       
+                    </th>
+                    <th>操作</th>                                
+                  </thead>
+
+                  <tbody>
+                  <%data.data && data.data.forEach(function(item,index){%>
+                    <tr>
+                    <td><%=index+1%></td>                        
+                    <td><%=item.salonsn%></td>                        
+                    <td><%=item.salonname%></td>                        
+                    <td><%=item.sn%></td>                        
+                    <td><%=item.amount%></td> 
+                    <%if(query.group == 'day'){%>                       
+                      <td><%=item.date%></td>
+                    <%}else{%>
+                      <td>
+                      <%
+                      if(query.start && query.end){
+                      %>
+                        <%=query.start%> 到 <%=query.end%>
+                      <%
+                      }else if(query.start && !query.end){
+                      %>
+                        <%=query.start%> 到
+                      <%                        
+                      }else if(!query.start && query.end){
+                      %>
+                        到 <%=query.end%>
+                      <%                        
+                      }
+                      %>                      
+                      </td>  
+                    <%}%>                          
+                    <td><a class="link" href="brokerage.html?id=<%=item.id%>" 
+                    data-slug="commission.show,commission.update">查看&gt</a></td>  
+                    </tr>
+                    <%})%>                      
+                  </tbody>
+                </table>  
+                <div class="pager"> </div>   
+              </script>             
+            </div>
+        </div>
+        <script type="text/javascript">
+          $(function(){      
+            if(!lib.query._){
+              $('input[type="date"]').val(new Date().format('yyyy-MM-dd'));
+              $('form[data-role="hash"]').submit();
+            }
+          });
+        </script>
+    </body>
+</html>

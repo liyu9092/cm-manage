@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理 </a>
+            <span>&gt;</span><a href="index.html">红包活动</a><span>&gt;</span>活动详情
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>活动详情</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="table-detail" ajat="laisee/show/<%=query.id%>#domid=table&tempid=table-t" id="table">
+				<script type="text/template" id="table-t">
+                <div class="detail-operation">
+                    <a data-slug="laisee.update" onclick="sessionStorage.removeItem('formData')" href='addBase.html?id=<%=query.id%>' class="btn"><%=data.status=="Y"||data.status=="F"?"编辑":"查看配置"%></a>
+					<span class="space"></span>
+                    <button class="btn" type="button" onclick="window.close()">关闭</button>  
+                </div>  
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>红包活动名称</td>
+                            <td><%=data.laisee_name%></td>
+                        </tr>
+
+                        <tr>
+                            <td>活动简介</td>
+                            <td><%=splitStr(data.lc_remark,40)%></td>
+                        </tr>
+
+                        <tr>
+                            <td>活动时间</td>
+                            <td><%=data.start_time%>至<%=data.end_time%></td>
+                        </tr>
+
+                        <tr>
+                            <td>活动状态</td>
+							<%var statusMap={"Y":"进行中","N":"已结束","S":"已关闭","F":"下线"}%>
+                            <td><%=statusMap[data.status]%></td>
+                        </tr>
+
+                        <tr>
+                            <td>券预算总金额</td>
+                            <td><%=data.budget_amount%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td>红包有效期</td>
+                            <td><%=data.over_time%></td>
+                        </tr>   
+
+                        <tr>
+                            <td>已领取数</td>
+                            <td><%=data.receiveNum%></td>
+                        </tr>
+
+                        <tr>
+                            <td>已领取的金额</td>
+                            <td><%=data.receiveAmount%></td>
+                        </tr>  
+
+                        <tr>
+                            <td>已使用数</td>
+                            <td><%=data.usedNum%></td>
+                        </tr>  
+
+                        <tr>
+                            <td>已使用总金额</td>
+                            <td><%=data.usedAmount%></td>
+                        </tr> 
+
+                        <tr>
+                            <td>已消费数</td>
+                            <td><%=data.consumeNum%></td>
+                        </tr> 
+
+                        <tr>
+                            <td>已消费数金额</td>
+                            <td><%=data.consumeAmount%></td>
+                        </tr>  
+
+                        <tr>
+                            <td>已失效数</td>
+                            <td><%=data.failure%></td>
+                        </tr>                                                                                  
+                    </tbody>                     
+                </table>
+				</script>
+                <script type="text/javascript">
+                var checkChinese = function(str){
+                    var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+                    return reg.test(str);
+                };
+
+                var splitStr = function(str,index){
+                    var len = str.length,tmp=[],i,j = 0,k=0;
+                    for ( i=0 ; i<len ; i = i+1){
+                      tmp.push(str[i]);
+                      if (checkChinese(str[i])){
+                        j = j + 2;
+                        k = k + 2;
+                      }else{
+                        j = j + 1;
+                        k = k + 1;
+                      }
+                      if ( str[i] == "\n" ){
+                        k = 0;
+
+                      }
+                      if (  k - index <= 1 && k - index >= 0 ) {
+                          k = 0;
+                          tmp.push("<br/>");
+                      }
+                    }
+                    return tmp.join('').replace(/\n/g,"<br/>");
+                }
+                </script>
+            </div>
+        </div>
+    </body>
+</html>

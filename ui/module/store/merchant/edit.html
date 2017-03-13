@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+	<div class="breadcrumb">
+		<a>商户管理</a><span>&gt;</span><a href="index.html">商户列表</a><span>&gt;</span><%=query._?"编辑商户":"新增商户"%>
+		<div class="flex-box">
+			<div class="flex-item">
+				<h4><%=query._?"编辑商户":"新增商户"%></h4>
+			</div>
+		</div>
+		<hr />
+	</div>
+	<div class="wrapper" ajat="<%if(query.id){%>merchant/getMerchantList?id=<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		<form novalidate method="post" class="form-vertical" data-role="form" action="<%=query._?"merchant/update":"merchant/save"%>">
+			<div class="detail-operation">
+				<button class="btn btn-cancel" type="button">取消</button>
+				<span class="space"></span>
+				<button class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>">提交</button>
+			</div>
+			<input type="hidden" name="id" value="<%=data.id||""%>">
+			<%if(query._){%>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>商户编号：</label>
+				<div class="control">
+					<input type="text" name="sn" maxlength="16" value="<%=data.sn||""%>" required data-value="<%=data.sn||""%>" unique="merchant/checkMerchantSn?sn=${value}" uniquemsg="商户编号重复">
+				</div>
+			</div>
+			<%}%>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>商户名称：</label>
+				<div class="control">
+					<input type="text" required name="name" maxlength="16" value="<%=data.name||""%>">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>联系人：</label>
+				<div class="control">
+					<input type="text" required name="contact" value="<%=data.contact||""%>">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>联系手机：</label>
+				<div class="control">
+					<input type="text"  required pattern="mobile" name="mobile" value="<%=data.mobile||""%>">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="">联系座机：</label>
+				<div class="control">
+					<%if(data.phone){data.phoneFirst=data.phone.substring(0,4);data.phoneLast=data.phone.substring(4);}%>
+					<input type="text" value="<%=data.phoneFirst||"0755"%>" pattern="number" maxlength="4" style="width:55px;min-width:0" class="phone-first">
+					<input style="width:185px;min-width:0" type="text" value="<%=data.phoneLast%>" pattern="number"  class="phone-last">
+					<input type="hidden" value="<%=data.phone%>" name="phone"/>
+					<span class="control-help hide"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="">邮箱地址：</label>
+				<div class="control">
+					<input type="text"  name="email" value="<%=data.email||""%>" pattern="email">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="">详细地址：</label>
+				<div class="control">
+					<textarea name="addr" placeholder="详细街道信息"><%=data.addr||""%></textarea>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="">成立日期：</label>
+				<div class="control">
+				<%if(data.foundingDate){
+					var date=new Date(data.foundingDate*1000);
+					data.foundingDate=date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
+				}%>
+					<input type="date" name="foundingDate" placeholder="YYYY-MM-DD" min="1950-01-01" max="2030-01-01" format="YYYY-MM-DD" value="<%=data.foundingDate||""%>">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""></label>
+				<div class="control">
+					<%localStorage.setItem("preview",JSON.stringify(data));%>
+					<button class="btn preview" type="button">预览</button>
+					<span class="space"></span>
+					<button class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>">提交</button>
+				</div>
+			</div>
+		</form>
+		</script>
+	</div>
+	<script type="text/javascript">
+		$('#form').on('keyup','.phone-first,.phone-last',function(){
+			$('input[name="phone"]').val($('.phone-first').val()+$('.phone-last').val());
+		}).on('keyup','.phone-first',function(){
+			if($(this).val().length==4){
+				$('.phone-last').focus();
+			}
+		});
+		$(document).on('click','.preview',function(){
+			var data=lib.tools.getFormData($(this).closest('form'));
+			data=$.extend(JSON.parse(localStorage.getItem("preview")),data);
+			localStorage.setItem('preview',JSON.stringify(data));
+			window.open("detail.html?preview=preview");
+		});
+	</script>
+  </body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+		<style type="text/css">
+			.operation .fa{
+				font-size:24px;
+				vertical-align: middle;
+				display:inline-block;
+			}
+			.laydate_box{
+				margin-left:-215px!important;
+			}
+			.calling {
+				color: #58A2EC!important;
+			}
+		</style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="index.html">顾客预约时间</a> <span>&gt;</span>顾客预约调整
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4> 顾客预约调整</h4>
+			</div>
+			<div>
+				<form action="calendar/export" data-role="export" data-slug="calendar.export">
+					<button class="btn">导出</button>
+				</form>
+			</div>
+			<div class="position-group" style="font-size:16px;font-weight:bold;margin-left:-50px">
+				<%=query.day.replace("-","年").replace("-","月")%>日
+			</div>
+		 </div>		 
+        </div>	
+        <div class="wrapper">
+           <div class="table" ajat="calendar/getDay?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>手机号</th>
+                            <th>姓名</th>
+                            <th>性别</th>                           
+                            <th>预约项目 </th>                           
+                            <th>预约金额</th>                           
+                            <th><a data-role="hash" href="#page=1&sort_key=COME_SHOP&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">订单状态 <i class="fa fa-sort"></i></a></th>                           
+							<th><a data-role="hash" href="#page=1&sort_key=UPDATED_BOOKING_DATE&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">预约日期 <i class="fa fa-sort"></i></a></th>                           
+                            <th><a data-role="hash" href="#page=1&sort_key=BOOKING_DESC&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">预约调整 <i class="fa fa-sort"></i></a></th>                           
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                <tbody>
+				<%var data=data.data%>
+				<%var map={
+					'MORNING':'上午',
+					'AFTERNOON':'下午',
+					'DEF':''
+				}%>
+				<%data.forEach(function(item,i){%>
+                 <tr>
+					<td><%=i+1%></td>
+					<td><%=item.bookerPhone%></td>
+					<td><%=item.bookerName%></td>
+					<td><%=item.bookerSex=="F"?"女":"男"%></td>
+					<td><%=item.itemName%></td>
+					<td><%=item.amount%></td>
+					<td><%=item.comeShop=="NON"?"未":"已"%>到店</td>
+					<td><input type="date" min="<%=new Date().format("yyyy-MM-dd")%>" class="date-item" required style="width:128px;" value="<%=item.bookingTime%>" /></td>
+					<td>
+						<select required class="desc-item">
+						<%if(item.bookingDesc=="DEF"){%>
+						<option value="">请选择</option>
+						<%}%>
+						<option <%=item.bookingDesc=="MORNING"?"selected":""%> value="MORNING">上午</option>
+						<option <%=item.bookingDesc=="AFTERNOON"?"selected":""%> value="AFTERNOON">下午</option>
+						</select>
+					</td>
+					<td class="operation">
+						<form data-slug="calendar.status" class="callform" action="calendar/status/<%=item.orderSn%>" data-role="normal">
+							<input type="hidden" value="<%=session.user.uid%>" name="userId" />
+							<button><i class="fa fa-phone"></i></button>
+						</form>
+						<!--
+						<span class="space"></span>
+						<i class="fa fa-calendar" data-ordersn="<%=item.orderSn%>" data-modifydesc="<%=item.bookingDesc%>" data-modifydate="<%=item.bookingTime%>"></i>
+						-->
+						<form class="update" data-slug="calendar.modifyDay" action="calendar/modifyDay" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})" onfail="parent.lib.popup.result({define:function(){location.reload()}})">
+							<input type="hidden" name="orderSn" value="<%=item.orderSn%>" />
+							<input type="hidden" name="modifyDesc" value="<%=item.bookingDesc%>" />
+							<input type="hidden" name="modifyDate" value="<%=item.bookingTime%>" required />
+							<input type="hidden" value="<%=session.user.uid%>" name="userId" />
+						</form>
+					</td>
+                  </tr>
+				  <%})%>
+                </tbody>
+            </table>		
+             <div class="pager"> </div>
+			</script>
+        </div>
+            </div>
+		<script type="text/template" id="box-t">
+			<form action="calendar/modifyDay" data-role="form">
+			<input type="hidden" value="<%=data.ordersn%>" name="orderSn" />
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>预约日期：</label>
+				<div class="control">
+					<input type="date" required name="modifyDate" value="<%=data.modifydate%>" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>预约调整：</label>
+				<div class="control">
+					<select required name="modifyDesc">
+						<option value="">请选择</option>
+						<option <%=data.modifydesc=="MORNING"?"selected":""%> value="MORNING">上午</option>
+						<option <%=data.modifydesc=="AFTERNOON"?"selected":""%> value="AFTERNOON">下午</option>
+					</select>
+				</div>
+			</div>
+			</form>
+		</script>
+		<script type="text/javascript">
+			$(document.body).on("click",'.fa-calendar',function(){
+				var $this=$(this);
+				var data=$this.data();
+				parent.lib.popup.box({
+					confirm:true,
+					width:600,
+					height:200,
+					content:lib.ejs.render({text:$('#box-t').html()},{data:data}),
+					complete:function(){
+						var popup=$(this);
+						var form=popup.find('form');
+						new lib.Form(form[0]);
+						form[0].goback=function(){location.reload();};
+						popup.find(".popup-alert-define").on("click",function(e){
+							e.stopPropagation();
+							form.submit();
+						});
+						form.on('success',function(e,data){
+							parent.lib.popup.close();
+						});
+					}
+				});
+			}).on('success','.callform',function(){
+				var self=this;
+				parent.lib.popup.result({
+					define:function(){
+						$(self).find('button').addClass('calling');
+						setTimeout(function(){
+							$(self).find('button').removeClass('calling');
+						},2*60*1000);
+					}
+				});
+			}).on('input','.date-item',function(){
+				var form=$(this).closest('tr').find("form.update");
+				form.find("input[name='modifyDate']").val($(this).val());
+				form.submit();
+			}).on('change','.desc-item',function(){
+				var form=$(this).closest('tr').find("form.update");
+				form.find("input[name='modifyDesc']").val($(this).val());
+				form.submit();
+			});
+			
+		</script>
+    </body>
+</html>

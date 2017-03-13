@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+	  <title>臭美管理后台</title>
+	  <meta charset="utf-8"/>
+	  <script type="text/javascript" src="/js/include.js"></script>
+	  <style type="text/css">
+		.page{
+			background:#E8EDF0;
+		}
+	  </style>
+  </head>
+  <body>
+	<div class="loadbar" style="width: 0px"></div>
+	<div class="page" id="page">
+		<script type="text/template" id="page-t">
+      <header>
+          <div class="logo">
+              <h1>臭美管理后台</h1>
+          </div>
+		  <nav class="nav-main">
+			<ul>
+				<%data.forEach(function(item,i){%>
+				<%if(item.show!=2){%>
+				<li data-id="level2<%=item.id%>">
+					<a>
+						<%=item.title%>
+					</a>
+				</li>
+				<%}%>
+				<%})%>
+			</ul>
+		  </nav>
+		  <div class="nav-sub">
+				<!--
+				<span class="drop-menu">
+					<button class="drop-menu-toggle"><span>业务部门</span> <i class="fa fa-angle-down"></i></button>
+					<ul class="drop-menu-list">
+						<li class="drop-menu-item" value="1"><a>业务部门</a></li>
+						<li class="drop-menu-item" value="2"><a>财务部门</a></li>
+						<li class="drop-menu-item" value="3"><a>市场部门</a></li>
+						<li class="drop-menu-item" value="4"><a>运营部门</a></li>
+						<li class="drop-menu-item" value="5"><a>商务部门</a></li>
+					</ul>
+				</span>
+				-->
+				<ul>
+					<!--
+					<li><a class="nav-sub-item"><span>消息</span></a></li>
+					<li><a class="nav-sub-item"><span>动态</span></a></li>
+					<li><a class="nav-sub-item"><span>帮助</span></a></li>-->
+					<li class="drop-menu drop-menu-right">
+						<a class="drop-menu-toggle nav-sub-item"><%=session.user.name||session.user.username%> <i class="fa fa-angle-down"></i></a>
+						<ul class="drop-menu-list">
+							<li class="drop-menu-item"><a target="main" href="/module/system/user/settings.html">修改用户信息</a></li>
+							<!--
+							<li class="drop-menu-item"><a>设置</a></li>-->
+							<li id="logout" class="drop-menu-item"><a>退出</a></li>
+						</ul>
+					</li>
+				</ul>
+		  </div>
+      </header>
+      <div class="frame-main" style="height: 398px;">
+         <aside id="aside">
+			<div class="swiper-container">
+				<div class="swiper-wrapper">
+				<%data.forEach(function(item1,i){%>
+					<%if(item1.show!=2){%>
+					<div class="menu-level2 swiper-slide" id="level2<%=item1.id%>">
+						<h2><%=item1.title%></h2>
+						<%item1.child&&item1.child.forEach(function(item2,j){%>
+						<%if(item2.show!=2){%>
+						<div class="menu-category <%=j==0?"active":""%>">
+							<div class="menu-category-title">
+								<span><%=item2.title%></span>
+							</div>
+							<ul style="<%=j==0?"display:block":""%>">
+								<%item2.child&&item2.child.forEach(function(item3){%>
+								<%if(item3.show!=2){%>
+								<li>
+									<a href="<%=slug[item3.slug]%>" data-slug1="<%=item3.slug%>" target="main"><i class="fa fa-angle-right"></i><%=item3.title%></a>
+								</li>
+								<%}%>
+								<%})%>
+							</ul>
+						</div>
+						<%}%>
+						<%})%>
+						
+					</div>
+					<%}%>
+				<%})%>
+				</div>
+			</div>
+         </aside>
+         <article>
+            <iframe frameborder="0" src="/module/system/user/info.html" name="main" style="opacity: 1;"></iframe>
+         </article>
+      </div>
+	  </script>
+	  </div>
+	  <link rel="stylesheet" href="/css/swiper.min.css" />
+	  <script type="text/javascript" src="/js/swiper.min.js"></script>
+	  <script type="text/javascript" src="/js/index.js"></script>
+  </body>
+</html>

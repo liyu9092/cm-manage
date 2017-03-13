@@ -1,0 +1,167 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+		<meta charset="utf-8"/>
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+            <div class="breadcrumb">
+           <a>收款管理 </a><span>&gt;</span><a href="index.html">收款列表</a>
+           <div class="flex-box">
+            <div class="flex-item">
+                <h4>收款列表</h4>
+            </div>
+            <div>
+                <a class="btn-primary" href="edit.html" data-slug="receivables.save"><i class="fa fa-plus"></i>新增</a>
+            </div>
+        </div>
+        </div>
+        <div class="wrapper">
+            <form data-role="hash"> 
+                <div class="input-group input-switch">
+					<select>
+						<option value="0">店铺名称</option>
+						<option value="1">店铺编号</option>
+						<option value="2">商户名称</option>
+					</select>
+						<input type="text" class="input-search" name="salonname" placeholder="请输入店铺名称">
+						<input type="text" class="input-search hide" name="sn" class="hide" placeholder="请输入店铺编号">
+						<input type="text" class="input-search hide" name="merchantName" class="hide" placeholder="请输入商户名称">								
+				 </div>	
+				 
+					<span class="space"></span>
+                    <label>收款日期：</label>
+				  <span class="date-group">
+					<input type="date" data-role="start" name="startTime"/>到<input type="date" data-role="end" name="endTime"/>
+				  </span>
+                      <button class="btn">搜索</button>
+				  <button type="button" class="btn" id="filter-toggle-btn">
+					筛选条件 <i class="fa fa-angle-down"></i>
+					</button>
+                <button class="btn" form="export" data-slug="receivables.export"><i class="fa fa-file-excel-o" ></i> 导出</button>
+                <div class="filter-box" style="display:none">
+                    <div class="flex-box">
+                        <div class="filter-title">收款类型：</div>
+                        <div class="flex-item">
+                            <label data-role="hash"><input type="radio" name="type" value="0" checked /><span>全部</span></label>
+                            <label data-role="hash"><input type="radio" name="type" value="1" /><span>业务投资款返还</span></label>
+                            <label data-role="hash"><input type="radio" name="type" value="2" /><span>交易代收款返还</span></label>              
+                        </div>
+                    </div>
+					
+                    <div class="flex-box">
+                        <div class="filter-title">收款方式：</div>
+                        <div class="flex-item">
+                            <label data-role="hash"><input type="radio" name="paymentStyle" value="0" checked /><span>全部</span></label>
+                            <label data-role="hash"><input type="radio" name="paymentStyle" value="1" /><span>银行存款</span></label>
+                            <label data-role="hash"><input type="radio" name="paymentStyle" value="2" ><span>账扣返还</span></label>              
+                            <label data-role="hash"><input type="radio" name="paymentStyle" value="3" /><span>现金</span></label>              
+                            <label data-role="hash"><input type="radio" name="paymentStyle" value="4" /><span>支付宝</span></label>              
+                            <label data-role="hash"><input type="radio" name="paymentStyle" value="5"/><span>财付通</span></label> 
+                        </div>
+                    </div> 
+					
+                    <div class="flex-box">
+                        <div class="filter-title">收款状态：</div>
+                        <div class="flex-item">
+                            <label data-role="hash"><input type="radio" name="status" value="0" checked /><span>全部</span></label>
+							<label data-role="hash"><input type="radio" name="status" value="1" /><span>待确认</span></label>   
+                            <label data-role="hash"><input type="radio" name="status" value="2" /><span>已确认</span></label>
+                                       
+                        </div>
+                    </div>
+                </div>            
+            </form>
+            <form action="receivables/export" data-role="export" id="export" ></form>    
+		    <div class="table" ajat="receivables/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+							<th width="50px"><label class="select-all"><input type="checkbox"/><span>全选</span></label></th>
+                            <th>序号</th>
+							<th>店铺编号</th>                       
+							<th>店铺名称</th>
+							<th>收款单号</th>						 
+                            <th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">收款类型 <i class="fa fa-sort"></i></a></th>                          
+                            <th>收款金额</th>
+							<th><a data-role="hash" href="#page=1&sort_key=paymentStyle&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">收款方式 <i class="fa fa-sort"></i></a></th>							
+							<th><a data-role="hash" href="#page=1&sort_key=receiptDate&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">收款日期 <i class="fa fa-sort"></i></a></th>			       
+							<th><a data-role="hash" href="#page=1&sort_key=addTime&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">创建日期<i class="fa fa-sort"></i></a></th>
+                            <th>制单人</th>
+							<th>备注</th>
+                            <th><a data-role="hash" href="#page=1&sort_key=status&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">状态<i class="fa fa-sort"></i></a></th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>					
+               <tbody>
+			   <%if(data.data){%>
+				<%var type=["","业务投资款返还","交易代收款返还"]%>
+				<%var status=["","待确认","已确认"]%>
+				<%var paymentStyle=["","银行存款","账扣返还","现金","支付宝","财付通"]%>
+				<%var data=data.data%>
+				<%data.forEach(function(item,i){%>
+				<tr>
+					<td><label><input type="checkbox" value="<%=item.id%>" data-price="<%=item.money%>" <%if(item.status==2){%>disabled<%}%>	/><span></span></label></td>
+					<td><%=i+1%></td>
+					 <td><%=item.sn%></td>
+					<td><%=item.salonname%></td>
+					<td><%=item.singleNumber%></td>
+					<td><%=type[item.type]%></td>					 
+					<td><%=item.money%></td>
+					<td><%=paymentStyle[item.paymentStyle]%></td>
+					<td> <%if(item.status==1){%>
+					<%}else{%> <%=new Date(item.receiptDate*1000).format("yyyy-MM-dd")%>
+				     <%}%>
+					</td>				 
+					<td><%=new Date(item.addTime*1000).format("yyyy-MM-dd")%>
+					</td>
+					<td><%=item.preparedByName%></td>
+					<td title="<%=item.remark%>"><%=item.remark.length>7?item.remark.substring(0,7)+"...":item.remark%></td>		
+					<td><%=status[item.status]%></td>
+					  
+					<td><a class="link" href="detail.html?id=<%=item.id%>" data-slug="receivables.getone">查看</a></td>
+                  </tr>
+				  <%})%>
+				  <%}%>
+              </tbody>
+            </table>
+			 <%if(data&&data.length>0){%>
+				<div class="table-bottom">
+					<label class="select-all"> <input type="checkbox"/><span>全选</span></label> 
+					<form disabled action="receivables/confirmAct" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+						<button class="btn" >确认付款</button>	
+						<input type="hidden" name="idStr" />
+					</form>					
+				</div>
+			 <%}%>
+            <div class="pager"> </div>
+			</script>
+        </div>
+    </div>
+	<script type="text/javascript">
+		$(function(){
+			
+			$('#table').on('change','tbody label input',function(){
+				var forms=$('.table-bottom form');
+				if($('tbody label input:checked').length>0){
+					forms.attr('disabled',false);
+				}else{
+					forms.attr('disabled',true);
+				}
+				var checked=$('tbody label input:checked');
+				var ids=[];
+				var price=0;
+				checked.each(function(){
+					price+=parseFloat($(this).data('price'));
+					ids.push(this.value);
+				});
+				$('.table-bottom input[name="idStr"]').val(ids.toString());
+				forms.eq(0).data('confirm',"你正在给"+checked.length+" 家店铺支付￥"+price+" ，是否继续？");
+			});
+		});
+	 
+	</script>
+</body>
+</html>

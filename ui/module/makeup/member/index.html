@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="index.html">其他人员列表</a>
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4>其他人员列表</h4>
+			</div>
+			<div>
+				<a href="edit.html" data-slug="others.add" class="btn-primary"><i class="fa fa-plus"></i> 新增</a>
+			</div>
+		 </div>		 
+        </div>		
+        <div class="wrapper">
+			<div class="position-group">
+				<form data-role="hash" novalidate="novalidate">
+					<span class="space"></span>
+					<div class="input-group placeholder-switch">
+						<select name="key">
+							<option value="1" data-placeholder="请输入人员姓名">人员姓名</option>
+							<option value="2" data-placeholder="请输入在职编号">在职编号</option>
+							<option value="3" data-placeholder="请输入手机号码">手机号码</option>
+							<option value="4" data-placeholder="请选择类型">类型</option>
+						</select>
+						<input class="input-search" type="text" placeholder="请输入人员姓名" name="keyword">
+						<select style="display:none">
+							<option value="1">美导A</option>
+							<option value="2">美容师B</option>
+							<option value="3">收银C</option>
+							<option value="4">前台D</option>
+						</select>
+						<button class="btn btn-search">
+							<i class="fa fa-search"></i>
+						</button>
+					</div>
+				</form>
+				<span class="space"></span>
+				<form action="others/export" data-slug="others.export" data-role="export">
+					<button class="btn">导出</button>
+				</form>
+			</div>
+           <div class="table" ajat="others/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>人员姓名</th>
+                            <th>性别</th>
+                            <th>工作年限</th>      
+							<th>录入时间</th>      
+                            <th>在职编号 </th>                           
+                            <th>类型</th>                           
+                            <th>手机号码</th>                           
+                            <th><a data-role="hash" href="#page=1&sort_key=status&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">状态 <i class="fa fa-sort"></i></a></th>                                                   
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                <tbody>
+				<%var data=data.data%>
+				<%var levelArray=["","明星院长","院长"]%>
+				<%data.forEach(function(item,i){%>
+                 <tr>
+					<td><%=i+1%></td>
+					<td><%=item.name%></td>
+					<td><%=item.sex==1?"男":"女"%></td>
+					<td><%=item.workingLife%></td>
+					<td><%=item.add_time%></td>
+					<td><%=item.number%></td>
+					<td><%if(item.type=="1"){%>
+							美导
+						<%}%>
+						<%if(item.type=="2"){%>
+							美容师
+						<%}%>
+						<%if(item.type=="3"){%>
+							收银
+						<%}%>
+						<%if(item.type=="4"){%>
+							前台
+						<%}%>
+					</td>
+					<td><%=item.mobilePhone%></td>
+					<td><%=item.status==1?"启用中":"<span style='color:#FF6600'>禁用中</span>"%></td>
+					<td>
+					<%if(item.status==1){%>
+					<form data-slug="others.down" action="others/down/<%=item.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+						<button class="link">禁用</button>
+					</form>
+					<%}else{%>
+					<form data-slug="others.up" action="others/up/<%=item.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+						<button class="link">启用</button>
+					</form>
+					<%}%>
+					<span class="space"></span>
+					<a class="link" href="detail.html?id=<%=item.id%>" data-slug="others.show,others.update">查看</a>
+					</td>
+                  </tr>
+				  <%})%>
+                </tbody>
+            </table>		
+             <div class="pager"> </div>
+			</script>
+        </div>
+            </div>
+			<script type="text/javascript">
+				$('select[name="key"]').on('change',function(){
+					var $this=$(this);
+					if($this.val()==4){
+						parent.lib.popup.menu({
+							list:[
+								{id:'1',name:"美导A"},
+								{id:'2',name:"美容师B"},
+								{id:'3',name:"收银C"},
+								{id:'4',name:"前台D"},
+							],
+							define:function(data){
+								$('input[name="keyword"]').val(data.id);
+								$this.closest('form').submit();
+							}
+						});
+					}
+				});
+				$('input[name="keyword"]').on('focus',function(){
+					var select=$('select[name="key"]');
+					if(select.val()==4){
+						select.trigger("change");
+					}
+				})
+			</script>
+    </body>
+</html>

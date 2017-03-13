@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="index.html">韩式半永久</a><span>&gt;</span>编辑项目
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4>编辑项目</h4>
+			</div>
+		 </div>		 
+        </div>		
+        <div class="wrapper">
+			<form action="handsel.html" class="form-vertical" data-role="form" id="form" ajat="#domid=form&tempid=form-t">
+				<script type="text/template" id="form-t">
+				<%var data=JSON.parse(sessionStorage.getItem("formdata"))%>
+				<%if(query.p=="index"){%>
+				<%document.getElementById("form").action="beautyItem/update"%>
+				<ul class="nav-step flex-box">
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>1.基本资料</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>2.预约详情</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>3.产品介绍</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>4.预约流程</span>
+					</li>
+					<li class="flex-item active">
+						<span class="arrow">5.定妆流程</span>
+					</li>
+				</ul>
+				<%}else{%>
+				<ul class="nav-step flex-box">
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>1.基本资料</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>2.预约详情</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>3.设备介绍</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>4.产品介绍</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>5.预约流程</span>
+					</li>
+					<li class="flex-item active">
+						<span class="arrow">6.定妆流程</span>
+					</li>
+					<%if(data.is_gift==1){%>
+					<li class="flex-item">
+						<span>7.赠送说明</span>
+					</li>
+					<%document.getElementById("form").action=document.getElementById("form").action+"?"+query._%>
+					<%}else{%>
+						<%document.getElementById("form").action="beautyItem/updateFashion"%>
+					<%}%>
+					
+				</ul>
+				<%}%>
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>流程名称：</label>
+                    <div class="control">
+						<input type="text" name="beauty_workflow_name" required value="<%=data.beauty_workflow_name%>" placeholder="2~5个字" minlength="2" maxlength="5" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>定妆流程：</label>
+                    <div class="control">
+						<div class="table makeup-item-image-list">
+							<table>
+								<thead>
+									<tr>
+										<th>名称</th>
+										<th>内容</th>
+										<th>图片</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									<%if(data.beauty){%>
+										<%=lib.ejs.render({url:"table-t"},{data:typeof data.beauty=="string"?JSON.parse(data.beauty):data.beauty})%>
+									<%}%>
+								</tbody>
+							</table>
+							<textarea name="beauty" style="display:none" class="json-hidden" required requiredmsg="定妆流程不能为空"><%=data.beauty%></textarea>
+							<br />
+							<button type="button" class="link add">+新增定妆流程</button>
+							<br />
+							<br />
+							<div>
+								<a class="btn" href="<%=query.p=="index"?"index.html":"fashion.html"%>">取消</a>
+								<span class="space"></span>
+								<%if(query.p=="index"||data.is_gift==0){%>
+								<a href="base.html?<%=query._%>" class="btn">返回</a>
+								<span class="space"></span>
+								<%}%>
+								<button class="btn-primary"><%=query.p=="index"||data.is_gift==0?"提交":"下一步"%></button>
+							</div>
+						</div>
+                    </div>
+                </div>
+				
+				</script>
+            </form>
+        </div>
+		<script type="text/javascript" src="edit.js"></script>
+		<script type="text/javascript">
+			$("#form").on("_ready",function(){
+				this.goback=function(){
+					location.href="/module/makeup/item/detail.html?"+lib.query._;
+				}
+			})
+		</script>
+    </body>
+</html>

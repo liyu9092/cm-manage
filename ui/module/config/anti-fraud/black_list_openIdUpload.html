@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>系统配置</a><span>&gt;</span><a>反欺诈</a><span>&gt;</span><a>黑名单-OpenId</a><span>&gt;</span><a>手动添加黑名单-OpenId</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>手动添加黑名单-OpenId</h4>
+				</div>
+			</div>
+		</div>
+        <style>
+         .clear-color{
+             background-color: #fff !important;
+             border-color: #fff !important;
+         }
+         .assertive{
+            color:#ea7692;
+         }
+        </style>
+		<div class="wrapper">
+        <div class="fr">
+        <button class="btn  btn-primary" id="uploadFile" data-slug="blacklist.openidUpload">选取文件</button>
+        </div>
+
+        <p class="small">注：通过导入xls. 文件以手动添加黑名单，格式需包含 序号、OpenId、备注（进入黑名单原因等）</p>
+
+        <span>预览：</span>
+		<div class="table" id="table">
+			<script type="text/template" id="table-t">
+                <table>
+                <thead>
+                <tr>
+                <th>序号</th>
+                <th>OpenId</th>
+                <th>备注</th>
+                </tr>
+                </thead>
+                <tbody>
+                <%data.data && data.data.forEach(function(item,index){%>
+                  <tr>
+                    <td><%=index+1%></td>
+                    <td><%=item.userInfo%></td>
+                    <td><%=item.note%></td>
+                  </tr>
+                <%})%>
+                </tbody>
+                </table>
+                <div class="pager">
+                </div>
+			</script>
+		</div>
+        <a class="btn" href="/module/config/anti-fraud/black_list_wechatOpenId.html">返回</a>
+        <form action="blacklist/openidSubmit" data-role="normal" onsuccess="history.back()">
+            <input type="hidden" name="redisKey" id="redisKey" value="">
+            <button class="btn btn-primary" data-slug="blacklist.openidSubmit" id="submit" disabled="disabled">提交</button>
+        </form>
+	</div>
+    <script>
+        lib.puploader.create({
+                    browse_button: 'uploadFile',
+                    auto_start:true,
+                    file_data_name:"blacklist",
+                    domain:cfg.url.host+'blacklist/openidUpload?token='+window.localStorage.getItem('token'),
+                    filters: {
+                        mime_types : [
+                            { title : "Excel file", extensions : "xls,xlsx,csv" },
+                        ]
+                    }
+        },function(uploader){
+            uploader.bind('FileUploadedSuccess',function(up,up,file,res){
+                var reponseData = JSON.parse(res.response);
+                var tmpKey = reponseData.data.redisKey;
+                renderList(reponseData.data);
+                if (tmpKey){
+                    $('#redisKey').val(tmpKey);
+                    $('#submit').removeAttr('disabled');
+                }else{
+                    $('#submit').attr('disabled','disabled');
+                }
+            })
+        });
+
+        var renderList = function(data){
+            var newAjat = lib.ajat('#domid=table&tempid=table-t').template(data);
+        }
+    </script>
+  </body>
+</html>

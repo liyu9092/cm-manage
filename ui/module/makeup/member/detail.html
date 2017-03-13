@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="index.html">韩式半永久</a><span>&gt;</span>查看项目详情
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4>查看项目详情</h4>
+			</div>
+			</div>
+			<hr />		 
+        </div>	
+        <div class="wrapper" id="detail" ajat="others/show/<%=query.id%>#domid=detail&tempid=detail-t">
+			<script type="text/template" id="detail-t">
+			<div class="detail-operation">
+				<a href="edit.html?<%=query._%>" data-slug="others.update" class="btn">编辑</a>
+				<span class="space"></span>
+				<button class="btn btn-cancel" type="button">返回</button>
+			</div>
+			<div class="table-box">
+				<div class="table-detail table-item">
+					<table>
+						<tbody>
+							<tr>
+								<td>姓名：</td>
+								<td colspan="3"><%=data.name%></td>
+							</tr>
+							<tr>
+								<td>性别：</td>
+								<td colspan="3"><%=data.sex==1?"男":"女"%></td>
+							</tr>
+							<tr>
+								<td>出生日期：</td>
+								<td colspan="3"><%=data.birthday%></td>
+							</tr>
+							<tr>
+								<td>证件类型：</td>
+								<td><%=data.credential%>
+									<%if(data.credential==1){%>
+										身份证
+									<%}%>
+									<%if(data.credential==2){%>
+										军官证
+									<%}%>
+									<%if(data.credential==3){%>
+										驾驶证
+									<%}%>
+									<%if(data.credential==4){%>
+										护照
+									<%}%>
+								</td>
+								<td>证件编号：</td>
+								<td><%=data.cardId%></td>
+							</tr>
+							<tr>
+								<td>手机号：</td>
+								<td colspan="3"><%=data.mobilePhone%></td>
+							</tr>
+							<tr>
+								<td>微信：</td>
+								<td colspan="3"><%=data.wechat%></td>
+							</tr>
+							<tr>
+								<td> QQ号：</td>
+								<td colspan="3"><%=data.qq%></td>
+							</tr>
+							<tr>
+								<td>邮箱：</td>
+								<td colspan="3"><%=data.email%></td>
+							</tr>
+							<tr>
+								<td> 类型：</td>
+								<td colspan="3">
+									<%if(data.type=="1"){%>
+										美导A
+									<%}%>
+									<%if(data.type=="2"){%>
+										美容师B
+									<%}%>
+									<%if(data.type=="3"){%>
+										收银C
+									<%}%>
+									<%if(data.type=="4"){%>
+										前台D
+									<%}%>
+								</td>
+							</tr>
+							<tr>
+								<td>状态：</td>
+								<td colspan="3"><%=data.status==1?"正常":"禁用"%></td>
+							</tr>
+							<tr>
+								<th colspan="4">工作信息</th>
+							</tr>
+							<tr>
+								<td>在职编号：</td>
+								<td colspan="3"><%=data.number%></td>
+							</tr>
+							<tr>
+								<td> 工作年限：</td>
+								<td colspan="3"><%=data.workingLife%></td>
+							</tr>
+							<tr>
+								<th colspan="4">个人说明</th>
+							</tr>
+							<tr>
+								<td>自我描述：</td>
+								<td colspan="3"><%=data.introduce%></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="table-item" style="width:300px;padding-left:15px;">
+					<h4>
+						个人图片：
+					</h4>
+					<%if(data.photo){%>
+						<img src="<%=data.photo%>" alt="" class="image-preview" style="width:auto;height:auto;" />
+					<%}%>
+				</div>
+			</div>
+			</script>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <style>
+        textarea{
+            height:150px!important;
+            width:500px!important;            
+        }
+      </style> 
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理</a>
+            <span>&gt;</span>
+            <a href="index.html">平台活动</a>
+            <span>&gt;</span><%= query.type=='add' ? '新增活动' : '编辑活动'%>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4><%= query.type=='add' ? '新增活动' : '编辑活动'%></h4>
+                </div>
+            </div>
+            <hr />
+        </div>
+
+        <div class="wrapper">
+            <form class="form-vertical" data-role="form" id="form">
+            <script type="text/template" id="form-t">                  
+                <ul class="nav-step flex-box">
+                    <li class="flex-item active">
+                        <span class="arrow">1.活动基本信息</span>
+                    </li>
+
+                    <li class="flex-item">
+                        <span>2.选择用户</span>
+                    </li>
+
+                    <li class="flex-item">
+                        <span>3.定义现金券</span>
+                    </li>
+                </ul>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>活动名称：</label>
+                    <div class="control">
+                        <input type="text" name="actName" value="<%=data.actName%>" 
+                        placeholder="限制12个字符" maxlength="12" required >
+                    </div>
+                </div> 
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>活动编号：</label>
+                    <%if(query.type=='edit'){%>
+                    <div class="control">
+                        <input type="text" name="actNo" value="<%=data.actNo%>" readOnly> 
+                    </div>
+                    <%}else{%>                        
+                        <div class="control" id="control" ajat="platform/getActNum#domid=control&tempid=input-t" ajat-one="true">
+     
+                        </div>
+                    <%}%>    
+                </div> 
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>活动简介：</label>
+                    <div class="control">
+                    <textarea maxlength="5000" name="actIntro" required placeholder="包含活动策划案例，时间，逻辑规则，限制1~5000个字符"  ><%=data.actIntro%></textarea>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>申请部门：</label>
+                    <div class="control">
+                        <select name="departmentId" id="department" required ajat-one="true" ajat="platform/getRequestDepartment#domid=department&tempid=department-t&departmentId=<%=data.departmentId||8%>"
+                        ajat-change="platform/getDepartmentManager/${value}#domid=manager&tempid=manager-t&managerId=<%=data.managerId%>">
+
+                        </select>  
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>负责人：</label>
+                   <div class="control" id="manager" ajat-one="true" ajat="platform/getDepartmentManager/<%=data.departmentId || 8 %>#domid=manager&tempid=manager-t&managerId=<%=data.managerId%>">
+
+                    </div>
+                    <span class="control-help" style="display:none;"></span>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""></label>
+                    <a class="btn" href="index.html" style="margin-right:20px">取消</a>
+                    <button class="btn-primary">下一步</button>
+                </div>
+                </script>                                                                  
+            </form>
+        </div> 
+
+        <script type="text/template" id="input-t">  
+            <input type="text" name="actNo" value="<%=data.actNo%>" readOnly>
+        </script>
+
+        <script type="text/template" id="department-t">  
+            <%data.forEach&&data.forEach(function(item,i){%>
+                <option <%=(item.id==protocol.custom.departmentId)?"selected":""%> value="<%=item.id%>">
+                <%=item.title%>
+                </option>
+            <%})%>
+        </script> 
+
+
+        <script type="text/template" id="manager-t">  
+        <%data.forEach&&data.forEach(function(item,i){%>
+            <label class="label">
+                <input type="radio" name="managerId" value="<%=item.id%>" required <%=item.id == protocol.custom.managerId ? "checked":""%> <%=(query.status=='3'||query.status=='4') ? 'disabled':''%>>
+                <span><%=item.name%></span>
+            </label>            
+        <%})%> 
+
+        <%if(data.length>0){%>
+            <div class="control-help" style="display:none;"></div>
+        <%}else{%>
+            <input type="hidden" name="managerId" required requiredmsg="请选择有负责人的部门"/>
+        <%}%>            
+        </script>        
+
+        <script src="addBase.js"></script>     
+    </body>
+</html>

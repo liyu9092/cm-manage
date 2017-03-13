@@ -1,0 +1,162 @@
+<%
+var action =  protocol.custom.action
+if (action == 'edit'){%>
+<table>
+    <tbody>
+        <tr>
+            <td class="td">施术方案시술부위</td>
+            <td>
+                <input type="text">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>眉型设计눈썹디자인：</td>
+                            <td>
+                                <label>
+                                    <input type="checkbox" name="useLimitTypes" value="2">
+                                    <span>自然眉자연형</span>
+                                </label>
+                                <br/>
+                                <label>
+                                    <input type="checkbox" name="useLimitTypes" value="2">
+                                    <span>一字眉일자형</span>
+                                </label>
+                            </td>
+                            <td>色号及调配比例색소색깔과 비율</td>
+                            <td><input type="text"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">针的种类<br/>니들의 종류</td>
+            <td>
+                <input type="text">
+            </td>
+        </tr>
+        <tr>
+            <td class="td">其他说明기타</td>
+            <td>
+                <input type="text">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>院长원장</td>
+                            <td><div class="control"><input class="searchInput" id="search" type="text" ajat-complete="assistant/search/${value}#domid=complete-position-assistantId&tempid=/module/makeup/order/template/list-t" autocomplete="off" />
+                            <input type="hidden" name="assistantId" class="inputId" value="" required>
+                            <div class="complete-position" id="complete-position-assistantId" style="width:20%;min-width:250px;" ></div>
+                            <span id="sn" class="weak"></span></div></td>
+                            <td>助理통역</td>
+                            <td><div class="control"><input class="searchInput" id="search" type="text" ajat-complete="assistant/search/${value}#domid=complete-position-assistantId&tempid=/module/makeup/order/template/list-t" autocomplete="off" />
+                            <input type="hidden" name="assistantId" class="inputId" value="" required>
+                            <div class="complete-position" id="complete-position-assistantId" style="width:20%;min-width:250px;" ></div>
+                            <span id="sn" class="weak"></span></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>美导상담자</td>
+                            <td><div class="control"><input class="searchInput" id="search" type="text" ajat-complete="assistant/search/${value}#domid=complete-position-assistantId&tempid=/module/makeup/order/template/list-t" autocomplete="off" />
+                            <input type="hidden" name="assistantId" class="inputId" value="" required>
+                            <div class="complete-position" id="complete-position-assistantId" style="width:20%;min-width:250px;" ></div>
+                                <span id="sn" class="weak"></span></div></td>
+                                <td>施术日期시술날짜</td>
+                                <td><input type="_datetime"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <%}else if (action == 'view'){%>
+    <table>
+    <tbody>
+        <tr>
+            <td class="td">施术方案시술부위</td>
+            <td>
+                234324
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>眉型设计눈썹디자인：</td>
+                            <td>
+                                <label>
+                                    <input type="checkbox" disabled="disabled" name="useLimitTypes" value="2">
+                                    <span>自然眉자연형</span>
+                                </label>
+                                <br/>
+                                <label>
+                                    <input type="checkbox" disabled="disabled" name="useLimitTypes" value="2">
+                                    <span>一字眉일자형</span>
+                                </label>
+                            </td>
+                            <td>色号及调配比例색소색깔과 비율</td>
+                            <td>234324234</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">针的种类<br/>니들의 종류</td>
+            <td>
+                123123
+            </td>
+        </tr>
+        <tr>
+            <td class="td">其他说明기타</td>
+            <td>
+               123123
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>院长원장</td>
+                            <td>sdfdsfdsf</td>
+                            <td>助理통역</td>
+                            <td>sdfdsf</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>美导상담자</td>
+                            <td>sdfdsfdsftd>
+                                <td>施术日期시술날짜</td>
+                                <td>2015/03/21 13:11:32</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <%}%>

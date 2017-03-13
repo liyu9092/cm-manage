@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script> 
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理</a>
+            <span>&gt;</span>
+            <a href="index.html">平台活动</a>
+            <span>&gt;</span>新增活动
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>新增活动</h4>
+                </div>
+            </div>
+            <hr />
+        </div>
+
+        <div class="wrapper">
+            <form class="form-vertical" data-role="form" id="form">
+                    <ul class="nav-step flex-box">
+                        <li class="flex-item active"><span class="arrow">1.活动基本信息</span></li>
+                        <li class="flex-item"><span>2.定义兑换券</span></li>
+                    </ul>
+                    <div id="pageContent">
+                    </div>
+            </form>
+        </div>
+        <script type="text/template" id='addBase_1'>
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>活动名称：</label>
+                <div class="control">
+                    <%if (data.vcId){%>
+                    <input type="text" disabled="disabled" value="<%=data.actName%>" placeholder="活动名称"
+                    maxlength="12" required >
+                    <input type="hidden" name="actName" value="<%=data.actName%>" placeholder="活动名称"
+                    maxlength="12" required >
+                    <%}else{%>
+                        <input type="text" name="actName" value="<%=data.actName%>" placeholder="活动名称"
+                        maxlength="12" required >
+                    <%}%>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>活动编号：</label>
+                <div class="control" id="actNo" <%if (!data.actNo){%> ajat-one="true" ajat="coupon/getActNum#domid=actNo&amp;tempid=actNo-t" <%}%>>
+                   <%if (data.actNo){%>
+                    <input type="text"  disabled value="<%=data.actNo%>">
+                    <input type="hidden" name="actNo" value="<%=data.actNo%>" required>
+                    <%}%>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>活动简介：</label>
+                <div class="control">
+                    <textarea maxlength="5000" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> name="actIntro" placeholder="包含活动策划案例，时间，逻辑规则，限制1~5000个字符" required style="height:150px;width:500px"><%=data.actIntro%></textarea>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>申请部门：</label>
+                <div class="control">
+                    <select name="departmentId" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> ajat-one="true" id="department" 
+						ajat="platform/getRequestDepartment#domid=department&amp;tempid=department-t&sid=<%=data.departmentId%>&status=<%=data.status%>"  required 
+						ajat-change="platform/getDepartmentManager/${value}#domid=manager&tempid=manager_t&sid=<%=data.managerId%>&status=<%=data.status%>"	
+						>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>负责人：</label>
+                <div id="manager">
+                </div>
+                <span class="control-help" style="display:none;"></span>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for=""></label>
+                <a href="index.html">
+                <button class="btn" type="button" style="margin-right:20px">取消</button></a>
+                <button class="btn-primary">下一步</button>
+            </div>
+        </script>
+        <script type="text/template" id='actNo-t'>
+            <input type="text"  disabled value="<%=data.actNo%>">
+            <input type="hidden" name="actNo" value="<%=data.actNo%>" required>
+        </script>
+        <script type="text/template" id="department-t">
+        <% sessionStorage.setItem("departmentList",JSON.stringify(data))%>
+            <option value="">全部</option>
+            <%data.forEach(function(item){%>
+            <option <%if (protocol.custom.sid == item.id){%> selected <%}%>value="<%=item.id%>"><%=item.title%></option>
+            <%})%>
+        </script>
+        <script type="text/template" id='manager_t'>
+        <%sessionStorage.setItem("managerList",JSON.stringify(data))%>
+		<%if(data.length>0){%>
+        <%data.forEach(function(item){%>
+        <label class="label">
+            <input type="radio"  <%if (protocol.custom.sid == item.id){%> checked='checked' <%}%> <%= protocol.custom.status==3 || protocol.custom.status==4 ? "disabled='disabled'" : ""%> class="label" name="managerId" value="<%=item.id%>" required>
+            <span><%=item.name%></span>
+        </label>
+        <%})%>
+		<%}else{%>
+			<input type="hidden" required requiredmsg="请选择负责人" />
+		<%}%>
+        </script>
+        <script>
+            var getTemplateData = function(){
+                var id = lib.query.id;
+				if (id && !getTmpData() ){
+                    lib.ajax({
+                        url:"coupon/getInfo/"+id
+                    }).done(function(data, status, xhr){
+                        if (data.result == 1){
+                            templateRender(data.data);
+                            setTmpData(data.data);
+                        }
+                    });
+                }else if ( getTmpData() && getTmpData().vcId == id){
+                    templateRender(getTmpData());
+                } else {
+                    clearTmpData();
+                    templateRender({});
+                }
+            };
+
+            var templateRender = function(data){
+                lib.ajat('#domid=pageContent&tempid=addBase_1').template(data);
+            };
+
+            var getTmpData = function(){
+               var tmp = JSON.parse(window.localStorage.getItem('couponTmpData'));
+               return tmp;
+            };
+
+            var setTmpData = function(data){
+                window.localStorage.setItem('couponTmpData',JSON.stringify(data));
+            }
+
+            
+            lib.Form.prototype.save = function(data){
+                var tmpData = $.extend(getTmpData(),data);
+				var managerList=JSON.parse(sessionStorage.getItem('managerList'));
+				if(managerList){
+					for (var i = managerList.length - 1; i >= 0; i--) {
+						if (managerList[i].id == tmpData.managerId){
+							tmpData.manager_name = managerList[i].name;
+						}
+					}
+				}
+				var departmentList=JSON.parse(sessionStorage.getItem('departmentList'));
+				if(departmentList){
+					for (var i = departmentList.length - 1; i >= 0; i--) {
+						if (departmentList[i].id == tmpData.departmentId){
+							tmpData.department_title = departmentList[i].title;
+						}
+					}
+				}
+                setTmpData(tmpData);
+                location.href="addTicket.html"+(lib.query._?"?"+lib.query._:"")
+            }
+
+            var clearTmpData  = function(){
+                window.localStorage.removeItem('couponTmpData');
+            }
+
+
+            getTemplateData();
+        </script>
+    </body>
+</html>

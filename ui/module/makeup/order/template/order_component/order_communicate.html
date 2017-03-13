@@ -1,0 +1,218 @@
+<%
+var action =  protocol.custom.action
+var receive = orderInfo.booking_receive;
+var extInfo = receive&&receive.ext;
+
+var extInfoDefault = {
+    'pro_intro':[1,2,3],
+    'conc_intro':[1,2],
+    'flow_intro':[1,2],
+    'ques_intro':[1,2]
+}
+
+function inArray(obj,array){
+    for(var i =0,len= array.length;i<len;i++){
+        if (obj == array[i]){
+            return true;
+        }
+    }
+    return false;
+}
+
+if (action == 'edit'){%>
+<form action="book/receive/<%=query.id%>" id="receive_form" data-role="form">
+<table>
+    <tbody>
+        <tr>
+            <td class="td">中心项目介绍：</td>
+            <td>
+                <label>
+                    <input type="checkbox" <%if (extInfo && inArray(1,extInfo.pro_intro)){%>checked="checked"<%}%> name="pro_intro" value="1">
+                    <span>定妆</span>
+                </label>
+                <label>
+                    <input type="checkbox" <%if (extInfo && inArray(2,extInfo.pro_intro)){%>checked="checked"<%}%> name="pro_intro" value="2">
+                    <span>优立塑</span>
+                </label>
+                <label>
+                    <input type="checkbox" <%if (extInfo && inArray(3,extInfo.pro_intro)){%>checked="checked"<%}%> name="pro_intro" value="3">
+                    <span>无创水光</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">设计理念介绍：</td>
+            <td>
+                <label>
+                    <input type="checkbox" <%if (extInfo && inArray(1,extInfo.conc_intro)){%>checked="checked"<%}%> name="conc_intro" value="2">
+                    <span>根据脸型、肤色、喜好设计</span>
+                </label>
+                <label>
+                    <input type="checkbox" <%if (extInfo && inArray(2,extInfo.conc_intro)){%>checked="checked"<%}%> name="conc_intro" value="2">
+                    <span>和谐的设计原则。</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">操作流程介绍：</td>
+            <td>
+                <label>
+                    <input type="checkbox" <%if (extInfo && inArray(1,extInfo.flow_intro)){%>checked="checked"<%}%> name="flow_intro" value="1">
+                    <span>定妆流程</span>
+                </label>
+                <label>
+                    <input type="checkbox" <%if (extInfo && inArray(2,extInfo.flow_intro)){%>checked="checked"<%}%> name="flow_intro" value="2">
+                    <span>优立塑流程</span>
+                </label>
+                <label>
+                    <input type="checkbox" <%if (extInfo && inArray(3,extInfo.flow_intro)){%>checked="checked"<%}%> name="flow_intro" value="3">
+                    <span>无创水光流程</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">高频问题介绍：</td>
+            <td>
+                <label>
+                    <input type="checkbox" <%if (extInfo && inArray(1,extInfo.ques_intro)){%>checked="checked"<%}%> name="ques_intro" value="1">
+                    <span>设计满意再付款</span>
+                </label>
+                <label>
+                    <input type="checkbox" <%if (extInfo && inArray(2,extInfo.ques_intro)){%>checked="checked"<%}%> name="ques_intro" value="2">
+                    <span>疼痛</span>
+                </label>
+                <label>
+                    <input type="checkbox" <%if (extInfo && inArray(3,extInfo.ques_intro)){%>checked="checked"<%}%> name="ques_intro" value="3">
+                    <span>补色</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">其他说明：</td>
+            <td><textarea name="remark" style="width: 500px;"><%=receive && receive.remark%></textarea></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>美导：</td>
+                            <td>
+                                <div class="control complete">
+                                    <input class="searchInput" id="search" type="text" ajat-complete="assistant/search/${value}#domid=complete-position-assistantId&tempid=/module/makeup/order/template/list-t" value="<%= receive &&receive.guide_user ? receive.guide_user.name+'（'+receive.guide_user.number+'）':''%>" autocomplete="off" />
+                                    <input type="hidden" name="guideId" class="inputId" value="<%= receive &&receive.guideId%>" >
+                                    <div class="complete-position" id="complete-position-assistantId" style="width:20%;min-width:250px;" ></div>
+                                    <span id="sn" class="weak"></span>
+                                </div>
+                            </td>
+                            <td>记录时间：</td>
+                            <td><input type="_datetime" name="record_time" value="<%= receive &&receive.record_time ? receive.record_time : new Date().format('yyyy-MM-dd  hh:ss')%>"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</form>
+<script type="text/javascript">
+    var newForm = new lib.Form($("#receive_form"));
+    newForm.el._getFormData = function() {
+        var returnData = lib.tools.getFormData($(this));
+        returnData.ext={};
+        returnData.ext["pro_intro"] = returnData.pro_intro || "";
+        returnData.ext["conc_intro"] = returnData.conc_intro || "";
+        returnData.ext["flow_intro"] = returnData.flow_intro || "";
+        returnData.ext["ques_intro"] = returnData.ques_intro || "";
+        returnData.ext = JSON.stringify(returnData.ext);
+        return returnData;
+    }
+</script>
+<%}else if (action == 'view'){%>
+<table>
+    <tbody>
+        <tr>
+            <td class="td">中心项目介绍：</td>
+            <td>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (extInfo && inArray(1,extInfo.pro_intro)){%>checked="checked"<%}%> name="pro_intro" value="1">
+                    <span>定妆</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (extInfo && inArray(2,extInfo.pro_intro)){%>checked="checked"<%}%> name="pro_intro" value="2">
+                    <span>优立塑</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (extInfo && inArray(3,extInfo.pro_intro)){%>checked="checked"<%}%> name="pro_intro" value="3">
+                    <span>无创水光</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">设计理念介绍：</td>
+            <td>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (extInfo && inArray(1,extInfo.conc_intro)){%>checked="checked"<%}%> name="conc_intro" value="2">
+                    <span>根据脸型、肤色、喜好设计</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (extInfo && inArray(2,extInfo.conc_intro)){%>checked="checked"<%}%> name="conc_intro" value="2">
+                    <span>和谐的设计原则。</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">操作流程介绍：</td>
+            <td>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (extInfo && inArray(1,extInfo.flow_intro)){%>checked="checked"<%}%> name="flow_intro" value="1">
+                    <span>定妆流程</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (extInfo && inArray(2,extInfo.flow_intro)){%>checked="checked"<%}%> name="flow_intro" value="2">
+                    <span>优立塑流程</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (extInfo && inArray(3,extInfo.flow_intro)){%>checked="checked"<%}%> name="flow_intro" value="3">
+                    <span>无创水光流程</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">高频问题介绍：</td>
+            <td>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (extInfo && inArray(1,extInfo.ques_intro)){%>checked="checked"<%}%> name="ques_intro" value="1">
+                    <span>设计满意再付款</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (extInfo && inArray(2,extInfo.ques_intro)){%>checked="checked"<%}%> name="ques_intro" value="2">
+                    <span>疼痛</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (extInfo && inArray(3,extInfo.ques_intro)){%>checked="checked"<%}%> name="ques_intro" value="3">
+                    <span>补色</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">其他说明：</td>
+            <td><%= receive &&receive.remark&&receive.remark.replace(/\n/g,'<br/>')%></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>美导：</td>
+                            <td><%=  receive &&receive.guide_user ? receive.guide_user.name+'（'+receive.guide_user.number+'）':''%></td>
+                            <td>记录时间：</td>
+                            <td><%=receive && receive.record_time%></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<%}%>

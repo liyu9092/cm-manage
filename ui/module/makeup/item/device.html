@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="index.html">韩式半永久</a><span>&gt;</span>编辑项目
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4>编辑项目</h4>
+			</div>
+		 </div>		 
+        </div>		
+        <div class="wrapper">
+			<form action="product.html" class="form-vertical" data-role="form" id="form" ajat="#domid=form&tempid=form-t">
+				<script type="text/template" id="form-t">
+				<%var data=JSON.parse(sessionStorage.getItem("formdata"))%>
+				<ul class="nav-step flex-box">
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>1.基本资料</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>2.预约详情</span>
+					</li>
+					<li class="flex-item active">
+						<span class="arrow">3.设备介绍</span>
+					</li>
+					<li class="flex-item">
+						<span>4.产品介绍</span>
+					</li>
+					<li class="flex-item">
+						<span>5.预约流程</span>
+					</li>
+					<li class="flex-item">
+						<span>6.定妆流程</span>
+					</li>
+					<%if(data.is_gift==1){%>
+					<li class="flex-item">
+						<span>7.赠送说明</span>
+					</li>
+					<%}%>
+				</ul>
+				
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>设备宣传语：</label>
+                    <div class="control">
+						<input type="text" name="equipment_slogan" required value="<%=data.equipment_slogan%>" placeholder="2~40个字" minlength="2" maxlength="40" />
+                    </div>
+                </div>
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>设备封面：</label>
+                    <div class="control">
+						<div class="control-image">
+							<div class="control-single-image">
+								<img src="<%=data.equipment_cover%>" alt=""/>
+								<div class="control-image-ud">
+									<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
+								</div>
+								<input type="hidden" name="equipment_cover" value="<%=data.equipment_cover%>" class="original" required requiredmsg="请上传设备封面" data-helpid="image-help1">
+							</div>
+						</div>
+						<div class="weak">请上传JPG或PNG格式的图标，可通过编辑裁剪690*400，此图标将显示在项目列表中</div>
+						<div class="control-help" style="display:none" id="image-help1"></div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>设备介绍：</label>
+                    <div class="control">
+						<div class="table makeup-item-image-list">
+							<table>
+								<thead>
+									<tr>
+										<th>名称</th>
+										<th>内容</th>
+										<th>图片</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									<%if(data.equipment){%>
+										<%=lib.ejs.render({url:"table-t"},{data:typeof data.equipment=="string"?JSON.parse(data.equipment):data.equipment})%>
+									<%}%>
+								</tbody>
+							</table>
+							<textarea name="equipment" style="display:none" class="json-hidden" required requiredmsg="设备介绍不能为空"><%=data.equipment%></textarea>
+							<br />
+							<button type="button" class="link add">+新增设备介绍</button>
+							<br />
+							<br />
+							<div>
+								<a class="btn" href="<%=query.p=="index"?"index.html":"fashion.html"%>">取消</a>
+								<span class="space"></span>
+								<button class="btn-primary">下一步</button>
+							</div>
+						</div>
+                    </div>
+                </div>
+				<%document.getElementById("form").action=document.getElementById("form").action+"?"+query._%>
+				</script>
+            </form>
+        </div>
+		<script type="text/javascript" src="edit.js"></script>
+		<script type="text/javascript">
+			$('#form').on("_ready",function(){
+				lib.puploader.image({
+					browse_button: 'imageUpload',
+					auto_start:true,
+					//imageLimitSize:"690*400",
+					filters: {
+						mime_types : [
+							{ title : "Image files", extensions : "jpg,png,jpeg" },
+						]
+					},
+					max_file_size:'2mb',
+					crop:true
+				},function(uploader){
+					uploader.bind('ImageUploaded',function(up,response){
+						lib.cropper.create({
+							src:response.img,
+							aspectRatio : 690/400,
+							thumbnails  : ["690x400"],
+							define:function(data){
+								up.preview($('#imageUpload').closest('.control-single-image'),{
+									img:data["690x400"],
+								});
+							}
+						});						
+					});					
+				});
+			})
+		</script>
+    </body>
+</html>

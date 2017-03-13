@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+		<title>臭美管理后台</title>
+		<meta charset="utf-8"/>
+		<script type="text/javascript" src="/js/include.js"></script>
+        <style>
+        td input{
+            display:none;
+        }  
+        .save{
+            display: none;
+        }  
+        .cancel{
+            display: none;           
+        } 
+        .form-vertical button{
+          min-width: 40px!important;
+        }  
+        .line{
+          display: none;
+          border: 1px solid #58A2EC;
+          margin-right: 15px;          
+        }
+        .show{
+            display:inline-block!important;
+        }
+        th{
+          width:25%;
+        }    
+        </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>系统配置</a>
+            <span>&gt;</span><a href="index.html">星级对应积分配置</a>
+			 <div class="flex-box">
+                <div class="flex-item">
+                    <h4>星级对应积分配置</h4>
+                </div>
+            </div>
+			<hr />
+        </div>
+        <div class="wrapper">        
+           
+                <div class="table" ajat="starconf/index#domid=table&tempid=table-t" id="table">
+                <script type="text/template" id="table-t">
+					<form action="starconf/online" data-role="normal" onsuccess="parent.lib.popup.result()">
+						<span>开启/暂停店铺星级</span><label data-slug="starconf.online" class="switch"><input type="checkbox" <%=data[0].status=="Y"?"checked":""%>/><span></span><input type="hidden" name="status" /></label>
+					</form>
+					<br />
+					<br />
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>星级名称</th>
+                                <th>星级店铺数</th>
+                                <th>起始积分</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        <% data && data.forEach(function(item,i){ %>
+                           <tr>
+                               <td><%=item.level%></td>
+                               <td><a href="vantages.html#level=<%=item.level%>" class="link"><%=item.salonCount%></a></td>
+                               <td>
+                                   <span class="score"><%=item.score%></span>
+                                   <input type="text" name="score" value="<%=item.score%>" pattern="number" maxlength="9"/>
+                                   <span class="control-help" style="display:none">未填写</span>
+                               </td>
+                               <td>
+									<%if(i!=0){%>
+                                   <button class="link edit" <%=item.status=="N"?"disabled":""%> data-slug="starconf.update">编辑</button>
+                                   <button class="link save" data-score="<%=item.id%>">保存</button>
+                                   <span class="space"></span>
+                                   <a class="link cancel">取消</a>
+								   <%}%>
+                               </td>
+                           </tr>
+                         <%})%>  
+                        </tbody>
+                    </table>
+                </script>
+                </div>                
+		</div>
+    <script src="index.js"></script>
+    </body>
+</html>

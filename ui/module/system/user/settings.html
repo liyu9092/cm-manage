@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+	<div class="breadcrumb">
+		<div class="flex-box">
+			<div class="flex-item">
+				<h4>修改个人信息</h4>
+			</div>		 
+		</div>
+		<hr />
+	</div>
+	<div class="wrapper" ajat="self/show#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		<form method="post" class="form-vertical" data-role="form" action="self/update">
+			<div class="control-group">
+				<label class="control-label" for="">登录账号：</label>
+				<div class="control">
+					<%=data.username%>
+					<span class="space"></span>
+					<span class="space"></span>
+					<span class="space"></span>
+					用户姓名：<span class="space"></span>
+					<%=data.name%>
+					<input type="hidden" name="name" value="<%=data.name%>" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>联系手机：</label>
+				<div class="control">
+					<input type="text" required pattern="mobile" value="<%=data.tel||""%>" name="tel"/>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>所属部门：</label>
+				<div class="control">
+					<select disabled required class="select normal" ajat="list/department#domid=department&tempid=department-t&sid=<%=data.department_id%>" id="department" >
+					</select>
+					<span class="space"></span><span class="red">*</span>职位：<span class="space"></span>
+					<select disabled required  class="select normal" ajat="list/position#domid=position&tempid=position-t&sid=<%=data.position_id%>" id="position" >
+					</select>
+					<input type="hidden" name="position_id" value="<%=data.position_id%>" />
+					<input type="hidden" name="department_id" value="<%=data.department_id%>" />
+					<input type="hidden" name="city_id" value="<%=data.city_id%>" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>所属城市：</label>
+				<div class="control">
+					<select disabled required  ajat="list/city#domid=city&tempid=city-t&sid=<%=data.city_id%>" id="city">
+						
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>用户状态：</label>
+				<div class="control">
+					<select disabled required name="city"  >
+						<option value="1">正常</option>
+						<option value="2">停用</option>
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>角色权限：</label>
+				<div class="control">
+					<%data.roles.forEach(function(item){%>	
+					<label><input type="checkbox" checked disabled/><span><%=item.name%></span></label>
+					<input type="checkbox" value="<%=item.id%>" name="roles" style="display:none" />
+					<%})%>
+				</div>
+			</div>
+			<legend><label><input class="checkbox" type="checkbox" id="switch" /><span>修改密码</span></label></legend>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>原密码：</label>
+				<div class="control">
+					<input name="old_password" type="password" disabled required pattern="password" patternmsg="密码是6-20位字母或数字组合"/>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>新密码：</label>
+				<div class="control">
+					<input name="password" id="password" type="password" disabled required pattern="password" patternmsg="密码是6-20位字母或数字组合"/>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>确认新密码：</label>
+				<div class="control">
+					<input type="password" disabled required match="password" matchmsg="确认新密码与新密码不一致"/>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""></label>
+				<div class="control"><button class="btn-primary">提交</button></div>
+			</div>
+		  </form>
+		  </script>
+	</div>
+	<script type="text/template" id="department-t">
+		<%data.forEach(function(item){%>
+			<option <%=item.id==protocol.custom.sid?"selected":""%> value="<%=item.id%>"><%=item.title%></option>
+		<%})%>
+	</script>
+	<script type="text/template" id="city-t">
+		<%data.forEach(function(item){%>
+			<option <%=item.id==protocol.custom.sid?"selected":""%> value="<%=item.id%>"><%=item.title%></option>
+		<%})%>
+	</script>
+	<script type="text/template" id="position-t">
+		<%data.forEach(function(item){%>
+			<option <%=item.id==protocol.custom.sid?"selected":""%> value="<%=item.id%>"><%=item.title%></option>
+		<%})%>
+	</script>
+	<script type="text/javascript">
+		$('#form').on('_ready',function(){
+			var form=$(this).find('form')[0];
+			form.goback=function(){$(this).removeAttr('disabled');}
+		});
+		$(document.body).on('change','#switch',function(){
+			if($(this).is(':checked')){
+				$('input[type="password"]').removeAttr('disabled');
+			}else{
+				$('input[type="password"]').attr('disabled',true);
+			}
+		})
+	</script>
+  </body>
+</html>

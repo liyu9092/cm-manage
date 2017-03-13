@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理 </a>
+            <span>&gt;</span><a href="index.html">兑换活动</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>活动概况</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="table-detail" ajat="#domid=table&tempid=table-t" id="table">
+				<script type="text/template" id="table-t">
+				<%var data = JSON.parse(window.localStorage.getItem('couponTmpData'));%>
+                <table>
+					<thead>
+					<tr>
+						<td colspan="2">
+						 活动基本信息
+						</td>
+					</tr>
+				</thead>
+                    <tbody>
+                        <tr>
+                            <td>活动名称</td>
+                            <td><%=data.actName%></td>
+                        </tr>
+
+                        <tr>
+                            <td>活动编号</td>
+                            <td><%=data.actNo%></td>
+                        </tr>
+
+                        <tr>
+                            <td>活动简介</td>
+                            <td><%=splitStr(data.actIntro,40)%>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>申请部门</td>
+                            <td><%=data.department_title%></td>
+                        </tr>
+
+                        <tr>
+                            <td>负责人</td>
+                            <td><%=data.manager_name%></td>
+                        </tr>   
+
+                        <tr>
+                            <td>活动时间</td>
+                            <td><%=data.getTimeStart ? data.getTimeStart : '【无限制】'%><%= data.getTimeStart && data.getTimeEnd ? '&nbsp;至&nbsp;'+data.getTimeEnd :'' %></td>
+                        </tr>
+                    </tbody>
+					<thead>
+						<tr>
+							<td colspan="2">
+							现金券使用限制
+							</td>
+						</tr>
+					</thead>
+                    <tbody>
+                        <tr>
+                            <td>券面额</td>
+                            <td>
+								<%=data.money%>元
+							</td>
+                        </tr>
+
+                        <tr>
+                            <td>券总数</td>
+                            <td>
+								<%=data.totalNumber ? data.totalNumber : '【无限制】'%>张
+							</td>
+                        </tr>
+
+                        <tr>
+                            <td>券预算合计</td>
+                            <td>
+								<%=data.money * data.totalNumber ? data.money * data.totalNumber +'元': '【无限制】'%>
+							</td>
+                        </tr>
+                        <tr>
+                            <td>指定项目类别消费获取</td>
+                            <td  ajat-one="true" id="limitItemTypes" ajat="platform/getItemType#domid=limitItemTypes&amp;tempid=limitItemTypes-t&sid=<%=data.limitItemTypes%>">
+							</td>
+                        </tr>
+                        <tr>
+                            <td>限制用户</td>
+                            <td>
+								<%='【无限制】'%>
+							</td>
+                        </tr>
+                        <tr>
+                            <td>指定店铺支付使用</td>
+                            <td>
+								<%='【无指定】'%>
+							</td>
+                        </tr>
+                        <tr>
+                            <td>单个项目满额可用</td>
+                            <td>
+								<%=data.enoughMoney && data.enoughMoney !='0' ? data.enoughMoney+'元' : '【无限制】'%>
+							</td>
+                        </tr>
+                        <tr>
+                            <td>现金券有效时间</td>
+                            <td><%if (data.addActLimitStartTime){%><%=data.addActLimitStartTime%>&nbsp;至&nbsp;<%=data.addActLimitEndTime%><%}else{%><%=data.fewDay || '7'%>天有效<%}%></td>
+                        </tr>
+                    </tbody>
+                </table>
+				<br />
+				 <form class="form-vertical" action="<%=query.id?"coupon/editConf":"coupon/add"%>"  data-role="normal" id="form" data-confirm="确定保存本活动吗？">
+					<a class="btn" href="addBase.html<%if (data.vcId){%>?id=<%=data.vcId%><%}%>" >返回</a>
+					<span class="space"></span>
+					<a class="btn" href="index.html">取消</a>
+					<span class="space"></span>
+					<button class="btn-primary">提交</button>
+				</form>
+				</script>
+            </div>
+        </div>
+        <script type="text/template" id='limitItemTypes-t'>
+            <%var checkedIds = protocol.custom.sid && protocol.custom.sid.split(',')%>
+            <%data.forEach(function(item){%>
+            <%if ( checkedIds && checkedIds.indexOf(item.typeid.toString()) !=-1 ){%>
+            <label class="checkbox">
+                <input type="checkbox" disabled='disabled' checked="checked" name="limitItemTypes" value="<%=item.typeid%>">
+                <span><%=item.typename%></span>
+            </label>
+            <%}%>
+            <%})%>
+        </script>
+		<script type="text/javascript">
+        var checkChinese = function(str){
+            var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+            return reg.test(str);
+        };
+
+        var splitStr = function(str,index){
+            var len = str.length,tmp=[],i,j = 0,k=0;
+            for ( i=0 ; i<len ; i = i+1){
+              tmp.push(str[i]);
+              if (checkChinese(str[i])){
+                j = j + 2;
+                k = k + 2;
+              }else{
+                j = j + 1;
+                k = k + 1;
+              }
+              if ( str[i] == "\n" ){
+                k = 0;
+
+              }
+              if (  k - index <= 1 && k - index >= 0 ) {
+                  k = 0;
+                  tmp.push("<br/>");
+              }
+            }
+            return tmp.join('').replace(/\n/g,"<br/>");
+        }
+
+        var clearTmpData  = function(){
+            window.localStorage.removeItem('couponTmpData');
+        }
+
+			$('body').on('click','#clear-btn',function(){
+                lib.popup.confirm({
+                    text:"确定取消本次编辑吗？",
+                    define: function(){
+                        clearTmpData();
+                        window.location.href="index.html";
+                }});
+            })
+			$('#table').on("_ready",function(){
+				var $form=$('#form');
+				$form[0]._getFormData=function(){
+                    var formData = JSON.parse(window.localStorage.getItem('couponTmpData'));
+                    // formData.sendSms = formData.sendSms.replace(/\[useMoney\]/g,formData.money).replace(/\[name\]/g,formData.actName);
+					return formData;
+				}
+				$form.on("success",function(){
+					clearTmpData();
+					parent.lib.popup.result({
+						text:lib.query.id?"编辑活动成功":"新增活动成功",
+						define:function(){
+							location.href="/module/marketing/ticket/ticketAct/index.html"
+						}
+					});
+				});
+			});
+		</script>
+    </body>
+</html>

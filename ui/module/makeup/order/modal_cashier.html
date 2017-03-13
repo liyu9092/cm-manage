@@ -1,0 +1,115 @@
+<form action="book/cash/<%=query.id%>" data-role="form">
+<div class="control-group">
+    <label class="control-label" for="">项目价格：</label>
+    <div class="control">
+            <label for=""><%=orderInfo.order.item_amount || 0%></label>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for="">已付定金：</label>
+    <div class="control">
+            <label for=""><%=orderInfo.order.PAYABLE%></label>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for="">应收金额：</label>
+    <div class="control">
+            <label for=""><span class="red"><%=orderInfo.order.item_amount - orderInfo.order.PAYABLE%></span></label>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for=""><span class="red">*</span>支付方式：</label>
+    <div class="control">
+            <select id="pay_type" name="pay_type">
+                <option value="1" selected>微信</option>
+                <option value="2">支付宝</option>
+                <option value="3">POS机</option>
+                <option value="4">现金</option>
+                <option value="5">微信+现金</option>
+                <option value="6">支付宝+现金</option>
+                <option value="7">POS机+现金</option>
+            </select>
+    </div>
+</div>
+<div class="control-group" id="other_money">
+    <label class="control-label" for=""><span class="red">*</span><span id="pay_name">微信</span>支付：</label>
+    <div class="control">
+            <input type="text" pattern='float' name="other_money"  required/>
+    </div>
+</div>
+<div class="control-group" style="display:none;" id="cash_money">
+    <label class="control-label" for=""><span class="red">*</span>现金支付：</label>
+    <div class="control">
+            <input type="text" pattern='float' name="cash_money" value="0" required/>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for="">其它抵扣：</label>
+    <div class="control">
+            <input type="text" pattern='float' value="0" name="deduction_money" max="<%=orderInfo.order.item_amount - orderInfo.order.PAYABLE%>" />
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for=""><span class="red">*</span>专家：</label>
+    <div class="control">
+        <input class="searchInput" id="search" type="text" ajat-complete="artificer/search/${value}#domid=complete-position-specialistId&tempid=/module/makeup/order/template/list-t" autocomplete="off" />
+        <input type="hidden" name="specialistId" class="inputId" value="" required>
+        <div class="complete-position" id="complete-position-specialistId" style="width:20%;min-width:250px;" ></div>
+        <span id="sn" class="weak"></span>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for=""><span class="red">*</span>助理：</label>
+    <div class="control">
+        <input class="searchInput" id="search" type="text" ajat-complete="assistant/search/${value}#domid=complete-position-assistantId&tempid=/module/makeup/order/template/list-t" autocomplete="off" />
+        <input type="hidden" name="assistantId" class="inputId" value="" required>
+        <div class="complete-position" id="complete-position-assistantId" style="width:20%;min-width:250px;" ></div>
+        <span id="sn" class="weak"></span>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for=""></label>
+    <button class="btn popup-alert-cancel" type="button">取消</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <button class="btn-primary">确认收银</button>
+</div> 
+</form>
+<script>
+
+$('.searchInput').on('input',function(){
+    $(this).siblings('.complete-position').show().siblings('.inputId').val('');
+})
+$('.complete-position').on('click','li',function(){
+    var $this=$(this),
+        inputDesc = $this.html(),
+        id=$this.attr('data-id'),
+        parent= $this.parents('.complete-position');
+    parent.siblings('#search').val(inputDesc).siblings('.inputId').val(id);
+    parent.hide();
+})
+    var cash_type_desc={
+     '1':'微信',
+     '2':'支付宝',
+     '3':'POS机',
+     '4':'现金',
+     '5':'微信' ,
+     '6':'支付宝' ,
+     '7':'POS机'}
+    $('#pay_type').on('change',function(){
+        var value = $(this).val(),
+            $cash_money = $('#cash_money'),
+            $other_money=$('#other_money'),
+            $pay_name = $('#pay_name');
+        if (value > 3){
+            $cash_money.show();
+        }else{
+            $cash_money.hide();
+        }
+        if (value !=4){
+            $other_money.show().find('input[name=other_money]').removeAttr('disabled');
+            $pay_name.html(cash_type_desc[value]);
+        }else{
+            $other_money.hide().find('input[name=other_money]').attr('disabled','disabeld');
+        }
+    })
+</script>

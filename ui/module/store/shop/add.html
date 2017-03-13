@@ -1,0 +1,444 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <link rel="stylesheet" href="shop.css" />    
+    </head>
+
+    <body>
+        <div class="breadcrumb">
+            <a>店铺管理</a>
+            <span>&gt;</span>
+            <a href="index.html">店铺列表</a>
+            <span>&gt;</span><%=query.type=="add" ? "新增店铺" : "编辑店铺"%>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4><%=query.type=="add" ? "新增店铺" : "编辑店铺"%></h4>
+				</div>
+			</div>
+			<hr />
+        </div>
+        
+        <div class="wrapper">
+          
+            <form class="form-vertical" data-role="form" id="form">
+            <script type="text/template" id="form-t">  
+				<div class="detail-operation">
+                    <%if(query.type=="add"){%>
+                        <button type="button" class="btn" onclick="window.close()">关闭</button>
+                    <%}else{%>   
+    					<button type="button" class="btn btn-cancel">取消</button>
+                    <%}%>    
+					<span class="space"></span>
+					<button class="btn-primary">提交</button>
+				</div>
+				<ul class="nav-step flex-box">
+					<li class="flex-item active"><span class="arrow">1.店铺基本信息</span></li>
+                    <li class="flex-item"><span>2.店铺图片信息</span></li>
+					<li class="flex-item"><span>3.银行账号信息</span></li>
+					<li class="flex-item"><span>4.准入评估信息</span></li>
+					<li class="flex-item"><span>5.附件上传</span></li>
+                    <li class="flex-item"><span>6.财务结算</span></li>
+				</ul>
+                <div class="control-group" id="salonSn" style="display:none">
+                    <label class="control-label" for=""><span class="red">*</span>店铺编号：</label>
+                    <div class="control">
+                        <input type="text" name="sn" value="<%=data.sn%>" placeholder="店铺编号" maxlength="10"
+                        required data-value="<%=data.sn||""%>" unique="salon/checkSalonSn?sn=${value}" uniquemsg="店铺编号重复">
+                    </div>
+                </div> 
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
+                    <div class="control">
+                        <input type="text" name="salonname" value="<%=data.salonname%>" placeholder="店铺名称" maxlength="16" required>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
+                    <div class="control">
+                        <input type="text" name="name" value="<%=data.name%>" placeholder="所属商户" disabled>
+                        <input type="hidden" name="merchantId" value="<%=data.merchantId%>">
+                        <input type="hidden" name="name" value="<%=data.name%>">
+                    </div>
+                </div>
+                <div class="control-group" style="margin-bottom:0">
+                    <label class="control-label" for=""><span class="red">*</span>店铺地址：</label>
+                    
+						<select id="province" name="provinceId" class="select min-width" required ajat-one="true" 
+						ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t&provinceId=<%=data.provinceId%>" ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t&citiesId=<%=data.citiesId%>">
+						</select>
+						<select id="city" name="citiesId" class="select min-width" required ajat-one="true" 
+						ajat="<%if(data.provinceId){%>salonList/getProvinces?type=2&areaId=<%=data.provinceId%><%}%>#domid=city&tempid=city_t&citiesId=<%=data.citiesId%>"
+						ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t&district=<%=data.district%>,salonList/getBussesName?cityid=${value}#domid=business&tempid=business_t&businessId=<%=data.businessId%>">
+						</select>
+                        
+                        <select id="area" name="district" class="select min-width" style="margin-right:10px" 
+                        required ajat-one="true"
+                        ajat="<%if(data.citiesId){%>salonList/getProvinces?type=3&areaId=<%=data.citiesId%><%}%>#domid=area&tempid=area_t&district=<%=data.district%>"
+                        ajat-change="salonList/getProvinces?type=4&areaId=${value}#domid=zone&tempid=zone_t&zone=<%=data.zone%>"
+                        >
+                        </select>
+                        <span class="control-help" style="display:none;"></span>                      
+                </div>
+
+                <div class="control-group" style="margin:0">
+                    <label class="control-label" for=""></label>
+                    <textarea class="textarea" name="addr" id="address" placeholder="详细街道信息" 
+                    maxlength="50" required ><%=data.addr%></textarea>
+                </div>                  
+
+                <div class="control-group" style="margin:0">
+                    <label class="control-label" for=""></label>
+                    <div class="textarea-bar">
+                        <span class="area-coor">地理坐标：</span>
+                        <span  id="coorMarker"><%=data.addrlati && data.addrlong ? '已标记' : '未标记'%></span>                         
+                        <button class="btn area-btn" id="addCoordinate" type="button">
+                            <i class="fa fa-map-marker"></i> 
+                            <span>添加坐标</span>
+                        </button>
+                    </div>
+                    <input id="coorMarkerInput" name="lngLat" type='hidden' required requiredmsg="未标记"
+                    value="<%=data.addrlati && data.addrlong ? data.addrlati+','+data.addrlong : ''%>">
+                    <span class="control-help"  style="display:none;"></span>
+                </div>    
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>所属商圈：</label>
+
+					<div class="control control-circle" id="zone" ajat="<%if(data.district){%>salonList/getProvinces?type=4&areaId=<%=data.district%><%}%>#domid=zone&tempid=zone_t&zone=<%=data.zone%>">
+
+					</div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>合同编号：</label>
+                    <div class="control">
+                        <input type="text" name="bargainno" value="<%=data.bargainno%>" placeholder="合同编号" maxlength="16" required>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>显示设置：</label>
+                    <label>
+                        <input type="radio" class="radio" name="isAppShow" value="1"
+                        <%=!data.show||data.show==1 ? "checked" : "" %>>
+                        <span>在APP中显示</span>
+                    </label>
+
+                    <label>
+                        <input type="radio" class="radio" name="isAppShow" value="2">
+                        <span>不在APP中显示</span>
+                    </label>
+                </div>                 
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>店铺分类：</label>
+                    <label>
+                        <input type="radio" class="radio" name="salonCategory" value="2"
+                        <%=!data.salonCategory||data.salonCategory==2 ? "checked" : "" %>>
+                        <span>店铺</span>
+                    </label>
+
+                    <label>
+                        <input type="radio" class="radio" name="salonCategory" value="1">
+                        <span>工作室</span>
+                    </label>
+                </div>                 
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>店铺类型：</label>
+
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="1"
+                    <%=!data.shopType||data.shopType==1 ? "checked" : "" %>>
+                    <span>预付款店</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="2" 
+                    <%=data.shopType==2 ? "checked" : "" %>>
+                    <span>投资店</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="3"
+                    <%=data.shopType==3 ? "checked" : "" %>>
+                    <span>金字塔店</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="4"
+                    <%=data.shopType==4 ? "checked" : "" %>>
+                    <span>高端店</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="5"
+                    <%=data.shopType==5 ? "checked" : "" %>>
+                    <span>写字楼店</span>
+                    </label>
+
+                    <span class="control-help" style="display:none;"></span>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>店铺邀请码：</label>
+                    <div class="control">
+                        <input type="text" value="<%=data.recommend_code%>" placeholder="店铺邀请码" 
+                        maxlength="10" disabled>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>分红联盟：</label>
+
+                    <label>
+                        <input type="radio" class="radio"  value="0" name="dividendStatus"
+                        <%=data.dividendStatus == "0" ? "checked" : "" %>>
+                        <span>加入分红联盟</span>
+                    </label>
+
+                    <label>
+                        <input type="radio" class="radio" value="1" name="dividendStatus"
+                        <%=(data.dividendStatus === undefined || data.dividendStatus === "" || data.dividendStatus == "1") ? "checked" : "" %>>
+                        <span>退出分红联盟</span>
+                    </label>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>当前等级：</label>
+                    <div class="control">
+                        <input type="hidden" name="salonGrade" value="<%=data.salonGrade%>">
+                        <%
+                            var salonGradeName="";
+                            if(data.salonGrade == "1"){
+                                salonGradeName = "S";
+                            }else if(data.salonGrade == "2"){
+                                salonGradeName = "A";
+                            }else if(data.salonGrade == "3"){
+                                salonGradeName = "B";
+                            }else if(data.salonGrade == "4"){
+                                salonGradeName = "C";
+                            }else if(data.salonGrade == "5"){
+                                salonGradeName = "新落地";
+                            }else if(data.salonGrade == "6"){
+                                salonGradeName = "淘汰区";
+                            }
+                        %>
+                        <input type="text"  value="<%=salonGradeName%>" disabled>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>调整等级：</label>
+                    <select class="select defalut-width" name="salonChangeGrade">
+                      <option value="1">S</option>
+                      <option value="2">A</option>
+                      <option value="3">B</option>
+                      <option value="4" selected>C</option>
+                      <option value="5">新落地</option>
+                      <option value="6">淘汰区</option>
+                    <select>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>调整生效日期：</label>
+                    <div class="control">
+                        <%
+                        if(data.changeInTime==0){
+                            data.changeInTime = "";
+                        }else if(!isNaN(data.changeInTime)){
+                            data.changeInTime = new Date(data.changeInTime*1000).format("yyyy-MM-dd")
+                        }
+                        %>   
+                        <input type="date" name="changeInTime" value="<%=data.changeInTime%>" max="2030-01-01" placeholder="YYYY-MM-DD" required>
+                    </div>
+                </div>                                                
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>合同起始日期：</label>
+                    <div class="control">
+                        <%
+                        if(data.contractTime==0){
+                            data.contractTime = "";
+                        }else if(!isNaN(data.contractTime)){
+                            data.contractTime = lib.tools.getDate(data.contractTime);
+                        }
+                        %>                        
+                        <input type="date" name="contractTime" value="<%=data.contractTime%>" required  placeholder="YYYY-MM-DD"
+                        min="1950-01-01" max="2030-01-01">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>合同截止日期：</label>
+                    <div class="control">   
+                        <%
+                        if(data.contractEndTime==0){
+                            data.contractEndTime = "";
+                        }else if(!isNaN(data.contractEndTime)){
+                            data.contractEndTime = lib.tools.getDate(data.contractEndTime);
+                        }
+                        %>                                       
+                        <input type="date" name="contractEndTime" placeholder="YYYY-MM-DD" value="<%=data.contractEndTime%>" 
+                        required  max="2030-01-01" min="<%=data.contractTime%>" dateminmsg="合同截止日期不能小于合同起始日期">
+                    </div>
+                </div>   
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>联系人：</label>
+                    <div class="control">
+                        <input type="text" name="bcontacts" value="<%=data.bcontacts%>" placeholder="联系人" maxlength="8" required>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>联系电话：</label>
+                    <div class="control">
+						 <input type="text" name="phone" value="<%=data.phone%>" placeholder="请输入7-12位有效店铺电话" 
+                         maxlength="12" pattern="phone" patternmsg="请输入7-12位有效店铺电话" required>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>店铺电话：</label>
+                    <div class="control">                       
+                        <input type="text" name="tel" value="<%=data.tel%>" placeholder="请输入7-12位有效店铺电话" 
+                        maxlength="12" pattern="phone" patternmsg="请输入7-12位有效店铺电话" required>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>法人代表：</label>
+                    <div class="control">
+                        <input type="text" name="corporateName" value="<%=data.corporateName%>" 
+                        placeholder="法人代表" maxlength="8" required>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>法人电话：</label>
+                    <div class="control">
+                        <input type="text" name="corporateTel" value="<%=data.corporateTel%>" placeholder="请输入11位有效手机号" 
+                        maxlength="11" pattern="mobile" patternmsg="请输入11位有效手机号" required>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>业务代表：</label>
+                    <div class="control control-circle"  id="business" ajat="<%if(data.citiesId){%>salonList/getBussesName?cityid=<%=data.citiesId%><%}%>#domid=business&tempid=business_t&businessId=<%=data.businessId%>">
+
+                    </div>
+                </div>                
+
+                <div class="control-group">
+                    <label class="control-label" for=""></label>
+                    <button class="btn" type="button" id="preview-btn" style="margin-right:20px">预览</button>
+                    <button class="btn-primary">下一步</button>
+                </div>
+            </script>
+            </form>       
+        </div>
+
+		<div class="map-container">
+			<style type="text/css">
+				.map-container{
+					position:fixed;left:0;top:0;width:100%;height:100%;display:none;
+					z-index:1000;
+				}
+				.map-toolbar{
+					position:absolute;left:0;top:0;width:100%;z-index:100;background:rgba(255,255,255,0.7);
+					box-shadow:0px 0px 5px rgba(0,0,0,0.1);
+				}
+				.map-toolbar>div{
+					padding:10px;
+				}
+				.map-toolbar input{
+					width:250px;
+				}
+				.map-inner{
+					position:absolute;left:0;top:0;width:100%;height:100%;
+				}
+				.map-marker-address{
+					font-size:16px;
+					line-height:32px;
+				}
+				.BMap_stdMpCtrl{
+					top:65px!important;
+				}
+			</style>
+			<div class="map-toolbar">
+				<div class="flex-box">
+					<div class="flex-item map-marker-address">标记位置：<span id="address-text">未标记</span></div>
+					<div class="tc" >
+						<input  type="text" id="map-search" placeholder='请输入关键字' />
+					</div>
+					<div class="flex-item" style="text-align:right">
+						<button class="btn">返回</button>
+						<span class="space"></span>
+						<button class="btn-primary">确定</button>
+					</div>
+				</div>
+			</div>
+			<div class="map-inner"id="map-wrapper"></div>
+		</div>
+        <script type="text/template" id="province_t">
+            <option value="">省份</option>
+            <%data.forEach&&data.forEach(function(item){%>
+                <option <%=item.pid==protocol.custom.provinceId?"selected":""%> value="<%=item.pid%>"><%=item.pname%></option>
+            <%})%>
+        </script>
+
+        <script type="text/template" id="city_t">
+            <option value="">城市</option>
+            <%data.forEach&&data.forEach(function(item){%>
+                <option <%=item.iid==protocol.custom.citiesId?"selected":""%> value="<%=item.iid%>"><%=item.iname%></option>
+            <%})%>
+        </script>
+
+        <script type="text/template" id="area_t">
+            <option value="">地区</option>
+            <%data.forEach&&data.forEach(function(item){%>
+                <option <%=item.tid==protocol.custom.district?"selected":""%> value="<%=item.tid%>"><%=item.tname%></option>
+            <%})%>
+        </script>
+
+        <script type="text/template" id="business_t">
+            <%data.forEach&&data.forEach(function(item){%>
+                <label class="label">
+                    <input type="radio" class="label" name="businessId" value="<%=item.id%>"
+                    <%=item.id == protocol.custom.businessId ? "checked":""%> required>
+                    <span><%=item.businessName%></span>
+                </label>
+            <%})%>
+            <%if(data.length>0){%>
+                <div class="control-help" style="display:none;"></div>
+            <%}else{%>
+                <input type="hidden" name="businessId" required requiredmsg="请选择有业务代表的城市"/>
+            <%}%>
+        </script>
+
+		<script type="text/template" id="zone_t">
+			<%data.forEach&&data.forEach(function(item){%>
+            <label class="label">
+    			<input type="radio" <%=item.areaid==protocol.custom.zone?"checked":""%>  name="zone" value="<%=item.areaid%>" required>
+    			<span><%=item.areaname%></span>
+            </label>
+			<%})%>
+
+			<%if(data.length>0){%>
+				<div class="control-help" style="display:none;"></div>
+			<%}else{%>
+				<input type="hidden" name="zone" required requiredmsg="请选择有商圈的地区"/>
+			<%}%>
+		</script>
+       
+        <script src="add.js"></script>
+
+        <script src="http://api.map.baidu.com/api?v=2.0&ak=F360d7e9ea3c3ecb5b9b9f2b530be8f4&callback=renderMap()">
+        </script>
+        
+    </body>
+</html>

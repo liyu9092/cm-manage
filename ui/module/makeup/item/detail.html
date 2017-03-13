@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+		<style type="text/css">
+			.item-sub{
+				padding-left:15px;
+				width:300px;
+			}
+			.item-logo{
+				margin:5px 0 10px 0;
+			}
+			.item-logo img{
+				width:100%;
+				margin-bottom:10px;
+			}
+			p,.wrapper h4,.images{
+				margin:10px 0;
+			}
+			.wrapper h4{
+				font-weight:bold;
+				font-size:14px;
+			}
+			.item-images .control-thumbnails-item:first-child:before{
+				position:absolute;
+				left:0px;
+				top:0px;
+				content:"首";
+				background: rgb(73,155,234); /* Old browsers */
+				background: -moz-linear-gradient(-45deg, rgba(73,155,234,1) 0%, ,rgba(32,124,229,1) 50%,rgba(0,0,0,0) 51%); /* FF3.6-15 */
+				background: -webkit-linear-gradient(-45deg, rgba(73,155,234,1) 0%,,rgba(32,124,229,1) 50%,rgba(0,0,0,0) 51%); /* Chrome10-25,Safari5.1-6 */
+				background: linear-gradient(135deg, rgba(73,155,234,1) 0%,rgba(32,124,229,1) 50%,rgba(0,0,0,0) 51%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+				width:40px;
+				height:40px;
+				color:#fff;
+				z-index:100;
+				text-indent:8px;
+			}
+			.table-detail tbody td:nth-child(odd){
+				font-weight:bold;
+			}
+		</style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="index.html">韩式半永久</a><span>&gt;</span>查看项目详情
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4>查看项目详情</h4>
+			</div>
+			</div>
+			<hr />		 
+        </div>	
+        <div class="wrapper" id="detail" ajat="<%if(query.p=='index'){%>beautyItem/show<%}else{%>beautyItem/showFashion<%}%>?<%=query._%>#domid=detail&tempid=detail-t">
+			<script type="text/template" id="detail-t">
+			<div class="detail-operation">
+				<a href="edit.html?<%=query._%>" data-slug="<%=query.p=="index"?"beautyItem.update":"beautyItem.updateFashion"%>" class="btn">编辑</a>
+				<span class="space"></span>
+				<button class="btn btn-cancel" type="button">返回</button>
+			</div>
+			<div class="table-box">
+				<div class="table-detail table-item">
+					<table>
+						<tbody>
+							<tr>
+								<td>项目名称：</td>
+								<td><%=data.name%></td>
+							</tr>
+							<%if(query.p=="index"){%>
+							<tr>
+								<td>类别：</td>
+								<td><%=data.level==1?"明星院长":"院长"%></td>
+							</tr>
+							<%}%>
+							<tr>
+								<td>市场价：</td>
+								<td>
+									<%if(query.p=="fashion"){%>
+										<%if(data.prices.min_price&&data.prices.max_price){%>
+											<%if(data.prices.min_price!=data.prices.max_price){%>
+											￥<%=data.prices.min_price%>-￥<%=data.prices.max_price%>
+											<%}else{%>
+											￥<%=data.prices.min_price%>
+											<%}%>
+										<%}%>
+									<%}else{%>
+										￥<%=data.price%>
+									<%}%>
+								</td>
+							</tr>
+							<tr>
+								<td>酬宾价：</td>
+								<td>
+									<%if(query.p=="fashion"){%>
+										<%if(data.prices.min_vip_price&&data.prices.max_vip_price){%>
+											<%if(data.prices.min_vip_price!=data.prices.max_vip_price){%>
+											￥<%=data.prices.min_vip_price%>-￥<%=data.prices.max_vip_price%>
+											<%}else{%>
+											￥<%=data.prices.max_vip_price%>
+											<%}%>
+										<%}%>
+									<%}else{%>
+										￥<%=data.vip_price%>
+									<%}%>
+								</td>
+							</tr>
+							<tr>
+								<td>特价：</td>
+								<td>
+									<%if(query.p=="fashion"){%>
+										<%if(data.prices.min_bargain_price&&data.prices.max_bargain_price){%>
+											<%if(data.prices.min_bargain_price!=data.prices.max_bargain_price){%>
+											￥<%=data.prices.min_bargain_price%>-￥<%=data.prices.max_bargain_price%>
+											<%}else{%>
+											￥<%=data.prices.min_bargain_price%>
+											<%}%>
+										<%}%>
+									<%}else{%>
+										￥<%=data.bargain_price%>
+									<%}%>
+								</td>
+							</tr>
+							
+							<tr>
+								<td>H5连接：</td>
+								<td><%=data.content_url%></td>
+							</tr>
+							<tr>
+								<td>APP预约数：</td>
+								<td><%=data.quantity%></td>
+							</tr>
+							<tr>
+								<td>已完成数：</td>
+								<td><%=data.completed_num%></td>
+							</tr>
+							<%if(data.is_gift==1){%>
+							<tr>
+								<th colspan="2">赠送信息</th>
+							</tr>
+							<tr>
+								<td>赠送说明：</td>
+								<td><%=data.present_explain.replace(/\n/g,"<br/>")%></td>
+							</tr>
+							<tr>
+								<td>时间限制：</td>
+								<td>订单生成后90天内有效</td>
+							</tr>
+							<%}%>
+						</tbody>
+					</table>
+				</div>
+				<%if(query.p=="index"){%>
+					<div class="table-item" style="width:140px;padding-left:15px;">
+						<h4 style="margin-top:0;">项目icon</h4>
+						<img src="<%=data.logo%>" class="image-preview" style="width:auto;height:auto;" alt="" />
+					</div>
+				<%}%>
+			</div>
+			</script>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <style>
+        .table tbody tr:hover{
+            background:none;
+        }
+      </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理</a>
+            <span>&gt;</span>
+            <a href="index.html">平台活动</a>
+            <span>&gt;</span>新增活动
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>新增活动</h4>
+                </div>
+            </div>
+            <hr />
+        </div>
+
+        <div class="wrapper">
+                    <ul class="nav-step flex-box">
+                        <li class="flex-item">
+                            <a >
+                                <i class="fa fa-check-circle"></i>
+                                <span>1.活动基本信息</span>
+                            </a>
+                        </li>
+                        <li class="flex-item active"><span class="arrow">2.定义现金券</span></li>
+                    </ul>
+
+                   <form class="form-vertical"  data-role="form" id="form">
+                       <script type="text/template" id="form-t">
+                           <table class="table" width="100%">
+                               <thead>
+                                   <tr>
+                                       <th>现金券设定</th>
+                                   </tr>
+                               </thead>
+
+                               <tbody>
+                                   <tr>
+                                       <td>
+                                           <div style="margin:15px">
+                                               <span style="display: inline-block;width:130px">券金额:</span>
+                                               <%if (!data.vcId){%>
+                                               <input type="text" name="money" pattern='number' min='1' value="<%=data.money%>" max='999' id='money' required/>
+                                               <%}else{%>
+                                                <input type="text" pattern='number' min='1' disabled="disabled" value="<%=data.money%>" max='999' id='money' required/>
+                                                <input type="hidden" name="money" pattern='number' min='1' value="<%=data.money%>" max='999' id='money' required/>
+                                                <%}%>
+                                               <strong>元&nbsp;&nbsp;&nbsp;</strong>
+                                               <span class="weak">（不可修改，可填写1~999)</span>
+                                           </div>
+
+                                           <div style="margin:15px">
+                                               <span style="display: inline-block;width:130px">满额使用(单个项目)</span>
+                                               <input type="text" pattern='number' min='0' required max='999' <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> value="<%=data.enoughMoney || 0%>" name="enoughMoney"/>
+                                               <strong>元&nbsp;&nbsp;&nbsp;以上可用</strong>
+                                               <span class="weak">(大于或等于该数值可使用，0为不限制，可填写0~999) </span>
+                                           </div>
+                                           <hr />
+                                           <div style="margin:15px">
+                                               <span style="display: inline-block;width:130px">券总数:</span>
+                                               <%if (!data.vcId){%>
+                                               <input type="text" name="totalNumber" id="ticketNumInput" required value="<%=data.totalNumber || 1%>" pattern='number' min='1' max='3000'  />
+                                               <%}else{%>
+                                                <input type="text" disabled id="ticketNumInput" required value="<%=data.totalNumber || 1%>" pattern='number' min='1' max='3000'  />
+                                                <input type="hidden" name="totalNumber" id="ticketNumInput" required value="<%=data.totalNumber || 1%>" pattern='number' min='1' max='3000'  />
+                                                <%}%>
+                                               <strong>张&nbsp;&nbsp;&nbsp;</strong>
+                                               <span class="weak">(不可修改，可填写1~3000）</span>
+                                           </div>
+                                           <hr />
+                                           <div style="margin:15px">
+                                               <span style="display: inline-block;width:130px">领券上限：</span>
+                                               <input <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> type="text" name="getSingleLimit" value="<%=data.getSingleLimit || 1%>" pattern='number' min='1' max='20' required/>
+                                               <strong>张&nbsp;&nbsp;&nbsp;</strong>
+                                               <span class="weak">(每人本活动参与次数，每次参与只可获取一张，填写1~20)</span>
+                                           </div>
+                                       </td>
+                                   </tr>
+                               </tbody>
+                           </table>
+
+
+                           <table class="table" width="100%">
+                               <thead>
+                                   <tr>
+                                       <th colspan="2">时间限制</th>
+                                   </tr>
+                               </thead>
+
+                               <tbody>
+                                   <tr>
+                                       <td>活动（获取）时间</td>
+                                       <td>
+                                           <input type="date" name="getTimeStart" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> id="getTimeStart" required value="<%=data.getTimeStart? data.getTimeStart.split(" ")[0]: new Date().format('yyyy-MM-dd')%>" required/>
+                                           <span>至</span>
+                                           <input type="date" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> name="getTimeEnd" match="getTimeStart" matchmsg="截止时间不能小于起始时间" value="<%=data.getTimeEnd?data.getTimeEnd.split(" ")[0]:new Date(new Date().getTime()+60*60*24*1000*7).format('yyyy-MM-dd')%>" id="getTimeEnd" required/>
+                                           <span class="control-help" style="display:none;"></span>
+                                       </td>
+                                   </tr>
+
+                                   <tr>
+                                       <td>券有效时间</td>
+                                       <td>
+                                           <div style="margin:15px">
+                                               <label class="radio">
+                                                   <input type="radio" class="avaDateRadio" name="avaDate" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> value="1"
+                                                   checked="checked">
+                                                   <span>指定有效期</span>
+                                               </label>
+                                               <input type="date" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> <%= data.fewDay ? "disabled='disabled'" : ""%> required value="<%=data.addActLimitStartTime?formattedDate(data.addActLimitStartTime): new Date().format('yyyy-MM-dd')%>" id="avaDateStart" min="<%=data.getTimeStart? data.getTimeStart.split(" ")[0]: new Date().format('yyyy-MM-dd')%>" name="addActLimitStartTime"/>
+                                               <span>至</span>
+                                               <input type="date" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> required <%= data.fewDay ? "disabled='disabled'" : ""%>  id="avaDateEnd" min="<%=data.getTimeEnd?data.getTimeEnd.split(" ")[0]:new Date(new Date().getTime()+60*60*24*1000*7).format('yyyy-MM-dd')%>" match="avaDateStart" matchmsg="截止时间不能小于起始时间" value="<%=data.addActLimitEndTime?formattedDate(data.addActLimitEndTime):new Date(new Date().getTime()+60*60*24*1000*7).format('yyyy-MM-dd')%>" name="addActLimitEndTime"/>
+                                               <span class="control-help" style="display:none;"></span>
+                                           </div>
+                                           <hr />
+                                           <div style="margin:15px">
+                                               <label class="radio">
+                                                   <input type="radio" id="fewDayRadio" class="avaDateRadio" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> <%if (data.fewDay){%>checked="checked" <%}%> name="avaDate" value="2" >
+                                                   <span>自定义有效期区间</span>
+                                               </label>
+                                               <input type="text" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> id="avaDay" <%if (!data.fewDay){%>disabled="disabled"<%}%> name="fewDay" value="<%=data.fewDay || 1%>" pattern="number" min="1" max="999"/>
+                                               <span >天内有效<span class="weak">（获取现金券后,可填写1~999）</span></span>
+                                           </div>
+                                       </td>
+                                   </tr>
+                               </tbody>
+                           </table>
+
+                           <table class="table" width="100%">
+                               <thead>
+                                   <tr>
+                                       <th>使用限制</th>
+                                   </tr>
+                               </thead>
+
+                               <tbody>
+                                   <tr>
+                                       <td>
+                                           <div style="margin:10px"><strong>指定项目类别支付可用</strong></div>
+                                           <div  ajat-one="true" id="limitItemTypes" ajat="platform/getItemType#domid=limitItemTypes&amp;tempid=limitItemTypes-t&sid=<%=data.limitItemTypes%>&status=<%=data.status%>">
+                                           </div>
+                                       </td>
+                                   </tr>
+                                   <tr>
+                                       <td>
+                                           <label>
+                                               <input type="checkbox" name="useLimitTypes" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> <%if (data.useLimitTypes){%>checked="checked"<%}%> value="2">
+                                               <span>限制首单使用</span>
+                                           </label>
+                                       </td>
+                                   </tr>
+                               </tbody>
+                           </table>
+
+                           <table class="table" width="100%">
+                               <thead>
+                                   <tr>
+                                       <th colspan="2">
+                                           <label class="checkbox">
+                                               <input id="sendSmsChecked" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> name="checkSendSms" type="checkbox" <%if (data.sendSms){%>checked="checked"<%}%>name="" value="3">
+                                               <span>发送手机短信</span>
+                                           </label>
+                                       </th>
+                                   </tr>
+                               </thead>
+
+                               <tbody>
+                                   <tr>
+                                       <td>手机短信内容</td>
+                                       <td><textarea name="sendSms" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> <%if (!data.sendSms){%>disabled="disabled"<%}%> required id="sendSms" minlength="10" maxlength="500"
+                                       placeholder="限制10~500个字符的长度,[useMoney]:接收短信用户获取的现金券金额,[name]:活动名称,[overtime]:接收短信用户获取的现金券有效结束时间" style="width: 500px;"><%=data.sendSms || '【臭美美发】亲爱的，[useMoney]元现金券已存入你的账户，登录臭美美发APP在个人中心查看，APP下载地址http://t.cn/RZXyLPg，退订回复TD'%></textarea></td>
+                                       <td>
+                                       <p class="weak">【说明】勾选之后必填，建议使用默认短信模板<br/>
+                                       10~500个汉字的长度<br/>
+                                       [useMoney]:接收短信用户获取的现金券金额<br/>
+                                       [name]:活动名称<br/>
+                                       [overtime]:接收短信用户获取的现金券有效结束时间</p>
+                                       </td>
+                                   </tr>
+                               </tbody>
+                           </table>
+                           <div class="control-group">
+                               <label class="control-label" for=""></label>
+                               <a href="index.html" >
+                               <button class="btn" type="button" style="margin-right:20px">取消</button></a>
+                               <%if (data.status !=3 && data.status != 4){%>
+                               <button class="btn-primary" data-slug="coupon.editConf,coupon.add">提交</button>
+                               <%}%>
+                           </div>
+                       </script>
+                    </form>
+        </div>
+
+
+        <script type="text/template" id='limitItemTypes-t'>
+            <%var checkedIds = protocol.custom.sid && protocol.custom.sid.split(',')%>
+            <%data.forEach(function(item){%>
+              <%if (item.typename != '其他'){%>
+            <label class="checkbox">
+                <input type="checkbox"  <%= protocol.custom.status==3 || protocol.custom.status==4 ? "disabled='disabled'" : ""%> <%if ( checkedIds && checkedIds.indexOf(item.typeid.toString()) !=-1 ){%>checked="checked"<%}%> name="limitItemTypes" value="<%=item.typeid%>">
+                <span><%=item.typename%></span>
+            </label>
+            <%}})%>
+        </script>
+
+        <script>
+            var getTemplateData = function(){
+                if (getTmpData()){
+                    templateRender(getTmpData());
+                }else {
+                    templateRender({});
+                }
+            };
+
+            var templateRender = function(data){
+                lib.ajat('#domid=form&tempid=form-t').template(data);
+            };
+
+            var getSubmitData = function(){
+                var thisFormData = lib.tools.getFormData($('#form'));
+                var tmpData = getTmpData();
+                if (thisFormData.addActLimitStartTime){
+                  tmpData.fewDay = '';
+                }else{
+                  tmpData.addActLimitStartTime = tmpData.addActLimitEndTime = '';
+                }
+
+                if (!thisFormData.checkSendSms){
+                  thisFormData.sendSms =  '';
+                }
+                if (!thisFormData.useLimitTypes){
+                  tmpData.useLimitTypes = '';
+                }
+                var formData = $.extend(tmpData,thisFormData);
+                return formData;
+            }
+
+            var getTmpData = function(){
+               var tmp = JSON.parse(window.localStorage.getItem('couponTmpData'));
+               return tmp;
+            };
+
+            var setTmpData = function(data){
+                window.localStorage.setItem('couponTmpData',JSON.stringify(data));
+            }
+
+            var clearTmpData  = function(){
+                window.localStorage.removeItem('couponTmpData');
+            }
+
+            // var newForm = new lib.Form();
+            lib.Form.prototype.save = function(data){
+                var formData = getSubmitData();
+                setTmpData(formData);
+                window.location.href="preview.html"+(lib.query._?"?"+lib.query._:"");
+            }
+
+            // 表单验证部分
+            $("#form").on('click','.ticketNum',function(){
+                if($(this).val()=="1"){
+                   $("#ticketNumInput").attr('disabled','disabled');
+                }else{
+                   $("#ticketNumInput").removeAttr('disabled');
+                }
+            }).on('click','.avaDateRadio',function(){
+                if($(this).val()=="1"){
+                   $("#avaDateStart").removeAttr('disabled');
+                   $("#avaDateEnd").removeAttr('disabled');
+                   $("#avaDay").attr('disabled','disabled');
+                }else{
+                   $("#avaDateStart").attr('disabled','disabled');
+                   $("#avaDateEnd").attr('disabled','disabled');
+                   $("#avaDay").removeAttr('disabled');
+                }
+            }).on('click', '#preview-btn', function(event) {
+                var formData = getSubmitData();
+                setTmpData(formData);
+                window.location.href="preview.html";
+
+            }).on('focus', '#getTimeStart', function(event) {
+
+                changeDateMin();
+
+            }).on('change', '#getTimeStart', function(event) {
+
+                changeDateMin(formattedDate($(this).val()));
+
+            }).on('change', '#getTimeEnd', function(event) {
+
+               // $('#getTimeStart').attr('max',formattedDate($(this).val()));
+                $('#avaDateEnd').attr('min',formattedDate($(this).val()));
+                $('#avaDateStart,#avaDateEnd').val('');
+
+            }).on('change', '#avaDateEnd', function(event) {
+
+                //$('#avaDateStart').attr('max',formattedDate($(this).val()));
+
+            }).on('change', '#avaDateStart', function(event) {
+                var getTimeEndValue = new Date($('#getTimeEnd').val()).getTime();
+                var avaDateStartValue =new Date($(this).val()).getTime();
+                var minDate = getTimeEndValue > avaDateStartValue ? getTimeEndValue :  avaDateStartValue;
+                $('#avaDateEnd').attr('min',formattedDate(new Date(minDate)));
+
+            }).on('change', '#sendSmsChecked', function(event) {
+              if($(this).is(':checked')){
+                $('#sendSms').removeAttr('disabled').attr('required','required');
+              }else{
+                $('#sendSms').attr('disabled','disabled').removeAttr('required');
+              }
+              $('#sendSms').trigger('blur');
+            });
+
+            var formattedDate = function(val){
+                var newDate = val ? new Date(val) : new Date();
+                return newDate.format("yyyy-MM-dd");
+            }
+
+            var changeDateMin = function(val){
+                var date = val ? val : new Date().format("yyyy-MM-dd");
+                $('#avaDateStart,#avaDateEnd').val('');
+                $('#avaDateStart,#avaDateEnd,#getTimeStart,#getTimeEnd').attr('min',date);
+            };
+
+            //changeDateMin();
+
+            var confirmBox = function(options){
+                 lib.popup.confirm({
+                     text:options.text,
+                     define: function(){
+                         lib.ajax({
+                             url : options.url,
+                             data: options.data
+                         }).done(function(data, status, xhr){
+                             if(data.result == 1){
+                                 parent.lib.popup.result({
+                                     text:options.resultText,
+                                     define:function(){
+                                         window.location.href="index.html";
+                                     }
+                                 });
+                             }
+                         });
+                     }
+                 });
+            };
+
+            getTemplateData();
+        </script>
+    </body>
+</html>

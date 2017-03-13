@@ -1,0 +1,9 @@
+﻿<%if(data.length>0){%>
+<ul>
+	<%data.forEach(function(item,i){%>
+	<li class="complete-item <%if(i==0&&protocol.query.salonname==item.salonname){%>active<%}%>" data-salon_id="<%=item.salonid%>" data-merchant_id="<%=item.merchantId%>" data-merchantname="<%=item.name%>" data-sn="<%=item.sn%>"><%=item.salonname%></li>
+	<%})%>
+</ul>
+<%}else{%>
+<div style="padding:5px 10px;">没有查找到店铺</div>
+<%}%>

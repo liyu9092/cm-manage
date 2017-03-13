@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <style>
+        .td{width:15%;min-width: 150px;}   
+     
+        .tab td{
+            padding:0;
+            text-align: center!important;
+            height:33px;  
+        }  
+        .tab input[type="date"] {
+            min-width:160px!important;
+            width:100%;
+            border: none;
+            visibility: hidden;
+        }
+        .tab input[type="text"] {
+            min-width:300px!important;
+            width:100%;
+            border: none;
+            visibility:hidden;
+        }           
+      </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>店铺管理</a>
+            <span>&gt;</span><a href="../index.html">店铺资料</a>
+            <span>&gt;</span><a href="index.html">造型师列表</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>查看造型师资料</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">      
+            <div class="table" style="width:70%;float:left" id="table-wrapper">
+                <script type="text/template" id="table-t">
+                <div style="position:absolute;right:20px;top:40px;">
+                    <button type="button" class="btn mr-20 isAble" data-stylistId="<%=data.stylistId%>"
+                    data-action="<%=data.status=="1" ? 'stylist/disabled/' : 'stylist/enable/'%>"
+                    data-slug="<%=data.status=="1" ? 'stylist.disabled' : 'stylist.enable'%>"
+                    data-reward="<%=data.reward%>" data-status="<%=data.status%>"> 
+                        <%=data.status=="1" ? "禁用" : "启用"%>
+                    </button>
+                    &nbsp;
+                    <button type="button" class="btn mr-20 del" data-status="<%=data.reward%>" 
+                    data-slug="stylist.destroy">
+                        删除
+                    </button>
+                    &nbsp;
+                    <a type="button" class="btn mr-20" href="edit.html#id=<%=data.stylistId%>" 
+                    data-slug="stylist.update">
+                        编辑
+                    </a>
+                    &nbsp;
+                    <button type="button" class="btn mr-20" onclick="history.back()">
+                        取消
+                    </button>                  
+                </div> 
+
+                <table>
+                    <tbody>
+                        <tr style="height:60px">
+                            <td colspan="4">
+                            <strong style="padding-left:15px;font-size:18px"><%=data.salonname%></strong>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">姓名：</td>
+                            <td colspan="3"><%=data.stylistName%></td>
+                        </tr>
+
+                        <tr>
+                            <%var sexText = {"0":"保密","1":"男","2":"女"} %>
+                            <td class="td">性别：</td>
+                            <td colspan="3"><%=sexText[data.sex]%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">手机号：</td>
+                            <td colspan="3"><%=data.mobilephone%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">微信：</td>
+                            <td colspan="3"><%=data.wechat%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">QQ号：</td>
+                            <td colspan="3"><%=data.qq%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="td">邮箱：</td>
+                            <td colspan="3"><%=data.email%></td>
+                        </tr>   
+
+                        <tr>
+                            <td class="td">出生日期：</td>
+                            <td colspan="3" class="format"><%=data.birthday%></td>
+                        </tr>
+
+                        <tr>                       
+                            <%if(data.IDcard){%>
+                                <td class="td">证件类型：</td>
+                                <td>身份证</td>
+                                <td class="td">证件编号：</td>
+                                <td><%=data.IDcard%></td>
+                            <%}%>
+
+                            <%if(data.drivingLicense){%>
+                                <td class="td">证件类型：</td>
+                                <td>驾驶证</td>
+                                <td class="td">证件编号：</td>
+                                <td><%=data.drivingLicense%></td>
+                            <%}%>
+
+                            <%if(data.passport){%>
+                                <td class="td">证件类型：</td>
+                                <td>护照</td>
+                                <td class="td">证件编号：</td>
+                                <td><%=data.passport%></td>
+                            <%}%>
+
+                            <%if(data.officerCert){%>
+                                <td class="td">证件类型：</td>
+                                <td>军官证</td>
+                                <td class="td">证件编号：</td>
+                                <td><%=data.officerCert%></td>
+                            <%}%>
+                        </tr>                          
+                    </tbody>                     
+                </table>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2">工作信息</th>                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="td">在职编号：</td>
+                            <td><%=data.sNumber%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">工作年限：</td>
+                            <td><%=data.workYears%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">门店职位：</td>
+                            <td><%=data.job%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">悬赏等级：</td>
+                            <%var gradeText = {"1":"资深发型师","2":"资深发型师", "1,2":"资深发型师","3":"设计总监", "4":"美发大师"} %>
+                            <td><%=gradeText[data.grade]%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">快剪等级</td>
+                            <%var fastGradeText = {"1":"普通快剪", "2":"总监快剪"}%>
+                            <td><%=fastGradeText[data.fastGrade]%></td>                            
+                        </tr>                        
+                    </tbody>                     
+                </table> 
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2">个人说明</th>                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="height:100px">
+                            <td class="td">个性签名：</td>
+                            <td><%=data.signature%></td>
+                        </tr>
+
+                        <tr style="height:100px">
+                            <td class="td">自我描述：</td>
+                            <td><%=data.description%></td>
+                        </tr>                       
+                    </tbody>                     
+                </table>
+
+                <table class="tab">
+                    <thead>
+                    <tr>
+                        <th colspan="3">教育经历</th>                       
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>起始日期</td>                       
+                        <td>截止日期</td>                       
+                        <td>教育院校（培训机构）</td>                       
+                    </tr>
+                    <% 
+                    var educateExp = JSON.parse(data.educateExp);
+                    %>
+                    <%for(var i = 1 ; i < 6 ; i++){%>
+                        <tr>
+                            <td><%=educateExp['sTime'+i]%></td>
+                            <td><%=educateExp['eTime'+i]%></td>
+                            <td><%=educateExp['name'+i]%></td>
+                        </tr>
+                    <%}%>                     
+                    </tbody>                     
+                </table>
+
+                <table class="tab">
+                    <thead>
+                        <tr>
+                            <th colspan="5">工作经验</th>                       
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>起始日期</td>                       
+                            <td>截止日期</td>                       
+                            <td>门店名称</td>                       
+                            <td>门店职位</td>                       
+                            <td>工作地点</td>                       
+                        </tr>  
+                        <% 
+                        var workExp = JSON.parse(data.workExp);
+                        %>                                       
+                        <%for(var i = 1 ; i < 6 ; i++){%>
+                            <tr>
+                                <td>
+                                    <%=workExp['wsTime'+i]%>
+                                </td>
+
+                                <td>
+                                   <%=workExp['weTime'+i]%></td>
+                                <td>
+                                   <%=workExp['wname'+i]%>
+                                </td>
+
+                                <td>
+                                    <%=workExp['wjob'+i]%>
+                                </td>
+
+                                <td>
+                                    <%=workExp['waddress'+i]%>
+                                </td>
+                            </tr>
+                        <%}%>                    
+                    </tbody>                     
+                </table>                                                                           
+            </div>               
+            </script>
+        </div>
+
+        <div style="float:left;margin:15px 0 15px 20px;">
+          <img src="" style="width:256px;height:256px"/>
+        </div>
+
+        <script>
+            (function(){
+                function init(){
+                    var promise = lib.ajat('stylist/show/'+lib.query.id+'#domid=table-wrapper&tempid=table-t').render();
+                    promise.done(function(data){
+                    $('img').attr('src',data.data.stylistImg);                 
+                    }); 
+                }
+
+                $("#table-wrapper").on('click','.isAble',function(){
+                    var reward = $(this).data("reward");
+                    var status = $(this).data("status");
+                    if(reward == "1" && status=="1"){
+                        lib.popup.alert({text:'此造型师有未完成打赏的赏金单，完成订单后才能禁用'});
+                        return;
+                    }                    
+                    var action = $(this).data('action');
+                    lib.ajax({
+                        type: "post",
+                        url : action+$(this).data('stylistid')
+                    }).done(function(data, status, xhr){
+                        if(data.result == 1){
+                            parent.lib.popup.result({text:"操作成功"});
+                            init();
+                        }
+                    })
+                })
+
+                $("#table-wrapper").on('click','.del',function(){
+                    var status = $(this).data("status");
+                    if(status == "1"){
+                        lib.popup.alert({text:'此造型师有未完成打赏的赏金单，完成订单后才能删除'});
+                        return;
+                    }
+                    if(status == "2"){
+                        lib.popup.confirm({
+                            text:'删除造型师后，此造型师的接单记录、作品记录也将一并清除，是否继续删除 ',
+                            define:function(){
+                                lib.ajax({
+                                    type: "post",
+                                    url : "stylist/destroy/"+lib.query.id
+                                }).done(function(data, status, xhr){
+                                    if(data.result == 1){
+                                        parent.lib.popup.result({
+                                            text:"删除成功",
+                                            define:function(){
+                                                history.back();
+                                            }
+                                        });                                        
+                                    }
+                                });                                 
+                            }
+                        })
+                    }
+                })                
+
+                init();
+            })();
+        </script>          
+    </body>
+</html>

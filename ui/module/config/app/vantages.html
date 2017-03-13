@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+        <style> 
+        .line{
+          border: 1px solid #58A2EC;
+          margin: 0 15px;          
+        }  
+        .show{
+            display:inline-block!important;
+        }
+        .hide{
+            display:none!important;
+        }
+        th{
+          width:20%;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>系统配置></a><span>&gt;</span><a href="vantages.html">店铺星级积分管理</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4> 店铺星级积分管理 </h4>
+                </div>
+            </div>      
+        </div> 
+
+        <div class="wrapper">
+            <form data-role="hash">                       
+               <div class="input-group input-switch">
+                    <select>
+                        <option value="0">店铺名称</option>
+                    </select>
+                    <input type="text" class="input-search" name="salonname" placeholder="店铺名称">
+                </div>
+
+                <span class="space"></span>
+                <label>所属星级：</label>
+                <select name="level">
+                    <option value="0">全部</option>
+                    <option value="1">LV1</option>
+                    <option value="2">LV2</option>
+                    <option value="3">LV3</option>
+                    <option value="4">LV4</option>
+                    <option value="5">LV5</option>
+                    <option value="6">LV6</option>
+                    <option value="7">LV7</option>
+                </select>  
+
+                <button class="btn" type="submit">查询</button>
+            </form>
+                         
+           <div class="table" ajat="salonstar/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+            <script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>店铺名称</th>
+                            <th>所属星级</th>
+                            <th>店铺累计积分</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                      <%var status=["","正常","停用","注销"]%>
+                      <%var data=data.data%>
+                      <%for(var i=0;i<data.length;i++){%>
+                        <tr>
+                            <td><%=i+1%></td>
+                            <td><%=data[i].salonname%></td>
+                            <td><%=data[i].level%></td>
+                            <td><%=data[i].score%></td>
+                            <td>
+                            <a class="link add" data-salonid="<%=data[i].salonid%>" data-score="<%=data[i].score%>" data-slug="salonstar.update">增加积分</a>
+                            <span class="space">|</span>
+                            <a class="link minus" data-score="<%=data[i].score%>" data-salonid="<%=data[i].salonid%>" data-slug="salonstar.update">减少积分
+                            </a>
+                            <span class="space">|</span>
+                            <a class="link" href="detail.html#salonid=<%=data[i].salonid%>&salonname=<%=data[i].salonname%>" data-slug="salonstar.show">积分详情</a>
+                            </td>      
+                        </tr>
+                        <%}%>                    
+                    </tbody>
+            </table>        
+             <div class="pager"> </div>
+            </script>
+            </div>
+
+            <script id="box" type="text/template">
+                <form action="salonstar/update" novalidate method="post" class="form-vertical" data-role="form">
+					<input type="hidden" name="salonid" value="<%=data.salonid%>" />
+					<input type="hidden" name="type" value="<%=data.type%>"/>
+                    <div class="control-group">
+                        <label class="control-label" for="">
+                            <span class="red">*</span>
+                            <span id="labelText"><%=data.type==1?"增加":"减少"%>积分：</span>
+                        </label>
+                        <div class="control">
+                            <input type="text" name="score" required pattern="number" maxlength="9" <%if(data.type==2){%> max="<%=data.score%>"<%}%>>
+                            <span class="unit">分</span>
+                        </div>
+                    </div> 
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span>原因说明：</label>
+                        <div class="control">
+                            <textarea required name="msg" maxlength="36"></textarea>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for=""></label>
+                        <button class="btn" type="button">取消</button>
+						<span class="space"></span>
+                        <button class="btn-primary">提交</button>
+                    </div>                
+                </form>                
+            </script>            
+        </div> 
+        <script src="vantages.js"></script>         
+    </body>
+</html>

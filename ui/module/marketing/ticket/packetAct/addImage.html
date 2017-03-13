@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script> 
+      <style>
+      .title{
+          display: inline-block;
+          font-weight: bold;
+          font-size: 15px;
+          padding-left: 5px;
+          width: 150px;"        
+      }
+      table{
+        margin : 30px;
+      }
+      </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理</a>
+            <span>&gt;</span>
+            <a href="index.html">红包活动</a>
+            <span>&gt;</span><%=query.id?"编辑":"新增"%>活动
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4><%=query.id?"编辑":"新增"%>活动</h4>
+                </div>
+            </div>
+            <hr />
+        </div>
+        <div class="wrapper">
+			<div id="form" ajat="<%if(query._){%>laisee/show/<%=query.id%><%}%>#domid=form&tempid=form-t">
+				<script type="text/template" id="form-t">
+				<%data=$.extend(data,JSON.parse(sessionStorage.getItem("formData")))%>
+				<form action="" class="form-vertical" data-role="form" >
+					<input type="hidden" value="<%=query.id%>" name="id" />
+					<div class="control-group">
+						<legend>
+						微信/朋友圈分享icon
+						</legend>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="">
+							<span class="red">*</span>分享图
+						</label>
+						<div class="control">
+							<div class="control-image">
+								<div class="control-single-image">
+									<img src="<%=data.share_icon%>" alt="" />
+									<div class="control-image-ud">
+										<div id="imageUpload1"><i class="fa fa-cloud-upload"></i>上传图分享图</div>
+									</div>
+									<input type="hidden" name="share_icon" class="original" value="<%=data.share_icon%>" required requiredmsg="请上传分享图" data-helpid="image-help1" />
+								</div>
+							</div>   
+							<div class="weak">分享图360*360px</div>
+							<div id="image-help1" class="control-help" style="display:none"></div>
+						</div>                        
+					</div> 
+					<div class="control-group">
+						<label class="control-label" for="">
+							<span class="red">*</span>分享标题
+						</label>
+						<div class="control">
+							<input type="text" value="<%=data.share_title%>" placeholder="填写分享标题" style="width:300px" name="share_title" required maxlength="24"/>
+						</div>                        
+					</div> 
+					<div class="control-group">
+						<label class="control-label" for="">
+							<span class="red">*</span>分享摘要
+						</label>
+						<div class="control">
+							<textarea type="text" value="<%=data.share_desc%>" placeholder="填写分享摘要" style="width:300px" name="share_desc" required  maxlength="28"><%=data.share_desc%></textarea>
+						</div>                        
+					</div> 
+					<div class="control-group">
+						<legend>
+							H5红包页面背景图
+						</legend>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="">
+							<span class="red">*</span>背景图
+						</label>
+						<div class="control">
+							<div class="control-image">
+								<div class="control-single-image">
+									<img src="<%=data.bonus_bg_img%>" alt="" style="width:320px" />
+									<div class="control-image-ud">
+										<div id="imageUpload2"><i class="fa fa-cloud-upload"></i>上传背景图</div>
+									</div>
+									<input type="hidden" name="bonus_bg_img" class="original" value="<%=data.bonus_bg_img%>" required requiredmsg="请上传背景图" data-helpid="image-help2" />
+								</div>
+							</div>
+							<div class="weak">H5页面宽度为640px；背景高度根据实际效果图截取</div>
+							<div id="image-help2"  class="control-help"  style="display:none"></div>					
+						</div>				
+					</div>
+					<div class="control-group">
+						<label class="control-label" for=""></label>
+						<div class="control">
+							 <a class="btn" href="index.html">取消</a>
+							 <span class="space"></span>
+							<button class="btn-primary" >下一步</button>  
+						</div>                        
+					</div>
+				</div> 
+			</form>
+			</script>
+		</div>
+		</div>
+        <script>
+			var $form=$('#form');
+			$form.on("_ready",function(e,data){
+				var form=$('#form form')[0]
+
+				 lib.Form.prototype.save = function(data){
+					var formData=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{};
+					data=$.extend(formData,data);
+					sessionStorage.setItem("formData",JSON.stringify(data));
+					location.href = "preview.html"+(lib.query._?"?"+lib.query._:"")
+				}
+				 
+				lib.puploader.image({
+					browse_button: 'imageUpload1',
+					auto_start:true,
+					filters: {
+						mime_types : [
+							{ title : "Image files", extensions : "jpg,png,jpeg" }
+						]
+					},
+					max_file_size:'2mb',
+					imageLimitSize:"360*360"
+				});
+				lib.puploader.image({
+					browse_button: 'imageUpload2',
+					auto_start:true,
+					filters: {
+						mime_types : [
+							{ title : "Image files", extensions : "jpg,png,jpeg" }
+						]
+					},
+					max_file_size:'2mb',
+					imageLimitSize:function(width,height){
+						return width==640;
+					}
+				});
+				if(data&&data.response){
+					if(data.response.status=="N"||data.response.status=="S"){
+						$form.find("input,select,textarea").attr("disabled",true);
+						$(".btn-primary").hide();
+						setTimeout(function(){
+							$form.find("input,select,textarea").attr("disabled",true);
+						},600)
+					}
+				}
+			});
+        </script>      
+    </body>
+</html>

@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>用户中心 </a><span>&gt;</span><a href="index.html">用户概况</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>用户概况</h4>
+				</div>
+			</div>
+		</div>
+		<div class="wrapper" ajat="user/survey#domid=detail&tempid=detail-t" id="detail">
+			<script type="text/template" id="detail-t">
+			<div class="table-detail">
+				<table>
+					<tbody>
+						<tr>
+							<td>用户总数</td>
+							<td><%=data.total%></td>
+						</tr>
+						<tr>
+							<td>本日新增用户数</td>
+							<td><%=data.day%></td>
+						</tr>
+						<tr>
+							<td>本周新增用户数</td>
+							<td><%=data.week%></td>
+						</tr>
+						<tr>
+							<td>本月新增用户数</td>
+							<td><%=data.month%></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<br />
+			<div class="chart-container">
+				<h2 class="tc">最近15天每日新增注册用户数与首单消费数</h2>
+				<canvas id="myChart" width="800" height="600"></canvas>
+				<div class="tc">
+					<i class="fa fa-circle" style="color:#E7BFAC"></i>
+					注册用户数
+					<span class="space"></span>
+					<i class="fa fa-circle" style="color:#FDF9CA"></i> 
+					首单消费数
+				</div>
+			</div>
+		</script>
+	</div>
+	<script type="text/javascript" src="/js/Chart.min.js"></script>
+	<script type="text/javascript">
+		$('#detail').on('_ready',function(e,data){
+			data=data.response;
+			var labels=[];
+			var registerArr=[];
+			for(var name in data.register){
+				registerArr.push(data.register[name]);
+				labels.push(name);
+			}
+			var firstArr=[];
+			for(var name in data.first){
+				firstArr.push(data.first[name]);
+			}
+			document.getElementById("myChart").width=window.innerWidth-40;
+			var ctx = document.getElementById("myChart").getContext("2d");
+			
+			var data = {
+				labels : labels,
+				datasets : [
+					{
+						fillColor : "rgba(220,220,220,0)",
+						strokeColor : "#E7BFAC",
+						pointColor : "#F6690F",
+						pointStrokeColor : "#fff",
+						data:registerArr
+						//data : [865,859,890,1081,1056,855,840,865,859,890,1081,1056,855,840,900]
+					},
+					{
+						fillColor : "rgba(151,187,205,0)",
+						strokeColor : "#FDF9CA",
+						pointColor : "#F7D80D",
+						pointStrokeColor : "#fff",
+						data:firstArr
+						//data : [828,848,840,1019,1096,1027,800,828,848,840,1019,1096,1027,800,955]
+					}
+				]
+			}
+			new Chart(ctx).Line(data);
+		})
+	</script>
+  </body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">       
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <link rel="stylesheet" href="homeBanner.css" />
+    </head>
+    <body>
+        <div class="breadcrumb">
+          <a>韩式定妆</a><span>&gt;</span><a href="homeBanner.html">主页Banner</a>    
+        </div>
+
+        <div id="warpper" class="box-warpper" ajat="banner/index?type=<%=query.type || 1%>#domid=warpper&tempid=warpper-t"> 
+        <script type="text/template" id="warpper-t">
+          <nav>
+            <ul class="clearfix">
+              <li><a href="homeBanner.html?type=1#state=1" class='<%=(!query.type || query.type=="1") ? "act" : ""%>'>
+                美发Banner</a></li>
+              <li><a href="homeBanner.html?type=2#state=2" class='<%=query.type=="2" ? "act" : ""%>'>定妆Banner</a></li>
+              <li><a href="homeBanner.html?type=3#state=3" class='<%=query.type=="3" ? "act" : ""%>'>纤体Banner</a></li>
+              <li><a href="homeBanner.html?type=4#state=4" class='<%=query.type=="4" ? "act" : ""%>'>水光针Banner</a></li>
+            </ul>
+          </nav>
+
+          <%if(!(!query.type || query.type=="1")){%>
+          <section>
+             <form class="form-vertical copyWriter" data-role="form">
+                <div class="title clearfix">
+                    <div class="fl"><h3><strong>价格与文案</strong></h3></div>
+                    <div class="fr">
+                      <button type="button" id="editBtn" class='link' 
+                      <%=(data.list && data.list.length > 0) ? '' : 'disabled'%>>
+                      编辑
+                      </button>
+                      <button type="submit" id="saveBtn" class='link hidden'>保存</button>
+                      <button type="reset"  id="cancelBtn" class='link hidden'>取消</button>
+                      <input type="hidden" name="type" value="<%=query.type || 1%>">
+                      <input type="hidden" name="copyWriter" value="1">
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <label class="control-label"><span class="red">*</span><strong>论述文案：</strong></label>
+                    <div class="keypress" maxlength="500">
+                        <textarea class="textarea" name="introduce" data-helpid="textarea-help"  placeholder="1-500字" 
+                        maxlength="500" required disabled><%=data.introduce%></textarea>
+                    </div>
+                    <span class="control-help" style="display:none;" id="textarea-help"></span>
+                </div>
+                <%if(query.type != "2"){%>
+                <div class="control-group" style="width:85%">     
+                    <label class="control-label"><span class="red">*</span><strong>市场价：</strong></label>
+                    <div class="control">
+                        <input type="text" name="priceOri" value="<%=data.priceOri%>" placeholder="1~20字" maxlength="20" 
+                        required disabled>
+                    </div>  
+
+                    <label class="control-label"><span class="red">*</span><strong>酬宾价：</strong></label>
+                    <div class="control">
+                        <input type="text" name="bargainPrice" value="<%=data.bargainPrice%>" placeholder="1~20字" maxlength="20" 
+                        required disabled>
+                    </div>   
+
+                    <label class="control-label"><span class="red">*</span><strong>特价：</strong></label>
+                    <div class="control">
+                        <input type="text" name="price" value="<%=data.price%>" placeholder="1~20字" maxlength="20" 
+                        required disabled>
+                    </div>
+                </div>
+                <%}%>                
+             </form>              
+          </section>
+          <%}%>
+
+          <section> 
+              <div class="title" style="margin:10px;">
+                  <h3><strong>Banner编辑</strong></h3>
+              </div>
+              <%data.list && data.list.forEach(function(item,i){%>
+                  <form data-role="form" class="banner move" draggable="true" id="<%=item.banner_id%>" url="<%=item.image%>">
+                      <ul>
+                          <li class="clearfix">
+                              <div class="fl"><h3><strong>Banner<%=i+1%></strong></h3></div>
+                              <div class="fr">
+                                  <button class='link save hidden'>保存</button>
+                                  <button type="reset" class='link canncel hidden'>取消</button>
+                                  <button type="button" class='link edit' data-slug="banner.edit">编辑</button>
+                                  <a class='link del' id="<%=item.banner_id%>" data-slug="banner.destroy">删除</a>
+                                  <input type="hidden" name="id" value="<%=item.banner_id%>">
+                                  <input type="hidden" name="type" value="<%=query.type || 1%>">
+                              </div>
+                          </li>
+
+                          <li>                                               
+                              <div class="thumbnails-item">
+                                  <div class="thumbnails-item-btn" style="display:none">
+                                      <button type="button" class="btn-primary" id="uploader<%=i%>">上传</button>
+                                  </div>
+
+                                  <div class="thumbnails-item-img">
+                                      <img src='<%=item.image%>'>
+                                      <input type="hidden" name="image" value='<%=item.image%>' required>
+                                      <div class="operation hidden">
+                                          <i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;<i class="fa fa-times-circle-o"></i>
+                                      </div>
+                                  <div>                             
+                              </div>  
+                          </li>
+
+                          <li style="padding:0"><span class="control-help imageTip" style="display:none">请先上传图片</span></li>
+
+                          <li class="inputBox">
+                              <div class="radios">
+                                  <label><span>题目：</span></label>
+                                  <input id="title" type="text" name="name" placeholder="1~20个字符，必填" value="<%=item.name%>" 
+                                  disabled  required maxLength="20"/>
+                              </div>
+
+                              <div class="radios">
+                                  <label class="radio">
+                                      <input type="radio" name="behavior<%=i%>" value="1" <%=item.behavior=="1" ? "checked" : ""%> disabled/>
+                                      <span>h5链接</span>
+                                  </label>
+
+                                  <input id="h5url" type="text" name="url" class="<%=item.behavior=='1'?'':''%>" placeholder="输入h5链接地址，带http://" pattern="(^http:\/\/)" patternmsg="h5链接有误" value="<%=item.behavior=='1' ? item.url : ''%>" disabled required/>
+                              </div>
+
+                              <div class="radios">
+                                  <label class="radio">
+                                      <input type="radio" name="behavior<%=i%>" value="2" <%=item.behavior=="2" ? "checked" : ""%> disabled />
+                                      <span>App内部链接</span>
+                                  </label>
+
+                                  <%if(item.behavior=="2"){var url = JSON.parse(item.url);%>
+                                      <select name="url" disabled  url=<%=item.url%>>
+                                        <option value="salon" <%=url.type=='salon'?'selected':''%>>美发店主页</option>
+                                        <option value="artificers" <%=url.type=='artificers'?'selected':''%>>指定跳转</option>
+                                        <option value="item" <%=(url.type=='SPM'||url.type=='FFA')?'selected':''%>>定妆项目</option>
+                                      </select>
+                                      <div class="control complete">
+                                        <input class="search <%=url.type=='salon'?'':'hidden'%>" type="text" name="salonName" 
+                                        ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" autocomplete="off" value="<%=item.salonName%>" required disabled/>
+                                        <input type="hidden" class="salonId" name="salonId" value="<%=item.salonId%>" 
+                                        required disabled>
+                                        <div class="complete-position" id="complete-position<%=i%>"></div>
+                                        <span class="control-help" style="display: none;">未填写</span>
+                                      </div>
+                                      <select name="itemId" style="width:26.5%;" disabled url=<%=item.url%>
+                                      class="itemSelect <%=(url.type=='SPM'|| url.type=='FFA')?'':'hidden'%>">
+
+                                      </select>   
+
+                                      <select name="itemId" style="width:26.5%;" class="artificersSelect <%=url.type=='artificers'?'':'hidden'%>" disabled>
+                                          <option value="1" <%=(url.type=='artificers'&&url.itemId=='1')?'selected':''%>>预约主页</option>
+                                          <option value="2" <%=(url.type=='artificers'&&url.itemId=='2')?'selected':''%>>定妆中心介绍页</option>
+                                          <option value="3" <%=(url.type=='artificers'&&url.itemId=='3')?'selected':''%>>约明星院长页面</option>
+                                          <option value="4" <%=(url.type=='artificers'&&url.itemId=='4')?'selected':''%>>约院长页</option>
+                                          <option value="5" <%=(url.type=='artificers'&&url.itemId=='5')?'selected':''%>>院长列表页</option>
+                                          <option value="6" <%=(url.type=='artificers'&&url.itemId=='6')?'selected':''%>>身边好店</option>
+                                          <option value="7" <%=(url.type=='artificers'&&url.itemId=='7')?'selected':''%>>离我最近</option>
+                                          <option value="8" <%=(url.type=='artificers'&&url.itemId=='8')?'selected':''%>>等级最高</option>
+                                          <option value="9" <%=(url.type=='artificers'&&url.itemId=='9')?'selected':''%>>约发型师</option>                                          
+                                      </select>                                                                           
+                                  <%}else{%>                                  
+                                      <select name="url" disabled>
+                                        <option value="salon">美发店主页</option>
+                                        <option value="artificers">指定跳转</option>
+                                        <option value="item">定妆项目</option>                                      
+                                      </select>
+                                      <div class="control complete">
+                                        <input class="search" type="text" name="salonName" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字"
+                                        autocomplete="off" value="<%=item.salonName%>" required disabled/>
+                                        <input type="hidden" class="salonId" name="salonId" value="<%=item.salonId%>" 
+                                        required disabled>
+                                        <div class="complete-position" id="complete-position<%=i%>"></div>
+                                        <span class="control-help" style="display: none;">未填写</span>
+                                      </div> 
+                                      <select name="itemId" style="width:26.5%;" class="itemSelect hidden" disabled>
+
+                                      </select>   
+
+                                      <select name="itemId" style="width:26.5%;" class="artificersSelect hidden" disabled>
+                                          <option value="1">预约主页</option>
+                                          <option value="2">定妆中心介绍页</option>
+                                          <option value="3">约明星院长页面</option>
+                                          <option value="4">约院长页</option>
+                                          <option value="5">院长列表页</option>
+                                          <option value="6">身边好店</option>
+                                          <option value="7">离我最近</option>
+                                          <option value="8">等级最高</option>
+                                          <option value="9">约发型师</option>                                        
+                                      </select>                                    
+                                  <%}%>
+
+                              </div>
+
+                              <div class="radios">
+                                  <label class="radio">
+                                      <input type="radio" name="behavior<%=i%>" value="0" <%=item.behavior=="0" ? "checked":""%> disabled/>
+                                      <span>无跳转</span>
+                                  </label>
+                              </div>
+                          </li>
+                      </ul>             
+                  </form>
+              <%})%>   
+              <%if(!data.list || data.list.length < 10){%>
+              <div class="plus-button" data-slug="banner.create">
+                <div>
+                    <button type="button">
+                        <span style="font-size: 4rem;color:#ddd;">+</span><br>
+                        <span style="font-size: 15px;color:#ddd;font-weight:900;">添加</span>
+                    </button>
+                </div>                
+              </div>   
+              <%}%>
+           </section>         
+        </script>
+        </div>
+        <script src="homeBanner.js"></script>
+    </body>
+</html>

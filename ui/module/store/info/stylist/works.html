@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <style>
+      .pictrue{
+          border:1px solid rgba(0,0,0,0.05);
+          padding-left:15px;
+      }
+      .designer-link{
+          display: inline-block;
+          font-size: 30px;
+          margin-left: 20px;
+          cursor: pointer;
+      }
+      .header{
+          height: 50px;
+          line-height: 50px;
+          position: relative;      
+      }
+      .del{
+          position: absolute;
+          right: 10px;
+          top: 10px;
+      }
+      .control-thumbnails-item{
+            width: 160px!important;
+            height: 120px!important;
+       }
+
+      .border-line{
+        border-bottom:1px dashed #ddd;
+        margin:10px 0 10px 0;        
+      }
+      </style>
+  </head>
+  <body>
+        <div class="breadcrumb">
+            <a>店铺管理</a>
+            <span>&gt;</span>
+            <a href="../index.html">店铺资料</a>
+            <span>&gt;</span>
+            <a href="index.html">造型师列表</a>
+            <span>&gt;</span>
+            <a href="works.html">个人作品</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>个人作品</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="wrapper">
+            <div class="detail-operation">
+                <button id="add_works_btn" class="btn-primary" data-slug="works.create">
+                  <i class="fa fa-plus" style="padding-right:5px"></i>新增
+                </button>
+            </div> 
+
+            <div id="works-wrapper" ajat="works/index/<%=query.id%>#domid=works-wrapper&tempid=works-t">
+                <script type="text/template" id="works-t">
+                <div style="width:70%;float:left;height:1px">
+                        <%data.works && data.works.forEach(function(item,i){%>
+                        <div class="pictrue">
+                            <div class="header">
+                                <span class="formatHms">
+                                <%=new Date(item.add_time*1000).format("yyyy-MM-dd hh:mm:ss")%>
+                                </span>&nbsp;&nbsp;
+                                <span><%=item.description%></span>
+                                <i class="fa fa-trash-o fa-3x del" data-slug="works.del_list"></i>
+                            </div>
+                            <%if(item.img && item.img.length > 0){ %>
+                            <div class="control-thumbnails" id="control-thumbnails1" data-id="<%=item.id%>">
+                                    <%item.img.forEach(function(obj,i){%>
+                                        <div class="control-thumbnails-item">
+                                        <img worksId="<%=obj.worksId%>" src="<%=obj.originImg%>" data-original="<%=obj.originImg%>">
+                                        <a class="fa fa-times-circle control-thumbnails-remove" data-slug="works.del"></a>
+                                            <div class="control-thumbnails-operation flex-box">
+                                                <span class="control-thumbnails-before flex-item">
+                                                    <i class="fa fa-long-arrow-left" data-slug="works.update"></i>
+                                                </span>
+                                                <span class="control-thumbnails-after flex-item">
+                                                    <i class="fa fa-long-arrow-right" data-slug="works.update"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    <%})%> 
+                                </div>                                 
+                            <%}%>                            
+                        </div> 
+                    <%})%>
+                </div>
+
+                <div style="float:left;width:25%;margin:-15px 0px 0px 30px">
+                <%
+                var gradeText={ "1":"资深发型师","2":"资深发型师","1,2":"资深发型师","3":"设计总监", "4":"美发大师"};
+                var fastGradeText={"1":"普通快剪", "2":"总监快剪"};                    
+                %>
+                <div  class="clearfix" >
+                    <h2 class="border-line"><%=data.salonSelf.salonname%></h2>
+                    <div style="float:left;">
+                        <img src="<%=data.salonSelf.stylistImg%>" style="width:100px;height:100px"/>
+                    </div>
+                    <div style="float:left;margin-left:10px">
+                        <div style="height:33px;vertical-align: middle;line-height: 33px;">
+                            <%=data.salonSelf.stylistName%>，<%=data.salonSelf.mobilephone%>
+                        </div>
+                        <div style="height:33px;vertical-align: middle;line-height: 33px;">
+                            <%=gradeText[data.salonSelf.grade]%><%=fastGradeText[data.salonSelf.fastGrade] ? ","+fastGradeText[data.salonSelf.fastGrade] : ""%>
+                        </div>
+                        <div style="height:33px;vertical-align: middle;line-height: 33px;">
+                         作品数：<%=data.salonSelf.num%>，上传次数：<%=data.salonSelf.uploadNum%>
+                        </div>
+                    </div> 
+                </div>
+                <%                                                 
+                data.salon && data.salon.forEach(function(item,i){
+                %>
+                <div  class="clearfix" >
+                    <h3  class="border-line">店内其他造型师</h3>                           
+                    <div style="float:left;">
+                        <img src="<%=item.stylistImg%>" style="width:100px;height:100px"/>
+                    </div>
+                    <div style="float:left;margin-left:10px">
+                        <div style="height:33px;vertical-align: middle;line-height: 33px;">
+                            <%=item.stylistName%>，<%=item.mobilephone%>
+                        </div>
+                        <div style="height:33px;vertical-align: middle;line-height: 33px;">
+                            <%=gradeText[item.grade]%><%=fastGradeText[item.fastGrade] ? ","+fastGradeText[item.fastGrade] : ""%>
+                        </div>
+                        <div style="height:33px;vertical-align: middle;line-height: 33px;">
+                         作品数：<%=item.num%>，上传次数：<%=item.uploadNum%>
+                         <a class="designer-link" href="works.html#id=<%=item.stylistId%>">&gt;</a>
+                        </div>
+                    </div>                         
+                </div>
+                <%})%>                                                  
+                </div>
+                </script>
+            </div> 
+            <div id="box" style="display:none;">
+                    <div class="pictrue" style="padding:15px">                  
+                        <div class="control-thumbnails" id="control-thumbnails" data-max="9">                
+                            <div class="control-image-upload" style="width:160px;height:120px;line-height:120px">
+                                <div id="imagesUpload">
+                                    <i class="fa fa-image"></i>
+                                    <em>上传个人作品</em>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <span id="imagesUploadTip" class="control-help" style="display:none">请上传个人作品图片</span> 
+
+                    <div class="control" style="width:100%;display:block;margin:30px 0">
+                        <div class="keypress" maxlength="140" style="width:inherit;">
+                          <textarea id="description" maxlength="140" style="width:inherit" data-helpid="textarea-help" required></textarea>
+                          <span id="textareaTip" class="control-help" style="display:none">未填写</span> 
+                        </div>
+                        <div class="keypress-help" style="display:none;" id="textarea-help"></div>
+                    </div>
+
+                    <div>
+                        <div style="width:33%;margin:20px 33%;" >                    
+                            <button id="submitBtn" class="btn-primary" style="margin-right:20px">提交</button>
+                            <button id="cancelBtn" class="btn" type="button">取消</button>
+                        </div>                                          
+                    </div>                   
+            </div> 
+        </div>
+    <script type="text/javascript" src="works.js"></script>
+  </body>
+</html>

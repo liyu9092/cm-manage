@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理</a><span>&gt;</span><a href="index.html">兑换活动</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4> 兑换券编码和密码 </h4>
+                </div>
+            </div>      
+        </div> 
+
+        <div class="wrapper" id="table" ajat="coupon/getCoupon/<%=query.id%>#domid=table&tempid=table-t">
+           <script type="text/template" id="table-t">
+            <form action="coupon/exportCoupon/<%=query.id%>" data-role="export">
+                <a href="detail.html#id=<%=query.id%>"><button type='button' class='btn'>返回</button></a>
+                <span class="space"></span>
+                <button class="btn" data-slug="coupon.exportCoupon">
+                <i class="fa fa-file-excel-o"></i> 导出
+                </button>
+            </form>
+           <div class="table" >
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>兑换券编码</th>
+                            <th>兑换券密码</th>
+                            <th>兑换券金额</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                <%data && data.forEach(function(item,index){%>
+                 <tr>
+                  <td><%=index+1%></td>
+                  <td><%=item.vSn%></td>
+                  <td><%=item.REDEEM_CODE%></td>
+                  <td><%=item.vUseMoney%></td>
+                  </tr>
+                  <%})%>
+                </tbody>
+            </table>
+        </div>
+        </script>
+            </div>
+    </body>
+</html>

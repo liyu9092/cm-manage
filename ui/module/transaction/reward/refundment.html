@@ -1,0 +1,328 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+    <title>臭美管理后台</title>
+    <script type="text/javascript" src="/js/include.js"></script>
+      <style>
+        .tab{
+          position: absolute;
+          top:35px;
+          left:30%;
+          border: none;
+        }
+
+        .tab a{
+          width:145px;
+          height:45px;
+          line-height: 45px;
+          margin:2px;
+          border: 1px solid #E6EAF2;
+          border-bottom: none;
+          font-size: 18px;
+          text-align: center;
+          display: inline-block; 
+          background-color:#f5f5f5;           
+        }
+
+       .active{background-color:inherit!important;};
+
+      </style>
+  </head>
+  <body>
+    <div class="breadcrumb">
+      <a>交易管理</a><span>&gt;</span><a href="index.html">赏金单退款</a>
+      <div class="flex-box">
+        <div class="flex-item">
+          <h4>赏金单退款</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrapper">
+        <div id="form" ajat="#domid=form&tempid=form-t" ajat-one="true">
+            <script type="text/template" id="form-t">
+                <div class="tab">            
+                    <a href="refundment.html?reload=1#refundStatus=0" <%=(!query.refundStatus || query.refundStatus=="0") ? "class=active" : ""%>>全部退款</a>
+
+                    <a href="refundment.html?reload=2#refundStatus=5" <%=query.refundStatus=="5" ? "class=active" : ""%>>待审核</a>
+
+                    <a href="refundment.html?reload=3#refundStatus=6,7,8,9" <%=query.refundStatus=="6,7,8,9" ? "class=active" : ""%>>已审核</a>
+                </div>
+
+                <form data-role="hash" >             
+                  <div class="input-group placeholder-switch">
+                      <select name="keywordType">
+                        <option value="0" data-placeholder="请输入订单号">订单号</option>
+                        <option value="1" data-placeholder="请输入用户臭美号">用户臭美号</option>
+                        <option value="2" data-placeholder="请输入用户手机号" selected="selected">用户手机号</option>
+                        <option value="3" data-placeholder="请输入店铺名称">店铺名称</option>
+                      </select>
+                      <input type="text" class="input-search" name="keyword" maxlength="16"
+                      placeholder="请输入用户手机号"/>
+                  </div>  
+
+                  <span class="date-group">
+                    <span style="padding:0 5px 0 15px">支付方式</span>
+                    <select name="payType" >
+                        <option value="0">全部</option>
+                        <option value="3">微信</option>
+                        <option value="2">支付宝</option>
+                        <option value="10">易联</option>
+                    </select>
+                  </span>
+
+                  <span class="date-group">
+                    <span style="padding:0 5px 0 15px">退款状态</span>
+                    <select name="refundStatus" >
+                      <%if(!query.refundStatus || query.refundStatus === "0"){%>
+                          <option value="0">全部</option>
+                          <option value="5">待审核</option>
+                          <option value="6">退款中</option>
+                          <option value="7">已退款</option>
+                          <option value="8">拒绝退款</option>
+                          <option value="9">失败</option>
+                      <%}else if(query.refundStatus === "5"){%>
+                          <option value="5">待审核</option>
+                      <%}else{%>
+                          <option value="6,7,8,9">全部</option>
+                          <option value="6">退款中</option>
+                          <option value="7">已退款</option>
+                          <option value="8">拒绝退款</option>
+                          <option value="9">失败</option>
+                      <%}%>
+                    </select>
+                  </span>                  
+
+                  <span class="date-group">
+                    <span style="padding:0 5px 0 20px">申请退款时间</span>
+                    <input type="date" name="minEndTime" data-role="start" placeholder="YYYY-MM-DD"/>
+                    <span style="padding:0 10px">到</span>
+                    <input type="date" name="maxEndTime" data-role="end" placeholder="YYYY-MM-DD"/>
+                  </span>
+
+                  <button class="btn" type="submit">搜索</button>         
+                </form>
+
+                <form action="bounty/exportRefund" data-role="export" data-slug="bounty.exportRefund">
+                  <button class="btn">
+                    <i class="fa fa-file-excel-o"></i> 导出
+                  </button>
+                </form>  
+            </script>          
+        </div>
+
+      <div class="table" ajat="bounty/index?isRefund=2&<%=query._%>#domid=table&tempid=table-t" id="table">
+      <script type="text/template" id="table-t">
+        <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">
+        <%if(data.total == 0){%>
+          当前页面下所有退款金额统计为：0.00元
+        <%}else{ var amount=0;%> 
+            <%data.data && data.data.forEach(function(item,i){
+                amount += item.money*100;
+            })%>   
+            当前页面下所有退款金额统计为：<%=amount/100%>元
+        <%}%> 
+        </div>  
+      <table>
+        <thead>
+          <tr>
+              <%if(query.refundStatus != "6,7,8,9"){%>
+              <th style="width:50px">
+                  <label class="select-all"><input type="checkbox"/><span>全选</span></label>
+              </th>
+              <%}%>            
+              <th>序号</th>
+              <th>赏金单号</th>
+              <th>支付方式</th>
+              <th>退款金额</th>
+              <th>申请时间</th>
+              <th>用户臭美号</th>
+              <th>用户手机号</th>
+              <th>店铺名称</th>
+              <th>退款状态</th>
+              <th>操作</th>
+          </tr>
+        </thead>
+
+        <tbody>       
+        <% var statusObj={"5":"申请退款","6":"退款中","7":"已退款","8":"拒绝退款","9":"失败"}%>
+        <%data.data &&　data.data.forEach(function(item,i){%>
+          <tr>
+              <%if(query.refundStatus != "6,7,8,9"){%>
+              <td>
+              <label>
+                  <input type="checkbox" data-id="<%=item.btId%>" 
+                  <%=item.refundStatus!="5" ? "disabled" : ""%>/>
+                  <span></span>
+              </label>
+              </td>  
+              <%}%>         
+              <td><%=i+1%></td>
+              <td><%=item.btSn%></td>
+              <td><%=item.payType%></td>
+              <td><%=item.money%></td>
+              <td><%=item.endTime%></td>
+              <td><%=item.userName%></td>
+              <td><%=item.userMobile%></td>
+              <td><%=item.salonName%></td>
+              <td><%=statusObj[item.refundStatus]%></td>
+              <td>
+                <a class="link" style="margin:0 5px;" data-slug="bounty.refundShow"
+                href="refundDetail.html?no=<%=item.btSn%>" >
+                查看&gt
+                </a>
+                <%if(item.refundStatus=="5"){%>
+                    <a class="link pass" style="margin:0 5px;" data-slug="bounty.accept" data-type="0" 
+                    data-id=<%=item.btId%>>
+                    通过
+                    </a>
+                    <a class="link reject" style="margin:0 5px;" data-slug="bounty.reject" data-type="0" 
+                    data-id=<%=item.btId%>>
+                    拒绝
+                    </a>
+                <%}%>
+
+                <%if(item.refundStatus=="8" || item.refundStatus=="9" || item.refundStatus=="6"){%>
+                    <a class="link pass" style="margin:0 5px;" data-type="1" data-id=<%=item.btId%>>重新退款
+                    </a>
+                <%}%>
+              </td>
+          </tr>
+        <%})%>
+        </tbody>
+      </table>
+      
+      <%if(query.refundStatus != "6,7,8,9" && data.data && data.total > 0){%>
+      <div class="table-bottom">
+        <label class="select-all"><input type="checkbox"/><span>全选</span></label>
+        <button class="btn pass"   data-type="2" style="margin-right:10px" data-slug="bounty.accept" disabled>
+        通过
+        </button>
+
+        <button class="btn reject" data-type="1" data-slug="bounty.reject" disabled>
+        拒绝
+        </button>
+      </div>
+      <%}%>      
+      <div class="pager">
+      </div>
+      </script>
+    </div>
+
+    <form id='alipaysubmit' name='alipaysubmit' target="_blank" style="display:none" method='post'
+    action='https://mapi.alipay.com/gateway.do?_input_charset=utf-8'>
+        <input type='hidden' name='_input_charset' value=''/>
+        <input type='hidden' name='batch_no' value=''/>
+        <input type='hidden' name='batch_num' value=''/>
+        <input type='hidden' name='detail_data' value=''/>
+        <input type='hidden' name='notify_url' value=''/>
+        <input type='hidden' name='partner' value=''/>
+        <input type='hidden' name='refund_date' value=''/>
+        <input type='hidden' name='seller_email' value=''/>
+        <input type='hidden' name='service' value=''/>
+        <input type='hidden' name='sign' value=''/>
+        <input type='hidden' name='sign_type' value=''/>
+    </form>
+
+  </div>
+  <script>
+  $(document).ready(function(){ 
+      $("#table").delegate('tbody input[type="checkbox"]', 'change', function(event) {
+          var button=$('.table-bottom button');
+          if($('tbody label input:checked').length>0){
+            button.attr('disabled',false);
+          }else{
+            button.attr('disabled',true);
+          }
+      });
+
+      $("#table").delegate(".reject",'click',function(){
+          var type = $(this).data('type');
+          var arr  = [];          
+          if(type == "0") arr.push($(this).data('id'));
+          if(type == "1") {
+            $('tbody input[type="checkbox"]:checked').each(function(index,obj){
+              arr.push($(obj).data('id'));
+            })
+          }
+          parent.lib.popup.prompt({
+             text   : '拒绝原因： ',
+             define : function(str){
+                lib.ajax({
+                  url  : 'bounty/reject',
+                  type : "post",
+                  data :  {ids:arr,reason:str}
+                }).done(function(data, status, xhr){
+                  if(data.result == "1"){
+                    parent.lib.popup.result({
+                      text:"操作成功",
+                      define:function(){
+                        lib.ajat('bounty/index?isRefund=2&<%=query._%>#domid=table&tempid=table-t').render();
+                      }
+                    });
+                  }
+                });  
+             }
+          });                   
+      });
+
+     $("#table").delegate('.pass', 'click', function(event) {
+          var type = $(this).data('type');
+          var arr = [];
+          var message = "你确定要执行同意操作？";
+          if(type == "0") {
+            arr.push($(this).data('id'));
+          }
+          if(type == "1") {
+            arr.push($(this).data('id'));
+            message = "你确定要执行重新退款操作？";
+          }
+          if(type == "2") {
+            $('tbody input[type="checkbox"]:checked').each(function(index,obj){
+              arr.push($(obj).data('id'));
+            })
+          } 
+
+          if(arr.length > 20){
+            parent.lib.popup.alert({
+              text : "一次最多只能操作20条数据！"
+            });
+            return;
+          }                    
+          parent.lib.popup.confirm({
+              text:message,
+              define:function(){
+                lib.ajax({
+                  url  : 'bounty/accept',
+                  type : "post",
+                  data : {ids:arr}
+                }).done(function(data, status, xhr){
+                    if(data.result == "1"){
+                        data = data.data;
+                        if(data.alipay){
+                          $.each($("#alipaysubmit").serializeArray(),function(i,field){
+                              $("input[name='"+field.name+"']").val(data.alipay[field.name]);
+                          })
+                          $("#alipaysubmit").submit();
+                        }
+                        if(data.msg) tip(data.msg);
+                        lib.ajat('bounty/index?isRefund=2&<%=query._%>#domid=table&tempid=table-t').render();
+                    } 
+                });                                       
+              }
+          }); 
+     });
+
+    function tip (msg) {
+        parent.lib.popup.box({
+            width:700,
+            height:$(window).height()-100,
+            title:'<h1>操作结果</h1>',
+            content:msg   
+        });              
+      }       
+    });
+  </script>
+  </body>
+</html>

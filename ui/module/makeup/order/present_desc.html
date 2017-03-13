@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆 </a>
+            <span>&gt;</span><a href="present_list.html">定妆单赠送查询</a>
+            <span>&gt;</span>定妆单赠送详情
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>定妆单赠送详情</h4>
+                </div>
+                <div class="flex-item fr">
+                  <div class="fr" >
+                    <span id="breadcrumb">
+                    <script id="breadcrumb-t" type="text/template">
+                    </script>
+                    </span>
+                    <a href="present_list.html" class="btn">
+                         返回
+                    </a>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <style>
+        .inner-table tbody td:nth-child(2n+1){
+            background-color: #F6F8F9;
+        }
+        .inner-table tbody td:nth-child(2n){
+            width: 35%;
+            background-color: #fff;
+        }
+        .white-bg{
+            background-color: #fff !important;
+        }
+        .inner-table{
+            margin: -1px;
+        }
+        .inner-table tbody td:nth-child(4n){
+            border-right: 0px;
+        }
+        .pad-n{
+            padding:0px !important;
+        }
+        .bor-n{
+            border:0px !important;
+        }
+        td.td{
+            background-color: #F6F8F9;
+        }
+        </style>
+        <link rel="stylesheet" type="text/css" href="./list-group.css">
+        <div class="wrapper">
+            <div class="table table-detail" style="margin:0" id="table">
+                <script type="text/template" id='table-t'>
+                <div class="list-group">
+                    <div class="list active">
+                        <div class="list-header">
+                            <span class="list-title">定妆单赠送信息</span>
+                        </div>
+                        <div class="list-content">
+                            <table >
+                                <tbody>
+                                    <tr>
+                                        <td colspan="2" class="pad-n bor-n">
+                                            <table class="inner-table bor-n">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>订单号：</td>
+                                                        <td><%=data.orderSn%></td>
+                                                        <td>赠送券号：</td>
+                                                        <td><%=data.ticketCode%></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="pad-n bor-n">
+                                            <table class="inner-table bor-n">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>手机号：</td>
+                                                        <td><%=data.mobilephone%></td>
+                                                        <td>活动名称：</td>
+                                                        <td><%=data.articleName%></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                     <tr>
+                                        <td colspan="2" class="pad-n bor-n">
+                                            <table class="inner-table bor-n">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>赠送项目：</td>
+                                                        <td><%=data.itemName%></td>
+                                                        <td>推荐码：</td>
+                                                        <td><%=data.recommendCode%></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="pad-n bor-n">
+                                            <table class="inner-table bor-n">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>赠送方式：</td>
+                                                        <td><%=data.presentTypeName%></td>
+                                                        <td>赠送日期：</td>
+                                                        <td><%=data.createTime%></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="pad-n bor-n">
+                                            <table class="inner-table bor-n">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>有效期：</td>
+                                                        <td><%=data.expireTime%></td>
+                                                        <td>状态：</td>
+                                                        <td><%=data.ticketStatusName%></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="list active">
+                        <div class="list-header">
+                            <span class="list-title">使用记录</span>
+                            <div class="displayOnView editBtn fr">
+                                <%if (data.ticketStatus == 2){%>
+                                <a class="link" data-slug="powderArticles.usePresentTicket" data-url="#domid=ajatDom13&tempid=./template/order_component/plan_11&formUrl=powderArticles/usePresentTicket" data-action='edit'>
+                                     使用
+                                </a>
+                                <%}else {%>
+                                <a class="link" data-url="#domid=ajatDom13&tempid=./template/order_component/plan_11&formUrl=powderArticles/editPresentUseInfo" data-action='edit'>编辑</a>
+                                <%}%>
+                            </div>
+                            <div class="displayOnEdit fr">
+                                <a class="btn" data-action="view" data-url="#domid=ajatDom13&tempid=./template/order_component/plan_11">取消</a>
+                                <a class="btn link" data-action="save">保存</a>
+                            </div>
+                        </div>
+                        <div class="list-content" id="ajatDom13">
+                        </div>
+                    </div>
+                </div>
+                 </script>
+                 <script type="text/javascript">
+                 var initDomId=0,orderInfo;
+                 var generateId = function(){
+                   return initDomId++
+                 }
+                 var newAjat = lib.ajat('powderArticles/presentListInfo?articleCodeId='+lib.query.id+'#domid=table&tempid=table-t').render().done(function(res){
+                     orderInfo = res.data
+                     parent.orderInfo = orderInfo;
+                     lib.ajat('#domid=ajatDom13&tempid=./template/order_component/plan_11&action=view').template(orderInfo);
+                 })
+
+                 var completeDefine = function(){
+                     var popup = $(this);
+                     var form = popup.find('form');
+                     var newForm = new lib.Form(form[0]);
+                     popup.find('.popup-alert-define').unbind('click').on("click",function(e){
+                        e.stopPropagation();
+                        form.submit();
+                     });
+                     form.on('success',function(){
+                         location.reload();
+                     })
+                 };
+                 var ModalList = {
+                   'useCoupon':{
+                     'title':'使用消费劵',
+                     'cancelText':'取消',
+                     'defineText':'保存',
+                     'confirm':true,
+                     'modalType':'box',
+                     'url':'./modal_useCoupon',
+                     'complete':completeDefine
+                 }
+                 };
+
+                 var bindEvent = function(){
+                    $('body').on('click','a[data-modal]',function(){
+                        var modal= $(this).attr('data-modal');
+                        initModal(ModalList[modal]);
+                    }).on('click','.editBtn a',function(){
+                        var $this=$(this),url=$this.attr('data-url'),action=$this.attr('data-action'),$list = $this.closest('.list');
+                        renderArea(url,action,{});
+                        transitionToEdit($this);
+                        if (!$list.hasClass('active')){
+                            $list.toggleClass('active').children('.list-content').slideToggle(200);
+                        }
+                    }).on('click','.displayOnEdit a',function(){
+                        var $this = $(this),url=$this.attr('data-url'),action=$this.attr('data-action');
+                        if (action == 'save'){
+                          $this.closest('.list').find('.list-content form').submit();
+                        }else if(action =='view'){
+                            renderArea(url,action,{})
+                            transitionToView($this);
+                        }
+                    }).on('input', '.searchInput', function() {
+                        $(this).siblings('.complete-position').show().siblings('.inputId').val('');
+                    }).on('click', '.complete-position li', function() {
+                        var $this = $(this),
+                            inputDesc = $this.html(),
+                            id = $this.attr('data-id'),
+                            parent = $this.parents('.complete-position');
+                        parent.siblings('#search').val(inputDesc).siblings('.inputId').val(id);
+                        parent.hide();
+                    }).on('click',function(){
+                        $('.complete-position').hide();
+                    })
+                 }();
+
+                 var transitionToView = function($this){
+                     $this.parents('.list-header').find('.displayOnEdit').hide().siblings('.displayOnView').show();
+                 }
+
+                 var transitionToEdit = function($this){
+                     $this.parents('.list-header').find('.displayOnView').hide().siblings('.displayOnEdit').show();
+                 }
+
+                 var renderArea = function(url, action, data) {
+                     lib.ajat(url + '&action=' + action).template(data);
+                 }
+
+                 var initModal = function(options){
+                     if (options.url && options.url.indexOf('./')>-1){
+                          options.content =lib.ejs.render({url:options.url});
+                     }else{
+                          options.content =lib.ejs.render({text:$(options.url).html()});
+                     }
+                     parent.lib.popup[options['modalType']](options);
+                 }
+
+                 </script>
+            </div>
+        </div>
+    </body>
+</html>

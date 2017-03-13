@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理</a><span>&gt;</span><a href="index.html">现金券列表</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4> 现金券列表 </h4>
+                </div>
+            </div>      
+        </div> 
+
+        <div class="wrapper">
+            <form data-role="hash">                       
+               <div class="input-group placeholder-switch">
+                    <select name="keywordType">
+                        <option value="1" data-placeholder="活动编号">活动编号</option>
+                        <option value="2" data-placeholder="活动名称">活动名称</option>
+                        <option value="3" data-placeholder="现金券编号">现金券编号</option>
+                        <option value="4" data-placeholder="用户手机号">用户手机号</option>
+                        <option value="5" data-placeholder="使用店铺">使用店铺</option>
+                        <option value="6" data-placeholder="分享手机号">分享手机号</option>
+                    </select>
+                    <input type="text" class="input-search" name="keyword" placeholder="活动编号">
+                </div>
+
+                <span class="space"></span>
+                <label>券状态：</label>
+                <select name="status">
+                    <option value="">全部</option>
+                    <option value="1">未使用</option>
+                    <option value="2">已使用</option>
+                    <option value="3">已失效</option>
+                    <option value="4">未兑换</option>
+                </select>  
+
+                <span class="space"></span>
+                <span>使用时间：</span>
+                <span class="date-group">
+                    <input type="date" data-role="start" name="startTime" placeholder="yyyy-MM-dd"/>
+                    到
+                    <input type="date" data-role="end" name="endTime" placeholder="yyyy-MM-dd"/>
+                </span>
+                <button class="btn" type="submit">查询</button>
+            </form>
+
+            <form action="voucher/exportTicketList" data-role="export">
+                <input type="hidden" name="currentpage" value="true"/>
+                <button class="btn" data-slug="voucher.exportTicketList">
+                <i class="fa fa-file-excel-o"></i> 导出
+                </button>
+            </form>
+                          
+           <div class="table" ajat="voucher/list?<%=query._%>#domid=table&tempid=table-t" id="table">
+            <script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>券编号</th>
+                            <th>兑换密码</th>
+                            <th>活动编号</th>
+                            <th>活动名称</th>
+                            <th>订单号</th>
+                            <th>券金额</th>
+                            <th>使用时间</th>
+                            <th>用户手机号</th>
+                            <th>使用店铺</th>
+                            <th>现金券状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                <%var statusText = {'1':'未使用', '2':'已使用', '3':'已失效', '4':'未兑换'}%>
+                <%data.data && data.data.forEach(function(item,index){%>
+                <tr>
+                    <td><%=index+1%></td>
+                    <td><%=item.vSn%></td>
+                    <td><%=item.REDEEM_CODE%></td>
+                    <td><%=item.vcSn%></td>
+                    <td><%=item.vcTitle%></td>
+                    <td><%=item.vOrderSn%></td>
+                    <td><%=item.vUseMoney%></td>
+                    <td><%=item.vUseTime%></td>
+                    <td><%=item.vMobilephone%></td>
+                    <td><%=item.vSalonName%></td>
+                    <td><%=statusText[item.vStatus]%></td>
+                    <td>
+                    <a class="link" href="detail.html#id=<%=item.vId%>" data-slug="voucher.info">查看&gt;</a>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <%if(item.vStatus == "1"){%>
+                    <form action="voucher/invalidStatus/<%=item.vId%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                      <button class="link" data-slug="voucher.invalidStatus">失效</button>
+                    </form>
+                    <%}%>
+                    </td>
+                </tr>                  
+                <%})%>  
+                </tbody>
+            </table>        
+             <div class="pager"> </div>
+            </script>
+        </div>
+            </div>            
+    </body>
+</html>

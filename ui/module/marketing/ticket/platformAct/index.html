@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理</a><span>&gt;</span><a href="index.html">平台活动列表</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>平台活动</h4>
+                </div>
+                <div class="flex-item">
+                    <button class="btn-primary fr"  data-slug="platform.add">
+                        <i class="fa fa-plus"></i> 新增平台活动
+                    </button>
+                </div>
+            </div>                 
+        </div> 
+
+        <div class="wrapper">
+            <form data-role="hash">                       
+               <div class="input-group placeholder-switch">
+                    <select name="selectItem">
+                        <option value="2" data-placeholder="活动名称">活动名称</option>
+						<option value="1" data-placeholder="活动编号">活动编号</option>
+                    </select>
+                    <input type="text" class="input-search" name="keyword" placeholder="活动名称">
+                </div>
+
+                <span class="space"></span>
+                <label>活动状态：</label>
+                <select name="status">
+                    <option value="">全部</option>
+                    <option value="1">进行中</option>
+                    <option value="2">暂停</option>
+                    <option value="3">已关闭</option>
+                    <option value="4">已结束</option>
+                </select>
+
+                <span class="space"></span>
+                <label>申请部门</label>
+                <select name="department" id="department" ajat="platform/getRequestDepartment#domid=department&tempid=department-t" ajat-one="true">
+                    <script type="text/template" id="department-t">  
+                        <option value="">全部</option>
+                        <%data.forEach&&data.forEach(function(item,i){%>
+                            <option <%=item.id==protocol.custom.departmentId?"selected":""%> value="<%=item.id%>">
+                            <%=item.title%>
+                            </option>
+                        <%})%>
+                    </script> 
+                </select>   
+
+                <span class="space"></span>
+                <span>活动时间：</span>
+                <span class="date-group">
+                    <input type="date" data-role="start" name="startTime" placeholder="YYYY-MM-DD"/>
+                    到
+                    <input type="date" data-role="end" name="endTime" placeholder="YYYY-MM-DD"/>
+                </span>
+                <button class="btn" type="submit">查询</button>
+            </form>
+
+            <form action="platform/exportList" data-role="export">
+                <input type="hidden" name="currentpage" value="true"/>
+                <button class="btn" data-slug="platform.exportList">
+                <i class="fa fa-file-excel-o"></i> 导出
+                </button>
+            </form>
+                          
+           <div class="table" ajat="platform/list?<%=query._%>#domid=table&tempid=table-t" id="table">
+            <script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>活动名称</th>
+                            <th>活动编码</th>
+                            <th>总数上限</th>
+                            <th>已发放数</th>
+                            <th>已使用数</th>
+                            <th>创建时间</th>
+                            <th>活动时间</th>
+                            <th>申请部门</th>
+                            <th>活动状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                <tbody>
+               <% var statusText = {'1':'进行中', '2': '下线', '3':'已关闭', '4': '已结束'}%>
+               <%data.data && data.data.forEach(function(item,index){%>
+                 <tr>
+                  <td><%=index+1%></td>
+                  <td>
+                      <a class="link" href="../cashCouponList/index.html?keywordType=1&keyword=<%=item.vcSn%>">
+                          <%=item.vcTitle%>
+                      </a>
+                  </td>
+                  <td><%=item.vcSn%></td>
+                  <td><%=item.totalNum%></td>
+                  <td><%=item.allNum%></td>  
+                  <td><%=item.useNum%></td>
+                  <td><%=item.addTime%></td>         
+                  <td><%=item.actTime%></td>         
+                  <td><%=item.department%></td>                  
+                  <td><%=statusText[item.status]%></td>
+                  <td>
+                    <a class="link" href="detail.html?id=<%=item.vcId%>&status=<%=item.status%>" data-slug="platform.getInfo">查看&gt;</a>
+                    <%if(item.status=="1"){%>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <form action="platform/offlineConf/<%=item.vcId%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                          <button class="link" data-slug="platform.offlineConf">下线</button>
+                        </form>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <form action="platform/closeConf/<%=item.vcId%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                          <button class="link" data-slug="platform.closeConf">关闭</button>
+                        </form>                        
+                    <%}%>
+
+                    <%if(item.status=="2"){%>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <form action="platform/upConf/<%=item.vcId%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                          <button class="link" data-slug="platform.upConf">上线</button>
+                        </form>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <form action="platform/closeConf/<%=item.vcId%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                          <button class="link" data-slug="platform.closeConf">关闭</button>
+                        </form> 
+                    <%}%>
+
+                  </td>
+                  </tr>
+                  <%})%>
+                </tbody>
+            </table>        
+             <div class="pager"> </div>
+            </script>
+        </div>
+        </div>  
+
+        <script>
+            $(".breadcrumb").on('click','button.btn-primary',function(e){
+                e.preventDefault();
+                sessionStorage.removeItem('add-base-data'); 
+                sessionStorage.removeItem('edit-base-data');
+                sessionStorage.removeItem('platformItemTypes');
+                location.href ="addBase.html?type=add&selectItemType=1";
+            })
+        </script>         
+    </body>
+</html>

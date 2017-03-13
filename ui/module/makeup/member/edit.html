@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="index.html">其他人员列表</a><span>&gt;</span><%=query._?"编辑":"新增"%>人员资料
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4><%=query._?"编辑":"新增"%>人员资料</h4>
+			</div>
+		 </div>		
+		<hr />		 
+        </div>		
+        <div class="wrapper" ajat="<%if(query._){%>others/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+			<script type="text/template" id="form-t">
+			<form action="<%=query.id?"others/update":"others/add"%>" class="form-vertical" data-role="form" >
+			<input type="hidden" name="id" value="<%=query.id%>" />
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>个人图片：</label>
+				<div class="control">
+					<div class="control-image">
+						<div class="control-single-image">
+							<img src="<%=data.photo%>" alt="" style="width:180px;">
+							<div class="control-image-ud">
+								<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
+							</div>
+							<input type="hidden" name="photo" class="original" value="<%=data.photo%>" required requiredmsg="请上传个人图片" data-helpid="image-help1">
+						</div>
+					</div>
+					<div class="weak">请上传JPG或PNG格式的图标，可通过编辑裁剪750*500，此图标将显示在项目列表中</div>
+					<div class="control-help" style="display:none" id="image-help1"></div>
+				</div>
+			</div>
+			<hr />
+			<legend>个人资料</legend>
+			<div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>姓名：</label>
+                <div class="control">
+                    <input type="text" name="name" value="<%=data.name%>" placeholder="1~8个汉字，姓名唯一" maxlength="8" required="required">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>性别：</label>
+                <div class="control">
+                    <label>
+                        <input type="radio" name="sex" value="1" <%=data.sex==1?"checked":""%>>
+                        <span>男</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="sex" value="2"  <%=data.sex!=1?"checked":""%>>
+                        <span>女</span>
+                    </label>
+                    <span class="control-help" style="display:none;"></span>
+                </div>
+            </div> 
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>出生日期：</label>
+                <div class="control">
+                    <input type="date" name="birthday" value="<%=data.birthday?data.birthday:"1990-01-01"%>" required>
+                </div>
+            </div>  
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>身份证件：</label>
+                <div class="control">                   
+                    <select name="credential" style="min-width:100px;width:4%;" required>
+                        <option value="1" <%=data.credential==1?"selected":""%>>身份证</option>
+                        <option value="2" <%=data.credential==2?"selected":""%>>军官证</option>
+                        <option value="3" <%=data.credential==3?"selected":""%>>驾驶证</option>
+                        <option value="4" <%=data.credential==4?"selected":""%>>护照</option>
+                    </select>
+                    <input type="text" name="cardId" placeholder="证件编号" style="min-width:140px;width:12.5%" maxlength="30" value="<%=data.cardId%>" required>
+                </div>
+            </div>                                 
+
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>手机号码：</label>
+                <div class="control">
+                    <input type="text" name="mobilePhone" placeholder="11位有效手机号" value="<%=data.mobilePhone%>" required maxlength="11" pattern="mobile" patternmsg="请输入11位有效手机号">
+                </div>
+            </div> 
+
+            <div class="control-group">
+                <label class="control-label" for="">微信号：</label>
+                <div class="control">
+                    <input type="text" name="wechat" placeholder="微信号码" value="<%=data.wechat%>" maxlength="25">
+                </div>
+            </div> 
+
+            <div class="control-group">
+                <label class="control-label" for="">QQ号：</label>
+                <div class="control">
+                    <input type="text" name="qq" placeholder="QQ号码" value="<%=data.qq%>" pattern="number" maxlength="25">
+                </div>
+            </div>  
+
+            <div class="control-group">
+                <label class="control-label" for="">邮箱：</label>
+                <div class="control">
+                    <input type="text" name="email" placeholder="邮箱地址" value="<%=data.email%>" pattern="email">
+                </div>
+            </div>  
+			<hr />
+			<legend>工作信息</legend>
+			<div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>类别（单选）：</label>
+                <div class="control">
+                    <label><input type="radio" name="type" required value="1" data-type="A" <%=!data.type||data.type==1?"checked":""%>/><span>美导A</span></label>
+					<label><input type="radio" name="type" required value="2" data-type="B" <%=data.type==2?"checked":""%>/><span>美容师B</span></label>
+					<label><input type="radio" name="type" required value="3" data-type="C" <%=data.type==3?"checked":""%>/><span>收银C</span></label>
+					<label><input type="radio" name="type" required value="4" data-type="D" <%=data.type==4?"checked":""%>/><span>前台D</span></label>
+                </div>
+            </div>
+			<div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>在职编号：</label>
+                <div class="control">
+					
+                    <span id="number-type" style="font-weight:bold;">
+						<%=data.number?data.number.substring(0,1):"A"%>
+					</span>
+					<input type="text"  class="blur-set-number" placeholder="输入三位在职数字编号" value="<%=data.number?data.number.substring(1):""%>" pattern="number" required  minlength="3" max="999" maxlength="3">
+					<span><input type="hidden" name="number" value="<%=data.number%>" data-value="<%=data.number%>" unique="others/checkNumberExists/${value}" /></span>
+                </div>
+            </div>  
+			<div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>工作年限：</label>
+                <div class="control">
+                    <input type="text" name="workingLife" pattern="number" max="99" min="1" placeholder="1~99整数" value="<%=data.workingLife%>" pattern="email" required> <span style="font-weight:bold;">年</span>
+                </div>
+            </div>  
+			<hr />
+			<legend>个人说明</legend>
+			<div class="control-group">
+                <label class="control-label" for="">自我描述：</label>
+                <div class="control">
+                    <div class="keypress" maxlength="50">
+                        <textarea maxlength="50" data-helpid="textarea-help2" name="introduce"><%=data.introduce%></textarea>
+                    </div>
+                    <div class="keypress-help" style="display: none;" id="textarea-help2"></div>
+                </div>
+            </div>
+                <div class="control-group">
+                    <label class="control-label" for=""></label>
+                    <a class="btn" href="<%=query.p=="index"?"index.html":"fashion.html"%>">取消</a>
+					<span class="space"></span>
+                    <button class="btn-primary" data-slug="<%=query.id?"others.update":"others.add"%>">提交</button>
+                </div>
+            </form>
+			</script>
+        </div>
+		<script type="text/javascript">
+			$('#form').on('_ready',function(e,data){
+				data=data.response;
+				lib.puploader.image({
+					browse_button: 'imageUpload',
+					auto_start:true,
+					//imageLimitSize:"300*300",
+					filters: {
+						mime_types : [
+							{ title : "Image files", extensions : "jpg,png,jpeg" },
+						]
+					},
+					max_file_size:'2mb',
+					crop:true
+				},function(uploader){
+					uploader.bind('ImageUploaded',function(up,response){
+						lib.cropper.create({
+							src:response.img,
+							aspectRatio : 750/500,
+							thumbnails  : ["750x500"],
+							define:function(data){
+								up.preview($('#imageUpload').closest('.control-single-image'),{
+									img:data["750x500"],
+								});
+							}
+						});	
+					});						
+				});
+				$('input[name="type"]').on('click',function(){
+					$('#number-type').text($(this).data('type'));
+				});
+				$('.blur-set-number').on('pass',function(){
+					var $this=$(this);
+					var value=$.trim($this.prev().text())+$this.val();
+					$('input[name="number"]').val(value).blur();
+				})
+			});
+			
+		</script>
+    </body>
+</html>

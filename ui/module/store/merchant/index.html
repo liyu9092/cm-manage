@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>商户管理</a><span>&gt;</span><a href="index.html">商户列表</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>商户列表</h4>
+				</div>
+				<div>
+					<a class="btn-primary" data-slug="merchant.save" href="edit.html"><i class="fa fa-plus"></i> 新增</a>
+				</div>
+			</div>
+		</div>
+		<div class="wrapper">
+			<div class="position-group">
+				<form data-role="hash">
+					<div class="input-group input-switch">
+						<select>
+							<option value="0">商户名称</option>
+							<option value="1">手机号码</option>
+							<option value="2">商户编号</option>
+						</select>
+						<input class="input-search" type="text" name="name"  placeholder="请输入商户名称">
+						<input class="input-search hide" type="text" name="mobile" placeholder="请输入手机号码">
+						<input class="input-search hide" type="text" name="sn" placeholder="请输入商户编号">
+						<button class="btn btn-search">
+							<i class="fa fa-search"></i>
+						</button>
+					</div>
+				</form>
+				&nbsp;
+				<form action="merchant/export" data-role="export" data-slug="merchant.export">
+					<button class="btn"><i class="fa fa-file-excel-o"></i> 导出</button>
+				</form>
+			</div>
+			<div class="table" ajat="merchant/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+			<table>
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>编号</th>
+						<th>商户</th>
+						<th>合作店铺数量 </th>
+						<th>联系人</th>
+						<th>联系手机</th>
+						<th>座机与邮箱</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<%data=data.data%>
+					<%data.forEach(function(item,i){%>
+					 <tr>
+						<td><%=i+1%></td>
+						<td><%=item.sn%></td>
+						<td><%=item.name%></td>
+						<td><%=item.salonNum>0?item.salonNum:0%></td>
+						<td><%=item.contact%></td>
+						<td>手机：<%=item.mobile%></td>
+						<td class="colswrap">座机：<%=item.phone%> <br />   
+							邮箱：<%=item.email%>
+						</td>
+						<td>
+							<a data-slug="salon.save" href="../shop/add.html?type=add&merchantId=<%=item.id%>&name=<%=item.name%>&addr=<%=item.addr%>" class="link">+添加店铺</a>
+							<span class="space"></span>
+							<a class="link" data-slug="merchant.show,merchant.update" href="detail.html?id=<%=item.id%>">查看</a>
+							<span class="space"></span>
+						</td>
+					</tr> 
+					<%})%>
+				</tbody>
+			</table>
+			<div class="pager">
+			</div>
+			</script>
+		</div>
+	</div>
+  </body>
+</html>

@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+	  <title>臭美管理后台开发规范</title>
+	  <script type="text/javascript" src="../../js/include.js"></script>
+	  <style type="text/css">
+		body{
+			font-size:14px;
+			padding:10px 0;
+		}
+		.nav{
+			position:fixed;
+			left:10px;
+			width:200px;
+			top:10px;
+		}
+		.nav li{
+			border:1px solid #ddd;
+			margin-bottom:-1px;
+		}
+		.nav li:first-child{
+			border-radius:3px 3px 0px 0px;
+		}
+		.nav li:last-child{
+			border-radius:0px 0px 3px 3px;
+		}
+		.nav li a{
+			line-height:36px;
+			display:block;
+			padding-left:15px;
+		}
+		.container{
+			margin-left:225px;
+		}
+		.weak{
+			border:1px dotted #ccc;
+			padding:3px 5px;
+		}
+		textarea{
+			width:100%;
+			overflow:hidden;
+		}
+		h4{
+			margin:15px 0px 10px 0px;
+			font-size:16px;
+		}
+	  </style>
+  </head>
+  <body>
+	<div class="nav">
+		<ul>
+			<li><a class="link" data-id="#ajat-container">ajat解决方案</a></li>
+			<li><a class="link" data-id="#hash-container">hash与ajat实现数据查询</a></li>
+			<li><a class="link" data-id="#form-container">表单验证和提交数据</a></li>
+		</ul>
+	</div>
+	<div class="container">
+		<div id="ajat-container">
+			<h2>ajat解决方案</h2>
+			<p>自定义ajat协议解决方案取自:Asynchronous Javascript And Template。ajat的目标：通过动态配置发送异步请求，然后借助EJS模板渲染页面</p>
+			<p class="red">ajat配置示例：ajat="merchant/index?<%=query._%>#domid=table&tempid=table-t"</p>
+			<p class="weak">
+				merchant/index:指请求接口地址
+				query:指浏览器url的参数对象，query._获取所有参数<br />
+				domid:指数据显示区域<br />
+				tempid:指模板,可以是一个script[type="text/template"](注意：模板里不能再套模板)或者html文件路径;<a href="http://www.embeddedjs.com/" class="link">EJS官网：http://www.embeddedjs.com/</a>
+			</p>
+			代码示例: <br />
+			<textarea style="height: 731px;">
+<div class="table" ajat="merchant/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+<script type="text/template" id="table-t">
+<table>
+	<thead>
+		<tr>
+			<th>序号</th>
+			<th>编号</th>
+			<th>商户</th>
+			<th>合作店铺数量 </th>
+			<th>联系人</th>
+			<th>联系手机</th>
+			<th>座机与邮箱</th>
+			<th>成立日期</th>
+		</tr>
+	</thead>
+	<tbody>
+		<%data=data.data%>
+		<%data.forEach(function(item,i){%>
+		 <tr>
+			<td><%=i+1%></td>
+			<td><%=item.sn%></td>
+			<td><%=item.name%></td>
+			<td><%=item.salonNum%></td>
+			<td><%=item.contact%></td>
+			<td>手机：<%=item.mobile%></td>
+			<td class="colswrap">座机：<%=item.phone%> <br />   
+				邮箱：<%=item.email%>
+			</td>
+			<td><%=item.foundingDate||""%></td>
+		</tr> 
+		<%})%>
+	</tbody>
+</table>
+</script>
+</div>
+			</textarea>
+			<h4>js里创建ajat和它相关函数介绍</h4>
+			<p class="weak">
+				var ajat=lib.ajat('merchant/index?<%=query._%>#domid=table&tempid=table-t');//创建ajat对象<br>
+				ajat.setUrl('/ajax/test')//修改ajat协议后台请求地址<br>
+				ajat.setQuery({name:'yunfei'})//修改ajat协议?号后的参数<br>
+				ajat.setCustom({tempid:'name'})//修改ajat协议#号后的参数<br>
+				ajat.setExternal({name:"demo"})//引入外部JSON数据后，就可以在模板里&lt;%=name%&gt;输出数据<br>
+				ajat.parseResponse=function(data){return data;}//data是http响应回来的数据，重写这方法可以在EJS模板渲染前处理数据<br>
+				ajat.render()//执行渲染<br>
+				更多请查看lib.js里的Ajat类
+			</p>
+			<h4>ajat自定义的事件,会在配置的domid元素触发</h4>
+			<p class="weak">
+				 _ready事件，指domid元素通过ajat填充HTML后触发<br>
+				  fetch事件，指domid元素通过ajat向后台发送请求前触发<br>
+				  exception事件，指domid元素通过ajat向后台发送请求后出现xhr.status或响应数据的异常<br>
+				  示例:<br>
+				  $('domid').on('_ready',function(e,data){//data包函protocol（指ajat协议对象）和response(响应回来的数据)<br>
+						console.log('_ready enter');<br>
+				  })
+		  <br>
+			</p>
+			<h4>其他</h4>
+			<p class="weak">
+				如果你只需要配置的ajat执行一次，请在配置ajat的节点上加ajat-one="true"属性<br />
+				如果你需要在某个元素上单击执行ajat,请在这个元素上配置ajat-click="merchant/index?<%=query._%>#domid=table&tempid=table-t" <br />
+				如果你需要select元素上change事件执行ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t&citiesId=1"//${value}当前select的值
+			</p>
+		</div>
+		<div id="hash-container">
+			<h4>hash与ajat实现数据查询</h4>
+			<p class="red">实现思路：通过锚点链接变化而变化查询内容,实现相关技术:form表单提交改变hash,hashchange事件执行ajat渲染</p>
+			如果实现改变hash：<br />
+			1.form表单,关键配置data-role="hash" <br />
+			<textarea style="height:280px">
+<form data-role="hash" class="position-group">
+	<div class="input-group">
+		<select>
+			<option value="1">商户搜索</option>
+			<option value="2">手机号搜索</option>
+		</select>
+		<input class="input-search" type="text" name="name"  placeholder="请输入店铺名">
+		<input class="input-search" type="text" name="mobile" class="hide" placeholder="请输入手机号">
+		<button type="submit" class="btn btn-search">
+			<i class="fa fa-search"></i>
+		</button>
+	</div>
+</form>
+			</textarea>
+			2.a链接,关键配置data-role="hash" <br />
+			<textarea style="height:40px">
+<a data-role="hash" href="#page=1&sort_key=created_at#sort_type=2">创建日期 <i class="fa fa-sort"></i></a>
+			</textarea>
+			3.通过js lib.
+		</div>
+		<div id="form-container">
+			<h4>表单校验和提交数据</h4>
+			表单校验
+			<p class="weak">
+				非空校验:配置required,requiredmsg不通过提示语<br />
+				匹配校验:配置match属性的值是要匹配input值的ID,matchmsg不通过提示语<br />
+				正则校验:配置pattern,patternmsg不通过提示语,pattern全局校验：email,password,float,percent,number,phone,mobile<br />
+				唯一校验:配置unique="salon/checkSalonSn?sn=${value}"${value}指当前配置输入框的值,uniquemsg不通过提示语,data-value指初始值<br />
+				禁止输入空格:配置nospace
+			</p>
+			表单数据提交
+			<p class="weak">
+				通过传统的表单提交，需要配置name属性
+			</p>
+			表单事件扩展
+			<p class="weak">
+				save,response,success,fail详情请看lib.js Form对象
+			</p>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			$('.nav a').on('click',function(){
+				$('html,body').scrollTop($($(this).attr('data-id')).offset().top);
+			})
+		})
+	</script>
+  </body>
+</html>

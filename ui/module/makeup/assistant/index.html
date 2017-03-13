@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="index.html">专家助理列表</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>专家助理列表</h4>
+                </div>
+                 <div>
+                    <a class="btn-primary" href="edit.html" data-slug="assistant.add">
+                        <i class="fa fa-plus"></i>新增专家助理
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="position-group">
+                <form data-role="hash">
+                    <div class="input-group placeholder-switch">
+                        <select name="itemMainNum">
+                            <option value="1" data-placeholder="请输入专家助理姓名">专家助理姓名</option>
+                            <option value="2" data-placeholder="请输入在职编号">在职编号</option>
+                            <option value="3" data-placeholder="请输入手机号码">手机号码</option>
+                            <option value="4" data-placeholder="请输入所属专家姓名">所属专家姓名</option>
+                        </select>
+                        <input type="text" class="input-search" name="keyword" placeholder="请输入专家助理姓名" maxlength="16">
+                        <button class="btn btn-search">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>                   
+                </form>
+                &nbsp;
+                <form action="assistant/export" data-role="export" data-slug="assistant.export">
+                    <button class="btn"><i class="fa fa-file-excel-o"></i> 导出</button>
+                </form>
+            </div>
+
+            <div class="table" ajat="assistant/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+            <script type="text/template" id="table-t">
+            <table>
+                <thead>
+                    <tr>                         
+                    <th>序号</th>
+                    <th>助理姓名</th>
+                    <th>性别</th>
+                    <th>工作年限</th>
+                    <th>在职编号</th>
+                    <th>所属专家</th>
+                    <th>手机号码</th>
+                    <th>完成项目数</th>
+                    <th>                    
+                        <a data-role="hash" href="#page=1&orderField=status&orderBy=<%=query.orderBy=="desc"?"asc":"desc"%>">                            
+                            状态
+                            <i class="fa fa-sort"></i>
+                        </a> 
+                    </th>
+                    <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%
+                      data=data.data
+                      var sexText = {"1":"男", "2":"女"}
+                      var statusText = {"0":"禁用中","1":"启用中"};
+                    %>
+                    <%data.forEach(function(item,i){%>
+                        <tr>                 
+                        <td><%=i+1%></td>
+                        <td><%=item.name%></td>
+                        <td><%=sexText[item.sex]%></td>
+                        <td><%=item.workingLife%></td>
+                        <td><%=item.number%></td>
+                        <td><%=item.relegation%></td>
+                        <td><%=item.mobilePhone%></td>
+                        <td>
+                            <a class="link"  href="../order/index.html#assistant_id=<%=item.id%>">
+                                <%=item.itemOver%>
+                            </a>   
+                        </td>
+                        <td><%=statusText[item.status]%></td>
+                        <td> 
+                            <%if(item.status == "0"){%>                       
+                                <form action="assistant/up/<%=item.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                                  <button class="link" data-slug="assistant.up">启用</button>
+                                </form>
+                            <%}else{%>
+                                <form action="assistant/down/<%=item.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                                  <button class="link" data-slug="assistant.down">禁用</button>
+                                </form>
+                            <%}%> 
+
+                            <span style="margin:0 5px;color:#ddd">|</span>
+
+                            <a class="link"  href="detail.html#id=<%=item.id%>&relegation=<%=item.relegation%>" data-slug="assistant.show,assistant.update">
+                                查看&gt;
+                            </a>
+                        </td>
+                        </tr> 
+                    <%})%>
+                </tbody>
+            </table>
+
+            <div class="pager">
+            </div>
+            </script>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+
+        </script>
+
+  </body>
+</html>

@@ -1,0 +1,36 @@
+.list-group .list-header{
+background-color: rgba(0,0,0,0.035);
+padding: 8px;
+text-align: left;
+border: 1px solid #E6EAF2;
+padding-left: 30px;
+}
+.list-group .list-header .list-title{
+font-size: 14px;
+font-weight: bold;
+}
+.list-group .list-content table{
+border-top:0px;
+}
+.slideBtn{
+cursor: pointer;
+}
+.list.active>.list-header>.slideBtn>.slideUp,.list>.list-header>.slideBtn>.slideDown{
+display: inline;
+}
+.list.active>.list-header>.slideBtn>.slideDown,.list>.list-header>.slideBtn>.slideUp{
+display: none;
+}
+.list-group .list-multiple-header{
+border-bottom-style: dashed;
+text-align: center;
+}
+.editBtn a{
+margin-right: 10px;
+}
+.displayOnEdit{
+display: none;
+}
+.control{
+	position: relative;
+}

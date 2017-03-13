@@ -1,0 +1,15 @@
+{
+  "name": "臭美管理后台",
+  "version": "2.0.0",
+  "description": "臭美管理后台API文档",
+  "title": "臭美管理后台API文档",
+  "url" : "http://192.168.13.46:8200",
+  "order":[
+  	"Login",
+    "List",
+  	"User",
+  	"Role",
+  	"Permission",
+    "Log"
+  ]
+}

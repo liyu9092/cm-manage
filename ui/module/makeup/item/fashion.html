@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="fashion.html">韩式快时尚</a>
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4>韩式快时尚</h4>
+			</div>
+		 </div>		 
+        </div>		
+        <div class="wrapper">
+			<div class="table-tab-switch" id="switch" ajat="#domid=switch&tempid=switch-t">
+				<script type="text/template" id="switch-t">
+				<ul class="tab-switch">
+					<li <%if(query.is_gift!=1){%> class="active" <%}%>><a href="#is_gift=0">快时尚项目</a></li>
+					<li <%if(query.is_gift==1){%> class="active" <%}%>><a href="#is_gift=1">快时尚赠送项目</a></li>
+				</ul>
+				</script>
+			</div>
+           <div class="table" ajat="beautyItem/indexFashion?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>项目名称</th>
+                            <th>市场价</th>
+							<th>酬宾价 </th>							
+                            <th>特价 </th>                           
+                            <th>APP预约数</th>
+							<th>已完成数</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                <tbody>
+				<%var data=data.data%>
+				<%data.forEach(function(item,i){%>
+                 <tr>
+					<td><%=i+1%></td>
+					<td><%=item.name%></td>
+					<td>
+						<%if(item.prices.min_price&&item.prices.max_price){%>
+							<%if(item.prices.min_price!=item.prices.max_price){%>
+							￥<%=item.prices.min_price%>-￥<%=item.prices.max_price%>
+							<%}else{%>
+							￥<%=item.prices.min_price%>
+							<%}%>
+						<%}%>
+					</td>
+					<td>
+						<%if(item.prices.min_vip_price&&item.prices.max_vip_price){%>
+							<%if(item.prices.min_vip_price!=item.prices.max_vip_price){%>
+							￥<%=item.prices.min_vip_price%>-￥<%=item.prices.max_vip_price%>
+							<%}else{%>
+								￥<%=item.prices.min_vip_price%>
+							<%}%>
+						<%}%>
+					</td>
+					<td>
+						<%if(item.prices.min_bargain_price&&item.prices.max_bargain_price){%>
+							<%if(item.prices.min_bargain_price!=item.prices.max_bargain_price){%>
+							￥<%=item.prices.min_bargain_price%>-￥<%=item.prices.max_bargain_price%>
+							<%}else{%>
+							￥<%=item.prices.min_bargain_price%>
+							<%}%>
+						<%}%>
+					</td>
+					<td><%=item.quantity%></td>
+					<td><a href="/module/makeup/order/index.html#item_id=<%=item.item_id%>&status=CSD&item_name=<%=item.name%>" class="link"><%=item.completed_num%></a></td>
+					<td><a class="link" href="detail.html?item_id=<%=item.item_id%>&p=fashion&is_gift=<%=query.is_gift%>" data-slug="beautyItem.showFashion,beautyItem.updateFashion">查看</a></td>
+                  </tr>
+				  <%})%>
+                </tbody>
+            </table>		
+             <div class="pager"> </div>
+			</script>
+        </div>
+            </div>
+    </body>
+</html>

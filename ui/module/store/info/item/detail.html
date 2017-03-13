@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>店铺管理 </a><span>&gt;</span>
+			<a href="../index.html">店铺资料</a><span>&gt;</span>
+			<a href="index.html#p=<%=query.p%>&salonid=<%=query.salonid%>&salonname=<%=query.salonname%>">
+				<%if(query.p=="special"){%>闲时特价<%}else if(query.p=="warehouse"){%>项目仓库<%}else{%>项目列表<%}%>
+			</a>
+			<span>&gt;</span>查看<%=query.p=="special"?"闲时特价":"项目"%>详情
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>查看<%=query.p=="special"?"闲时特价":"项目"%>详情</h4>
+				</div>
+			</div>
+		</div>
+		<div class="wrapper">
+			<div class="table-detail" id="detail">
+				<script type="text/template" id="detail-t">
+				<div class="detail-operation">
+					<%
+						var slug="itemInfo.update";
+						if(query.p=="warehouse"){
+							if(query.type=="special"){
+								slug="itemInfo.updateSpecialItem"
+							}
+						}
+						if(lib.query.p=="special"){
+							slug="itemInfo.updateSpecialItem"
+						}
+					%>
+					<%if(query.p=="warehouse"){%>
+					<form data-slug="warehouse.puton" action="warehouse/puton" data-role="normal" onsuccess="var self=this;parent.lib.popup.result({define:function(){history.back()}})">
+						<button class="btn">上架</button><span class="space"></span>
+						<input type="hidden" name="ids" value="<%=query.id%>" />
+					</form>
+					<span class="space"></span>
+					<form data-slug="warehouse.destroy" action="warehouse/destroy" data-role="normal" data-confirm="您正在删除此项目，是否继续 " onsuccess="var self=this;parent.lib.popup.result({define:function(){history.back()}})">
+						<button class="btn">删除</button><span class="space"></span>
+						<input type="hidden" name="ids" value="<%=query.id%>" />
+					</form>
+					<span class="space"></span>
+					<%}else{%>
+					<form data-slug="item.down" action="item/down/<%=query.id%>" data-role="normal" onsuccess="var self=this;parent.lib.popup.result({define:function(){history.back()}})">
+						<button class="btn">下架</button>
+					</form>
+					<span class="space"></span>
+					<%}%>
+					<a data-slug="<%=slug%>" class="btn" href="edit.html?<%=query._%>">编辑</a><span class="space"></span>
+					<button class="btn btn-cancel">关闭</button>
+				</div>
+				<div class="flex-box">
+					<div class="flex-item">
+						<table>
+							<thead>
+								<tr>
+									<td colspan="2">
+									  <%=query.salonname%>
+									</td>	
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>项目名称：</td>
+									<td><%=data.itemname%></td>
+								</tr>
+								<tr>
+									<td>项目分类：</td>
+									<td><%=data.typename%></td>
+								</tr>
+								<tr>
+									<td>增值服务：</td>
+									<td><%=data.addserviceStr%></td>
+								</tr>
+								<tr>
+									<td>服务详情：</td>
+									<td><%=data.desc.replace(/\n/g,"</br>")%></td>
+								</tr>
+							</tbody>
+						</table>
+						<table>
+							<thead>
+								<tr>
+									<th colspan="4">
+										项目限制
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td> 项目有效期：</td>
+									<td colspan="3"><%=data.exp_time?new Date(data.exp_time*1000).format("yyyy-MM-dd"):"无限制"%></td>
+								</tr>
+								<tr>
+									<td>定时上架：</td>
+									<td><%=data.timingAdded?new Date(data.timingAdded*1000).format("yyyy-MM-dd hh:mm"):""%></td>
+									<td>定时下架：</td>
+									<td><%=data.timingShelves?new Date(data.timingShelves*1000).format("yyyy-MM-dd hh:mm"):""%></td>
+								</tr>
+								<tr>
+									<td>限制购买：</td>
+									<td colspan="3"><%=data.limit_time?data.limit_time:"无限制"%></td>
+								</tr>	
+								<tr>
+									<td>库存数量：</td>
+									<td colspan="3"><%=data.total_rep?data.total_rep:"无限制"%></td>
+								</tr>
+								<tr>
+									<td>限制资格：</td>
+									<td colspan="3">
+										<%if(!data.limit_invite&&!data.limit_first){%>
+											无限制
+										<%}%>
+										<%if(data.limit_first){%>
+											限首次下单可购买
+										<%}%>
+										<%if(data.limit_invite){%>
+											限推荐用户购买
+										<%}%>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<table>
+							<thead>
+								<tr>
+									<th colspan="2">
+										价格设置
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>定价方式：</td>
+									<td><%=data.norms_cat_id==0||data.userId==0?"无规格，统一价":"有规格，区间价"%></td>
+								</tr>
+								<%if(data.norms_cat_id==0||data.userId==0){%>
+								<tr>
+									<td>原价：</td>
+									<td>￥<%=parseInt(data.prices[0].price)%></td>
+								</tr>
+								<tr>
+									<td>臭美价：</td>
+									<td>￥<%=parseInt(data.prices[0].price_dis)%></td>
+								</tr>	
+								<tr>
+									<td>集团价：</td>
+									<td>￥<%=parseInt(data.prices[0].price_group)%></td>
+								</tr>
+								<%}else{%>
+								<%if(data.userId!=0){%>
+								<tr>
+									<td colspan="2" style="padding-left:5px;">
+										<table>
+											<thead>
+												<tr>
+													<th>规格</th>
+													<th>原价</th>
+													<th>臭美价</th>
+													<th>集团价</th>
+												</tr>
+											</thead>
+											<tbody>
+												<%data.prices&&data.prices.forEach(function(item){%>
+												<tr>
+													<td style="width:auto;min-width:0">
+													<%var arr=[];
+													item.formats.forEach(function(item2){
+														arr.push(item2.format_name);
+													})%>
+													<%=arr.join("、")%>
+													</td>
+													<td style="width:auto;min-width:0"><%=parseInt(item.price)?"￥"+item.price:""%></td>
+													<td style="width:auto;min-width:0"><%=parseInt(item.price_dis)?"￥"+item.price_dis:""%></td>
+													<td style="width:auto;min-width:0"><%=parseInt(item.price_group)?"￥"+item.price_group:""%></td>
+												</tr>
+												<%})%>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+								<%}%>
+								<%}%>
+							</tbody>
+						</table>
+						
+						<table>
+							<thead>
+								<tr>
+									<th colspan="2">
+										其他信息
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>已售数量：</td>
+									<td><%=data.sold%></td>
+								</tr>
+								<tr>
+									<td>上架时间：</td>
+									<td><%=data.up_time?new Date(data.up_time*1000).format("yyyy-MM-dd hh:mm"):""%></td>
+								</tr>
+								<tr>
+									<td>上架操作人：</td>
+									<td><%=data.name%></td>
+								</tr>	
+								<tr>
+									<td>最后一次修改时间：</td>
+									<td><%=data.updateTime?new Date(data.updateTime*1000).format("yyyy-MM-dd hh:mm"):""%></td>
+								</tr>
+								<tr>
+									<td>最后一次修改人：</td>
+									<td><%=data.name%></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div style="margin-left:20px;">
+						<div style="border:1px solid #E6EAF2;padding:10px;">
+							<h4 style="padding-bottom:5px">项目图片</h4>
+							<img src="<%=data.logo%>"alt="" style="width:300px;height:300px;"/>
+						</div>
+					</div>
+				</div>
+				</script>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(function(){
+				var ajat="item/show/";
+				if(lib.query.p=="warehouse"){
+					if(lib.query.type=="item"){
+						ajat="warehouse/show/"
+					}
+					if(lib.query.type=="special"){
+						ajat="warehouse/detail/"
+					}
+				}
+				if(lib.query.p=="special"){
+					ajat="onsale/show/"
+				}
+				ajat+=lib.query.id;
+				lib.ajat(ajat+"#domid=detail&tempid=detail-t").render();
+			})
+		</script>
+  </body>
+</html>

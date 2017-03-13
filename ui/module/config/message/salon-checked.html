@@ -1,0 +1,4 @@
+﻿<%data.forEach&&data.forEach(function(item){%>
+<label title="<%=item.salonName%>(<%=item.recommendCode%>)" id="salon-search-<%=item.recommendCode%>" data-code="<%=item.recommendCode%>" data-name="<%=item.salonName%>" ><input type="checkbox" value="<%=item.recommendCode%>" <%=protocol.custom.sid&&protocol.custom.sid.indexOf(item.recommendCode)>-1?"checked":""%>><span><%=item.salonName%>(<%=item.recommendCode%>)</span>
+</label>
+<%})%>

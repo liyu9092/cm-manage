@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>店铺管理 </a><span>&gt;</span><a href="index.html">店铺资料</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>店铺资料</h4>
+				</div>
+			</div>
+		</div>
+		<div class="wrapper">
+			<div class="position-group">
+				<form data-role="hash">
+					<div class="input-group placeholder-switch">
+						<select name="key">
+							<option value="1" data-placeholder="请输入店铺名称">店铺名称</option>
+							<option value="2" data-placeholder="请输入商户名称">商户名称</option>
+						</select>
+						<input class="input-search" type="text" name="keyword"  placeholder="请输入店铺名称">
+						<button class="btn btn-search">
+							<i class="fa fa-search"></i>
+						</button>
+					</div>
+				</form>
+			</div>
+			<div class="table" ajat="itemInfo/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+			<table>
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>店铺</th>
+						<th>普通项目</th>
+						<th>闲时特价 </th>
+						<th>造型师</th>
+						<th>项目仓库</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<%data=data.data%>
+					<%data.forEach(function(item,i){%>
+					 <tr>
+						<td><%=i+1%></td>
+						<td><%=item.salonname%></td>
+						<td><a data-slug="item.index" href="item/index.html#p=item&salonid=<%=item.salonid%>&salonname=<%=item.salonname%>" class="link _link"><%=item.generalNums%></a></td>
+						<td><a data-slug="onsale.index" href="item/index.html#p=special&salonid=<%=item.salonid%>&salonname=<%=item.salonname%>" class="link _link"><%=item.specialNums%></a></td>
+						<td><a data-slug="stylist.index" href="stylist/index.html?salonId=<%=item.salonid%>&salonname=<%=item.salonname%>" class="link _link"><%=item.hairstyNums%></a></td>
+						<td><a data-slug="warehouse.index" href="item/index.html#p=warehouse&salonid=<%=item.salonid%>&salonname=<%=item.salonname%>" class="link _link"><%=item.wareroomNums%></a></td>
+						<td>
+							<a data-slug="itemInfo.create" href="item/edit.html?salonid=<%=item.salonid%>&p=item&salonname=<%=item.salonname%>" class="link">添加普通项目</a>
+							<span class="space"></span>
+							<a data-slug="itemInfo.createSpecialItem" href="item/edit.html?salonid=<%=item.salonid%>&p=special&salonname=<%=item.salonname%>" class="link">添加闲时特价</a>
+							<span class="space"></span>
+							<a data-slug="stylist.create" href="stylist/edit.html?salonid=<%=item.salonid%>&salonname=<%=item.salonname%>" class="link">添加造型师</a>
+						</td>
+					</tr> 
+					<%})%>
+				</tbody>
+			</table>
+			<div class="pager">
+			</div>
+			</script>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document.body).on('access',function(){
+			$('._link[data-slug]').each(function(){
+				$(this).parent().html($(this).html());
+			})
+		});
+	</script>
+  </body>
+</html>

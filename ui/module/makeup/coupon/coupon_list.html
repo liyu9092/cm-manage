@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+        <style type="text/css">
+            .tc{
+                text-align: center !important;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="index.html">定妆赠送活动</a><span>&gt;</span>查看赠送活动
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4> 查看赠送活动 </h4>
+                </div>
+                <div class="flex-item">
+                  <div class="fr" ajat="#domid=breadcrumb&tempid=breadcrumb-t" id="breadcrumb">
+                      <script id="breadcrumb-t" type="text/template">
+                          <form action="powderArticles/exportArticlesTicketList" data-role="export">
+                              <button class="btn " data-slug="powderArticles.exportArticlesTicketList">
+                              <i class="fa fa-file-excel-o"></i> 导出
+                              </button>
+                          </form>
+                          <a href="detail_act.html#id=<%=query.presentId%>">
+                          <div class="btn " href="detail_act.html">
+                                 返回
+                          </div>
+                          </a>
+                      </script>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+           <div class="table" ajat="powderArticles/articlesTicketList?<%=query._%>#domid=table&tempid=table-t" id="table">
+            <script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>赠送项目</th>
+                            <th>赠送劵编码</th>
+                            <th>活动起始日</th>
+                            <th>活动截止日</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                <%var data=data.data%>
+                <%data.forEach(function(item,index){%>
+                 <tr>
+                  <td><%=index+1%></td>
+                  <td><%=item.itemName%></td>
+                  <td><%=item.TicketCode%></td>
+                  <td><%=item.startTime%></td>
+                  <td><%=item.endTime%></td>
+                  <td><%=item.ticketStatusName%></td>
+                  </tr>
+                  <%})%>
+                </tbody>
+            </table>
+             <div class="pager"> </div>
+            </script>
+        </div>
+            </div>
+    </body>
+</html>

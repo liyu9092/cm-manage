@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>交易管理</a>
+            <span>&gt;</span><a href="index.html">约发型师查询</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>约发型师查询</h4>
+                </div>
+            </div>
+        </div>        
+
+        <div class="wrapper">
+            <form data-role="hash">                       
+               <div class="input-group placeholder-switch">
+                    <select name="keywordType">
+                        <option value="0" data-placeholder="请输入用户臭美号">用户臭美号</option>
+						<option value="1" data-placeholder="请输入用户手机号">用户手机号</option>
+						<option value="2" data-placeholder="请输入店铺名称">店铺名称</option>
+						<option value="3" data-placeholder="请输入造型师手机号">造型师手机号</option>
+                    </select>
+                    <input type="text" class="input-search" name="keyword" placeholder="请输入用户臭美号">
+                </div>
+                <span class="space"></span>
+				联系客户 
+				<select name="contacted">
+					<option value="">全部</option>
+					<option value="0">未联系</option>
+					<option value="1">已联系</option>
+				</select>
+				<span class="space"></span>
+                <span>提交时间</span>
+                <span class="date-group">
+                    <input type="date" data-role="start" name="minTime" placeholder="YYYY-MM-DD"/>
+                    到
+                    <input type="date" data-role="end" name="maxTime" placeholder="YYYY-MM-DD"/>
+                </span>
+                <button class="btn">搜索</button>
+            </form>
+
+            <form action="appointment/export" data-role="export">
+                <button class="btn" data-slug="appointment.export">
+                <i class="fa fa-file-excel-o"></i> 导出
+                </button>
+            </form>
+                          
+           <div class="table" ajat="appointment/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+            <script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>用户手机号</th>
+                            <th>美发项目</th>
+                            <th>联系客户</th>
+                            <th>提交时间</th>
+                            <th>造型师手机号</th>
+                            <th>店铺名称</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                <%var data=data.data%>
+                <%data.forEach&&data.forEach(function(item,i){%>
+                 <tr>
+                  <td><%=i+1%></td>
+                  <td><%=item.userMobile%></td>
+                  <td><%=item.service_item%></td>
+                  <td><%=item.contacted%></td>
+                  <td><%=item.add_time%></td>
+                  <td><%=item.stylistMobile%></td>         
+                  <td><%=item.salonName%></td>         
+                  <td>
+                    <a class="link" data-slug="appointment.show" href="detail.html?id=<%=item.id%>">查看&gt;</a>
+                  </td>
+                  </tr>
+                  <%})%>
+                </tbody>
+            </table>        
+             <div class="pager"> </div>
+            </script>
+        </div>
+            </div>            
+    </body>
+</html>

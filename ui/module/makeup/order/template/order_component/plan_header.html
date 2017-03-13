@@ -1,0 +1,64 @@
+<%
+var listInfos ={
+    '1':{
+    'name':'无创水光'
+    },
+    '2':{
+    'name':'无创水光'
+    },
+    '3':{
+    'name':'优立塑'
+    },
+    '4':{
+    'name':'3D发际线헤어라인',
+    'makeup':'3D发际线-补色记录  헤어라인-리터치'
+    },
+    '5':{
+    'name':'韩式美瞳线아이라인',
+    'makeup':'韩式美瞳线-补色记录 아이라인- 리터치 기록'
+    },
+    '6':{
+    'name':'3D水晶唇입술',
+    'makeup':'3D水晶唇-补色记录  입술-리터치'
+    },
+    '7':{
+    'name':'韩式立体眉눈썹',
+    'makeup':'韩式立体眉-补色记录  눈썹- 리터치 기록'
+    },
+    '8':{
+    'name':'3D发际线헤어라인',
+    'makeup':'3D发际线-补色记录  헤어라인-리터치'
+    },
+    '9':{
+    'name':'韩式美瞳线아이라인',
+    'makeup':'韩式美瞳线-补色记录 아이라인- 리터치 기록'
+    },
+    '10':{
+    'name':'3D水晶唇입술',
+    'makeup':'3D水晶唇-补色记录  입술-리터치'
+    },
+    '11':{
+    'name':'韩式立体眉눈썹',
+    'makeup':'韩式立体眉-补色记录  눈썹- 리터치 기록'
+    },
+}
+var custom = protocol.custom;
+var item_id = projectList[custom.id].item_id;
+%>
+<div class="list active">
+    <div class="list-header">
+        <span class="list-title"><%=listInfos[item_id].makeup%></span>
+        <div class="displayOnView slideBtn fr">
+            <div class="slideUp">收起 <i class="fa fa-angle-up"></i></div>
+            <div class="slideDown">展开 <i class="fa fa-angle-down"></i></div>
+        </div>
+        <div class="displayOnView editBtn fr">
+            <a class="link" data-id='<%=custom.id%>' data-type='<%=custom.type%>' data-action='edit'>编辑</a>
+        </div>
+        <div class="displayOnEdit fr">
+            <a class="btn" data-action="view" data-type='makeup' data-id='<%=custom.id%>'>取消</a>
+            <a class="btn link" data-action="save">保存</a>
+        </div>
+    </div>
+    <div class="list-content" ajat="#domid=ajatDom_<%=custom.id%>_makeup1&tempid=./template/order_component/plan_desc&action=view&id=<%=custom.id%>&type=<%=custom.type%>" id="ajatDom_<%=custom.id%>_makeup1"  id="ajatDom_<%=custom.id%>_makeup1"></div>
+</div>

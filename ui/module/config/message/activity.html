@@ -1,0 +1,19 @@
+﻿<%data.forEach(function(item){%>
+<label title="<%=item.confTitle%>(<%=item.recommendCode%>)"><input type="checkbox" <%=protocol.custom.disabled?"disabled":""%> value="<%=item.recommendCode%>" <%=protocol.custom.sid&&protocol.custom.sid.indexOf(item.recommendCode)>-1?"checked":""%> /><span><%=item.confTitle%>(<%=item.recommendCode%>)</span>
+</label>
+<%})%>
+<style type="text/css">
+	.popup-box{
+		line-height:28px;
+	}
+	.popup-box-body{
+		padding:0px 5px;
+	}
+	.popup-box label span{
+		width:202px;
+		overflow:hidden;
+		height:22px;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+</style>

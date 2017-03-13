@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <style>
+        td:first-of-type{
+            width:15%;
+        }
+      </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理 </a>
+            <span>&gt;</span><a href="index.html">平台活动</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>活动概况</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="table" style="margin:0" id="table-wrapper" ajat="platform/actView/<%=query.id%>#domid=table-wrapper&tempid=table-t">
+            <script type="text/template" id="table-t">           
+                <table>
+                    <tbody>
+                        <tr>
+                            <td class="td">活动名称</td>
+                            <td><%=data.vcTitle%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">活动编号</td>
+                            <td><%=data.vcSn%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">活动简介</td>
+                            <td>
+                            <%=splitStr(data.vcRemark,40)%>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">活动时间</td>
+                            <td><%=data.actTime%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">活动状态</td>
+                            <% var statusText = {'1':'进行中', '2': '下线', '3':'已关闭', '4': '已结束'}%>
+                            <td><%=statusText[data.status]%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="td">申请部门</td>
+                            <td><%=data.department%></td>
+                        </tr>   
+
+                        <tr>
+                            <td class="td">负责人</td>
+                            <td><%=data.manager%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">现金券总张数上限</td>
+                            <td><%=data.totalNum%></td>
+                        </tr>  
+
+                        <tr>
+                            <td class="td">现金券预算总金额</td>
+                            <td><%=data.budget%></td>
+                        </tr>  
+
+                        <tr>
+                            <td class="td">指定集团获取</td>
+                            <td><%=data.companyCode%></td>
+                        </tr> 
+
+                        <tr>
+                            <td class="td">指定活动获取</td>
+                            <td><%=data.activityCode%></td>
+                        </tr> 
+
+                        <tr>
+                            <td class="td">指定店铺获取</td>
+                            <td><%=data.dividendCode%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">已发放数</td>
+                            <td><%=data.allNum%></td>
+                        </tr>  
+
+                        <tr>
+                            <td class="td">已发放金额</td>
+                            <td><%=data.allMoney%></td>
+                        </tr> 
+
+                        <tr>
+                            <td class="td">已使用数</td>
+                            <td><%=data.useNumed%></td>
+                        </tr> 
+
+                        <tr>
+                            <td class="td">已使用总金额</td>
+                            <td><%=data.useMoneyed%></td>
+                        </tr>
+
+
+                        <tr>
+                            <td class="td">已消费数</td>
+                            <td><%=data.consumeNum%></td>
+                        </tr> 
+
+                        <tr>
+                            <td class="td">已消费数金额</td>
+                            <td><%=data.consumeMoney%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">已失效数</td>
+                            <td><%=data.invalidNum%></td>
+                        </tr>                                                      
+                                                                                
+                    </tbody>                     
+                </table>
+
+                <div class="control-group">
+                    <a class="btn" href="index.html">取消</a>
+                    &nbsp;&nbsp;
+                    <button class="btn-primary edit-button" data-slug="platform.getInfo">
+                    <%=(query.status=='3' || query.status=='4') ? '查看配置' : '编辑' %>
+                    </button>
+                </div>                               
+            </script>
+            </div>
+        </div>
+
+        <script>
+            $("#table-wrapper").on('click',".edit-button",function(){
+                lib.ajax({
+                    type: "post",
+                    url : 'platform/getInfo/'+lib.query.id
+                }).done(function(data, status, xhr){
+                    if(data.result == 1){
+                        data = data.data;
+                        if(data.selectItemType=="1"){
+                            data.selectUseType = data.getTypes;
+                        }
+                        if(data.selectItemType=="2"){
+                            if(data.getTypes == "3"){
+                                data.selectUseType = 3;
+                            }
+
+                            if(data.getCodeType == "1"){
+                                data.selectUseType = 6;
+                            }
+
+                            if(data.getCodeType == "2"){
+                                data.selectUseType = 4;
+                            }
+
+                            if(data.getCodeType == "3"){
+                               data.selectUseType = 5;
+                            }
+                        }
+                        sessionStorage.setItem('edit-base-data',JSON.stringify(data));  
+                        location.href = "addBase.html?type=edit&id="+lib.query.id+"&selectItemType="+(data.selectItemType||1)+"&status="+lib.query.status;                        
+                    }
+                });
+            })
+
+            var checkChinese = function(str){
+                var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+                return reg.test(str);
+            };
+
+            var splitStr = function(str,index){
+                var len = str.length,tmp=[],i,j = 0,k=0;
+                for ( i=0 ; i<len ; i = i+1){
+                  tmp.push(str[i]);
+                  if (checkChinese(str[i])){
+                    j = j + 2;
+                    k = k + 2;
+                  }else{
+                    j = j + 1;
+                    k = k + 1;
+                  }
+                  if ( str[i] == "\n" ){
+                    k = 0;
+                  }
+                  if (  k - index <= 1 && k - index >= 0 ) {
+                      k = 0;
+                      tmp.push("<br/>");
+                  }
+                }
+                return tmp.join('').replace(/\n/g,"<br/>");
+            }
+        </script>    
+    </body>
+</html>

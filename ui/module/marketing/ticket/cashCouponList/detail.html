@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <style>
+        td:first-of-type{
+            width:15%;
+        }
+      </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理 </a>
+            <span>&gt;</span><a href="index.html">现金券列表</a>
+            <span>&gt;</span><a>现金券详情</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>现金券详情</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="wrapper">
+            <div class="detail-operation">
+                <button class="btn" type="button" onclick="history.back()">取消</button>
+            </div>
+
+            <div class="table" style="margin:0" id="table-wrapper" ajat="voucher/info/<%=query.id%>#domid=table-wrapper&tempid=table-t">
+            <script type="text/template" id="table-t">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td class="td">现金券编号</td>
+                            <td><%=data.vSn%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">获取时间</td>
+                            <td><%=new Date(data.vAddTime*1000).format("yyyy-MM-dd")%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">用户手机号</td>
+                            <td><%=data.vMobilephone%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">面值</td>
+                            <td><%=data.vUseMoney%></td>
+                        </tr>
+
+                        <tr>
+                            <%var statusText = {'1':'未使用', '2':'已使用', '3':'待激活 ', '4':'活动关闭','5':'已失效'}%>
+                            <td class="td">现金券状态</td>
+                            <td><%=statusText[data.vStatus]%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">使用时间</td>
+                            <td><%=data.vUseTime%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">有效时间</td>
+                            <td>
+                            <%if ( data.vUseStart == '0' || data.vUseEnd == '0'){%>
+                                无限制
+                            <%}else{%>
+                                <%=new Date(data.vUseStart*1000).format("yyyy-MM-dd")%>
+                                到
+                                <%=new Date(data.vUseEnd*1000).format("yyyy-MM-dd")%>
+                            <%}%>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">关联订单号</td>
+                            <td><%=data.vOrderSn%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">关联订单状态</td>
+                            <td><%=data.isPay%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">使用店铺</td>
+                            <td><%=data.vSalonName%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">使用项目</td>
+                            <td><%=data.vItemName%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">活动（红包）编号</td>
+                            <td><%=data.vcSn%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">活动名称</td>
+                            <td><%=data.vcTitle%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">红包分享人</td>
+                            <td><%=data.sharePhone%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">兑换密码</td>
+                            <td><%=data.REDEEM_CODE%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">获取条件</td>
+                            <td><%=data.getText%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">使用限制</td>
+                            <td><%=data.useLimitText%></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </script>
+            </div>
+        </div>
+    </body>
+</html>

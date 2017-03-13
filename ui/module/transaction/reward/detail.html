@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <style>.first-td{width: 15%;padding-left: 30px!important;}</style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>交易管理</a>
+            <span>&gt;</span><a href="index.html">赏金单查询</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>赏金单详情</h4>
+                </div>
+                <div class="flex-item">
+                    <button type="button" class="btn fr" onclick="history.back()">取消</button>
+                </div>                
+            </div>
+        </div>
+        <div class="wrapper" id="table-wrapper" 
+        ajat="<%if(query.no){%>bounty/show?<%=query._%><%}%>#domid=table-wrapper&tempid=table-t">
+        <script type="text/template" id="table-t">
+            <div class="table">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td class="first-td">赏金单号</td>
+                            <td><%=data.btSn%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">服务类型</td>
+                            <td><%=%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">用户臭美号</td>
+                            <td><%=data.userName%></td>                            
+                        </tr> 
+
+                        <tr>
+                            <td class="first-td">用户手机号</td>
+                            <td><%=data.userMobile%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">任务需求</td>
+                            <td><%=data.needsStr%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">我的需求</td>
+                            <td><%=data.remark%></td>                            
+                        </tr> 
+
+                        <tr>
+                            <td class="first-td">选择发型师</td>
+                            <td><%=data.selectType%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">支付方式</td>
+                            <td><%=data.payType%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">赏金金额</td>
+                            <td><%=data.money%></td>                            
+                        </tr> 
+
+                        <tr>
+                            <td class="first-td">是否支付</td>
+                            <td><%=data.isPay%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">下单时间</td>
+                            <td><%=data.addTime%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">支付时间</td>
+                            <td><%=data.payTime%></td>                            
+                        </tr> 
+
+                        <tr>
+                            <td class="first-td">第三方流水号</td>
+                            <td><%=data.tn%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">取消时间</td>
+                            <td><%=data.cancelTime%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">完成时间</td>
+                            <td><%=data.endTime%></td>                            
+                        </tr> 
+
+                        <tr>
+                            <td class="first-td">店铺名称</td>
+                            <td><%=data.salonName%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">服务区域</td>
+                            <td><%=data.district%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">店铺类型</td>
+                            <td><%=data.bountyType%></td>                            
+                        </tr> 
+
+                        <tr>
+                            <td class="first-td">造型师类型</td>
+                            <td><%=data.grade%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">造型师账号</td>
+                            <td><%=data.stylistName%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">造型师手机号</td>
+                            <td><%=data.hairStylistMobile%></td>                            
+                        </tr> 
+
+                        <tr>
+                            <td class="first-td">订单状态</td>
+                            <td><%=data.btStatus%></td>
+                        </tr>
+                              
+                    </tbody>                     
+                </table>
+            </div>
+        </script>
+        </div>
+    </body>
+</html>

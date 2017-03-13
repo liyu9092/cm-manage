@@ -1,0 +1,256 @@
+<%
+var action =  protocol.custom.action;
+var formUrl = protocol.custom.formUrl;
+var skinConcerns = orderInfo.skinConcerns ? orderInfo.skinConcerns.split(",") : [];
+var Concerns = {
+    "1":{
+        "name":"腰毛粗大"
+        },
+    "2":{
+        "name":"皮肤暗沉"
+        },
+    "3":{
+        "name":"敏感脆弱"
+        },
+    "4":{
+        "name":"干燥粗糙"
+        },
+    "5":{
+        name:"细小皱纹"
+        },
+    "6":{
+        "name":"痤疮痕迹"
+        },
+    "7":{
+        "name":"皮肤松弛"
+        },
+    "8":{
+        "name":"其他"
+        },
+}
+for(var i =0;i<skinConcerns.length;i++){
+    if (Concerns[skinConcerns[i]]){
+        Concerns[skinConcerns[i]]['selected'] = true;
+    }
+}
+
+
+var stostes={
+    "1":{
+        "type":"N5",
+        "nums":"0"
+        },
+    "2":{
+        "type":"N10",
+        "nums":"0"
+        },
+    "3":{
+        "type":"MITOCELL HOME",
+        "nums":"0"
+        },
+    "4":{
+        "type":"PRODERM",
+        "nums":"0"
+        }
+}
+
+orderStoste = orderInfo.stoste || [];
+for(var i = 0;i<orderStoste.length;i++){
+    for (var j=1;j<5;j++){
+        if (orderStoste[i].type == stostes[j].type){
+            stostes[j]['selected'] = true;
+            stostes[j]['nums'] = orderStoste[i].nums;
+        }
+    }
+}
+
+if (action == 'edit'){%>
+<form action="<%=formUrl%>" id="presentUseInfo" data-role="form">
+<table>
+<input type="hidden" name="articleCodeId" value="<%=query.id%>">
+    <tbody>
+        <tr>
+            <td class="td">皮肤状况</td>
+            <td>
+                <%for(var i=1;i<9;i++){%>
+                    <label>
+                        <input type="checkbox" <%= Concerns[i].selected == true ? "checked='checked'" : ""%> name="skinConcern" value="<%=i%>">
+                        <span><%=Concerns[i].name%></span>
+                    </label>
+
+                <%}%>
+                <input type="hidden" name="skinConcerns" value="<%=orderInfo.skinConcerns%>">
+            </td>
+        </tr>
+        <tr>
+            <td class="td">选择原液</td>
+            <td>
+                <%for(var i=1;i<5;i++){%>
+                <%var current = stostes[i];%>
+                    <label class="checkbox stoste">
+                        <input type="checkbox" <%= current.selected == true ? "checked='checked'" : ""%> name="type" value="<%=current.type%>">
+                        <span><%=current.type%></span>
+                        <span>   用量</span>
+                        <input <%= current.selected == true ? "" : "disabled='disabled'"%>  name="nums" pattern="number"  type="text" value="<%=current.nums%>">
+                        <span>支</span>
+                    </label>
+                    <%if (i <4){%>
+                    <br/>
+                    <%}%>
+                <%}%>
+                <br/>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">备注</td>
+            <td>
+                <textarea name="remark" style="width:500px;"><%=orderInfo.remark%></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>美导</td>
+                            <%
+                            var tempId = generateId()
+                            var autoComplete = "others/search/1/${value}#domid=complete-position-"+tempId+"&tempid=/module/makeup/order/template/list-t";
+                            %>
+                            <td><div class="control"><input class="searchInput" id="search" type="text" ajat-complete="<%=autoComplete%>" value="<%= orderInfo.guideName ? orderInfo.guideName+'（'+orderInfo.guideNumber+'）':''%>" autocomplete="off" />
+                            <input type="hidden" name="guideId" class="inputId" value="<%=orderInfo.guideId%>">
+                            <div class="complete-position" id="complete-position-<%=tempId%>" style="width:20%;min-width:250px;" ></div>
+                            <span id="sn" class="weak"></span></div></td>
+                            <td>美容师</td>
+                            <%
+                            var tempId = generateId()
+                            var autoComplete = "others/search/2/${value}#domid=complete-position-"+tempId+"&tempid=/module/makeup/order/template/list-t";
+                            %>
+                            <td><div class="control"><input class="searchInput" id="search" type="text" ajat-complete="<%=autoComplete%>" value="<%= orderInfo.beauticianName ? orderInfo.beauticianName+'（'+orderInfo.beauticianNumber+'）':''%>" autocomplete="off" />
+                            <input type="hidden" name="beauticianId" class="inputId" value="<%=orderInfo.beauticianId%>">
+                            <div class="complete-position" id="complete-position-<%=tempId%>" style="width:20%;min-width:250px;" ></div>
+                            <span id="sn" class="weak"></span></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">操作日期</td>
+            <td><input name="recordTime" type="_datetime" value="<%=orderInfo.recordTime%>"></td>
+        </tr>
+    </tbody>
+</table>
+</form>
+<script type="text/javascript">
+    $('.checkbox').on('click','input[type=checkbox]',function(){
+        var $this = $(this)
+        if ($this.is(':checked')){
+            $this.siblings('input[type=text]').removeAttr('disabled');
+        }else{
+            $this.siblings('input[type=text]').attr('disabled','disabled');
+        }
+    })
+    $('input[name=skinConcern]').on('change',function(){
+        var values = [];
+        $.each($('input[name=skinConcern]:checked'),function(){
+            values.push($(this).val());
+        })
+        $('input[name=skinConcerns]').val(values.join(','))
+    })
+
+    var getStoste = function(){
+        var  $stostes= $('.stoste input[name=type]:checked'),returnValue=[];
+        $.each($stostes,function(){
+            var stoste = {
+                'type': $(this).val(),
+                'nums': Number($(this).siblings('input[name=nums]').val()) || 0
+            }
+            returnValue.push(stoste);
+        })
+        return returnValue;
+    }
+
+    var generateForm = function(form){
+        var newForm = new lib.Form(form.eq(0));
+        newForm.el._getFormData = function() {
+            var returnData = lib.tools.getFormData($(this));
+            console.log(returnData);
+            if (getStoste().length){
+                returnData.stoste =  getStoste()}
+            else{
+                returnData.stoste  = "";
+            }
+            return returnData;
+        }
+        form.on('success', function() {
+            parent.lib.popup.result({
+                text: '操作成功',
+                define: function() {
+                    location.reload();
+                }
+            });
+        })
+    }
+
+    generateForm($('#presentUseInfo'));
+</script>
+<%}else if (action == 'view'){%>
+<table>
+    <tbody>
+        <tr>
+            <td class="td">皮肤状况</td>
+            <td>
+               <%for(var i=1;i<9;i++){%>
+                   <label>
+                       <input type="checkbox" disabled="disabled" <%= Concerns[i].selected == true ? "checked='checked'" : ""%> name="skinConcern" value="<%=i%>">
+                       <span><%=Concerns[i].name%></span>
+                   </label>
+               <%}%>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">选择原液</td>
+            <td>
+                <%for(var i=1;i<5;i++){%>
+                <%var current = stostes[i];%>
+                    <label class="checkbox stoste">
+                        <input disabled="disabled" type="checkbox" <%= current.selected == true ? "checked='checked'" : ""%> name="type" value="<%=current.type%>">
+                        <span><%=current.type%></span>
+                        <span>   用量</span>
+                        <input disabled="disabled" name="nums" pattern="number"  type="text" value="<%=current.nums%>">
+                        <span>支</span>
+                    </label>
+                    <%if (i < 4){%>
+                    <br/>
+                    <%}%>
+                <%}%>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">备注</td>
+            <td>
+                <%=orderInfo.remark && orderInfo.remark.replace(/\n/g,'<br/>')%>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>美导</td>
+                            <td><div class="control"><%= orderInfo.guideName ? orderInfo.guideName+'（'+orderInfo.guideNumber+'）':''%></div></td>
+                            <td>美容师</td>
+                            <td><div class="control"><%= orderInfo.beauticianName ? orderInfo.beauticianName+'（'+orderInfo.beauticianNumber+'）' : ''%></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">操作日期</td>
+            <td><%=orderInfo.recordTime%></td>
+        </tr>
+    </tbody>
+</table>
+<%}%>

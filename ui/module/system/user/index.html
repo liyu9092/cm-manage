@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>系统管理</a><span>&gt;</span><a href="index.html">用户管理</a>
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4>用户管理</h4>
+			</div>
+			<div>
+				<a class="btn-primary" href="edit.html" data-slug="manager.create"><i class="fa fa-plus"></i>新增</a>
+			</div>
+		 </div>		 
+        </div>		
+        <div class="wrapper">
+			<form data-role="hash">                       
+			   <div class="input-group input-switch">
+				<select>
+					<option value="0">登录账号</option>
+					<option value="1">角色名称</option>
+					<option value="2">用户姓名</option>
+				</select>
+				<input type="text" class="input-search" name="username" placeholder="请输入登录账号">
+				<input type="text" class="input-search hide" name="role" class="hide" placeholder="请输入角色名称">
+				<input type="text" class="input-search hide" name="name" class="hide" placeholder="请输入用户名称">							
+			</div>					 
+			<span class="space"></span>
+				<label>所属部门</label>
+				 <select name="department_id"  ajat-one="true" ajat="list/department#domid=department&tempid=department-t" id="department">
+				<script type="text/template" id="department-t">
+					<option value="">全部</option>
+					<%for(var i=0;i<data.length;i++){%>
+						<option value="<%=data[i].id%>"><%=data[i].title%></option>
+					<%}%>
+				</script>
+			</select>			 
+				<span class="space"></span>
+				<label>状态</label>
+			   <select name="status" >
+				<option value="">全部</option>
+				<option value="1">正常</option>
+				<option value="2">停用</option>
+				<option value="3">注销</option></select>
+				<span class="space"></span>
+				<label>所属城市</label>
+				<select  name="city_id" ajat-one="true" ajat="list/city#domid=city&tempid=/module/public/template/city&insert=after" id ="city">
+					<option value="">全部</option>
+				</select>
+				<span class="space"></span>
+				添加时间
+				<span class="date-group">
+				<input type="date" data-role="start" name="start" placeholder="YYYY-MM-DD"/>到<input type="date" data-role="end" name="end" placeholder="YYYY-MM-DD"/>
+				</span>
+				<button class="btn" type="submit">搜索</button>
+				</form>
+			  <form action="manager/export" data-role="export"><button class="btn" data-slug="manager.export"><i class="fa fa-file-excel-o"></i> 导出</button></form>
+						  
+           <div class="table" ajat="manager/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>用户姓名</th>
+                            <th>登陆账号</th>
+                            <th>状态</th>
+                            <th><a data-role="hash" href="#page=1&sort_key=city_id&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">所属区域 <i class="fa fa-sort"></i></a></th>
+							<th><a data-role="hash" href="#page=1&sort_key=department_id&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">所属部门 <i class="fa fa-sort"></i></a></th>
+							<th><a data-role="hash" href="#page=1&sort_key=position_id&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">所属职位 <i class="fa fa-sort"></i></a></th>
+                            <th>角色名称</th>
+                            <th><a data-role="hash" href="#page=1&sort_key=created_at&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">添加时间 <i class="fa fa-sort"></i></a></th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                <tbody>
+				<%var status=["","正常","停用","注销"]%>
+				<%var data=data.data%>
+				<%for(var i=0;i<data.length;i++){%>
+                 <tr>
+                 <td><%=i+1%></td>
+                  <td><%=data[i].name%></td>
+				  <td><%=data[i].username%></td>
+                  <td><%=status[data[i].status]%></td>
+				  <td><%=data[i].city?data[i].city.iname:""%></td>	
+                  <td><%=data[i].department?data[i].department.title:""%></td>
+				  <td><%=data[i].position?data[i].position.title:""%></td>		   
+				  <td><%for(var j=0;j<data[i].roles.length;j++){%>
+				      <%=data[i].roles[j].name%>
+					  <%}%>					 
+				   </td>				  
+				  <td><%=data[i].created_at%></td>
+                  <td><a class="link" href="edit.html?id=<%=data[i].id%>" data-slug="manager.show,manager.update">查看</a></td>
+                  </tr>
+				  <%}%>
+                </tbody>
+            </table>		
+             <div class="pager"> </div>
+			</script>
+        </div>
+            </div>
+			 
+	 
+    </body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理</a>
+            <span>&gt;</span><a href="index.html">红包活动配置</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>红包活动</h4>
+                </div>
+                <div class="flex-item">
+                    <a class="btn-primary fr" href="addBase.html" onclick="sessionStorage.removeItem('formData')" data-slug="laisee.create">
+                        <i class="fa fa-plus"></i> 新增红包活动
+                    </a>
+                </div>
+            </div>
+        </div>        
+
+        <div class="wrapper">
+            <form data-role="hash">                       
+               <div class="input-group input-switch">
+                    <select>
+                        <option value="0">红包名称</option>
+                    </select>
+                    <input type="text" class="input-search" name="laisee_name" placeholder="红包名称">
+                </div>
+                <span class="space"></span>
+                <span>创建时间</span>
+                <span class="date-group">
+                    <input type="date" data-role="start" name="start_time" placeholder="YYYY-MM-DD"/>
+                    到
+                    <input type="date" data-role="end" name="end_time" placeholder="YYYY-MM-DD"/>
+                </span>
+                <button class="btn">搜索</button>
+            </form>
+
+            <form action="laisee/export" data-role="export">
+                <button class="btn" data-slug="laisee.export">
+                <i class="fa fa-file-excel-o"></i> 导出
+                </button>
+            </form>
+                          
+           <div class="table" ajat="laisee/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+            <script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>红包名称</th>
+                            <th>现金券数</th>
+                            <th>已领取数</th>
+                            <th>已使用数</th>
+                            <th>礼包领取数</th>
+                            <th>创建时间</th>
+                            <th>上线时间</th>
+                            <th>活动状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                <%var data=data.data%>
+                <%data.forEach&&data.forEach(function(item,i){%>
+                 <tr>
+                  <td><%=i+1%></td>
+                  <td><%=item.laisee_name%></td>
+                  <td><%=item.voucherNum%></td>
+                  <td><%=item.receiveNum%></td>
+                  <td><%=item.usedNum%></td>
+                  <td><%=item.giftNum%></td>         
+                  <td><%=item.create_time%></td>         
+                  <td><%=item.start_time%></td>
+				  <%var statusMap={"Y":"进行中","N":"已结束","S":"已关闭","F":"下线"}%>
+                  <td><%=statusMap[item.status]%></td>
+                  <td>
+                    <a class="link" data-slug="laisee.show,laisee.update" href="detail.html?id=<%=item.id%>">查看&gt;</a>
+					<%if(item.status=="Y"){%>
+					<form data-slug="laisee.offline" action="laisee/offline/<%=item.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+						<span class="space"></span>
+						<button class="link">下线</button>
+					</form>
+					<form data-slug="laisee.close" action="laisee/close/<%=item.id%>" data-role="normal"  onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+						<span class="space"></span>
+						<button class="link">关闭</button>
+					</form>
+					<%}%>
+					<%if(item.status=="F"){%>
+					<form data-slug="laisee.online" action="laisee/online/<%=item.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+						<span class="space"></span>
+						<button class="link">上线</button>
+					</form>
+					<%}%>
+                  </td>
+                  </tr>
+                  <%})%>
+                </tbody>
+            </table>        
+             <div class="pager"> </div>
+            </script>
+        </div>
+            </div> 		
+    </body>
+</html>

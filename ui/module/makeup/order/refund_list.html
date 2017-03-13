@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+        <style type="text/css">
+            .tc{
+                text-align: center !important;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="index.html">定妆单退款查询</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4> 定妆单退款查询 </h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <form data-role="hash">
+              <div class="input-group placeholder-switch">
+                   <select name="key">
+                       <option value="1" data-placeholder="请输入手机号">手机号</option>
+                       <option value="2" data-placeholder="请输入预约号">预约号</option>
+                       <option value="3"    data-placeholder="请输入推荐号">推荐号</option>
+                   </select>
+                   <input type="text" class="input-search" maxlength="20" name="keyword" placeholder="请输入手机号">
+               </div>
+               <span class="space"></span>
+               <span>申请退款日：</span>
+               <span class="date-group">
+                   <input type="date" data-role="start" name="start_time" placeholder="YYYY-MM-DD"/>
+                   至
+                   <input type="date" data-role="end" name="end_time" placeholder="YYYY-MM-DD"/>
+               </span>
+              <span class="space"></span>
+              <div class="input-group">
+                   <select name="pay_type">
+                       <option value="0">支付方式</option>
+                       <option value="3" >微信</option>
+                       <option value="2" >支付宝</option>
+                       <option value="10" >易联支付</option>
+                   </select>
+               </div>
+               <span class="space"></span>
+               <div class="input-group">
+                    <select name="state">
+                        <option value="RFN,RFD,RFE">退款状态</option>
+                        <option value="RFN" >退款中</option>
+                        <option value="RFD" >已退款</option>
+                        <option value="RFE" >退款失败</option>
+                    </select>
+                </div>
+               <span class="space"></span>
+               <div class="input-group">
+                    <select name="initiate_refund">
+                        <option value="0">发起退款</option>
+                        <option value="1" >用户</option>
+                        <option value="2" >臭美人员</option>
+                    </select>
+                </div>
+                <button class="btn" type="submit" data-slug="beautyrefund.index">查询</button>
+            </form>
+            <span ajat="#domid=alipay&tempid=/module/makeup/order/template/alipay" id="alipay"></span>
+           <div class="table" ajat="beautyrefund/index?<%if (!query.state){%>state=RFN,RFD,RFE<%}%>&<%=query._%>#domid=table&tempid=table-t" id="table">
+            <script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><label class="select-all"><input type="checkbox"/><span>全选</span></label></th>
+                            <th>序号</th>
+                            <th>手机号</th>
+                            <th>姓名</th>
+                            <th>预约项目</th>
+                            <th>退款金额</th>
+                            <th>预约号</th>
+                            <th>退款日期</th>
+                            <th>支付方式</th>
+                            <th>发起退款</th>
+                            <th><a data-role="hash" href="#page=1&sort_key=book_status&sort_type=<%=query.sort_type=='DESC'?'ASC':'DESC'%>">状态 <i class="fa fa-sort"></i></a></th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                <%var data=data.data%>
+                <%var pay_type_desc={
+                    "1":"网银",
+                    "2":"支付宝",
+                    "3":"微信",
+                    "4":"余额",
+                    "7":"积分",
+                    "10":"易联"
+                }%>
+                <%var status={
+                    'NEW':'未支付',
+                    'PYD':'未消费',
+                    'CSD':'已完成',
+                    'RFN':'退款中',
+                    'RFD':'已退款',
+                    'RFE':'退款失败',
+                    'RFD-OFL':'已退款',
+                }
+                var initiate_refundText = {'1':'用户退款','2':'臭美人员'}
+                %>
+                <%data.forEach(function(item,index){%>
+                 <tr>
+                  <td><label><input <%if (item.book_status == 'RFD' || item.book_status == 'RFD-OFL'){%>disabled='disabled'<%}%> type="checkbox"  value="<%=item.booking_sn%>"/><span></span></label></td>
+                  <td><%=index+1%></td>
+                  <td><%=item.booker_phone%></td>
+                  <td><%=item.booker_name%></td>
+                  <td><%var orderItems=[];
+                  item.booking_order_item.forEach(function(orderItem){
+                      orderItems.push(orderItem.item_name);
+                  })%><%=orderItems.join(",")%></td>
+                  <td><%=item.money%></td>
+                  <td><%=item.booking_sn%></td>
+                  <td><%=item.add_time%></td>
+                  <td><%=pay_type_desc[item.pay_type]%></td>
+                  <td><%=initiate_refundText[item.initiate_refund]%></td>
+                  <td><%=status[item.book_status]%></td>
+                  <td class="tc">
+                    <a class="link" data-slug="beautyrefund.show" href="refund_desc.html#id=<%=item.booking_id%>&booking_sn=<%=item.booking_sn%>">查看</a>
+                  </td>
+                  </tr>
+                  <%})%>
+                </tbody>
+            </table>
+            <div class="table-bottom">
+				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
+				<button disabled class="btn" data-action="accept" type="button">确认退款</button>
+				<button disabled class="btn" data-action="reject" type="button">拒绝退款</button>
+			</div>
+             <div class="pager"> </div>
+            </script>
+            <script type="text/javascript">
+            var ids=[];
+            var confirmBox = function(options){
+                 parent.lib.popup.confirm({
+                     text:options.text,
+                     cancelText:options.cancelText,
+                     defineText:options.defineText,
+                     define: function(){
+                         lib.ajax({
+                             url : options.url,
+                             data: options.data
+                         }).done(function(data, status, xhr){
+                             if(data.result == 1){
+                                 parent.lib.popup.result({
+                                     define:function(){
+                                        options.successCallback ? options.successCallback(data) : location.reload();
+                                     }
+                                 });
+                             }
+                         });
+                     }
+                 });
+            }
+
+
+            var refund = function(response){
+                var data = response.data;
+                if(data.alipay && data.alipay.form_args){
+                  $.each($("#alipaysubmit").serializeArray(),function(i,field){
+                    $("input[name='"+field.name+"']").val(data.alipay.form_args[field.name]);
+                  })
+                  $("#alipaysubmit").submit();
+                }
+                parent.lib.popup.result({
+                    text:'退款成功',
+                    define:function(){
+                        location.reload();
+                    }
+                });
+            }
+
+            var getConfig = function(action){
+                var confirmBoxConfig = {
+                    'accept':{
+                        'text':'已选中'+ids.length+'个退款单，是否确认退款',
+                        'cancelText':'取消退款',
+                        'defineText':'确认退款',
+                        'url':'beautyrefund/accept',
+                        'data':{
+                            'booking_sn':ids.join(",")
+                        },
+                        'successCallback':refund
+                    },
+                    'reject':{
+                        'text':'你正在给'+ids.length+'个退款单取消退款，是否执行',
+                        'cancelText':'取消',
+                        'defineText':'执行',
+                        'url':'beautyrefund/reject',
+                        'data':{
+                            'booking_sn':ids.join(",")
+                        }
+                    }
+                }
+                return confirmBoxConfig[action]
+            }
+
+        		$('#table').on('change','input',function(){
+                    var checkedBox = $('tbody label input:checked');ids = [];
+        			if(checkedBox.length>0){
+                        $.each(checkedBox,function(item){
+                            ids.push($(this).val())
+                        });
+        				$('.table-bottom button').removeAttr('disabled');
+        			}else{
+        				$('.table-bottom button').attr('disabled','disabled');
+        			}
+        		}).on('click','button',function(){
+                    var action = $(this).attr('data-action');
+                    confirmBox(getConfig(action));
+                })
+        	</script>
+        </div>
+            </div>
+    </body>
+</html>

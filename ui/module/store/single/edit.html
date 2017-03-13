@@ -1,0 +1,150 @@
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="format-detection" content="telephone=no">
+        <title>臭美管理后台</title>
+        <script src="/js/include.js"></script>
+    </head>
+    <body>
+	
+        <div class="breadcrumb">
+            <a>店铺结算</a><span>&gt;</span><a href="index.html">转付单</a><span>&gt;</span><span id="breadcrumb-current"><%=query._?"编辑转付单":"新增转付单"%></span>
+				<div class="flex-box">
+			<div class="flex-item">
+				<h4><%=query._?"编辑转付单":"新增转付单"%></h4>
+			</div>		 
+		  </div>
+		 <hr />
+        </div>			
+     <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		  <form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>shop_count/update/<%=data.id%><%}else{%>shop_count/create/<%=data.id%><%}%>">
+				<div class="detail-operation">
+				<button class="btn btn-cancel" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">取消</button>
+				<span class="space"></span>
+				<button class="btn-primary" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>			
+			</div>
+				
+                  <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>付款单类型：</label>
+                    <div class="control">
+                       <select required name="type"   style="width:20%;" <%=query.id?"disabled":""%>>
+                          <option value="2" <%=data.type==1||data.type==2?"selected":""%>>付交易代收款</option>						 
+                                 							
+                        </select>
+                    </div>
+                </div>
+				<div class="control-separation">
+                    <legend>付款详情</legend>
+					<hr />
+                </div>
+			   <input type="hidden" name="id" id="id" value="<%=data.id%>"/>
+					<input type="hidden" name="salon_id" id="salon_id" value="<%=data.salon_id||""%>"/>
+				    <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
+                    <div class="control complete">		
+                        <input id="search" type="text" value="<%=data.salon?data.salon.salonname:""%>" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" 
+						ajat-resources="/module/public/widget/autocomplete/index.js" 
+						autocomplete="off" required>
+						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ></div>
+						 <span id="sn" class="weak" value="<%=data.salon?data.salon.sn:""%>"  ></span>	
+                    </div>
+                </div>	
+                  <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
+                    <div class="control">
+                        <input type="text" id="merchantname" value="<%=data.merchant?data.merchant.name:""%>" disabled>
+						<input type="hidden" name="merchant_id" id="merchant_id" required requiredmsg="没有找到店铺名称对应的商户" value="<%=data.merchant?data.merchant.id:""%>"/>
+                    </div>
+                </div>
+					 
+			    <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>付款方式：</label>
+                     <div class="control">
+                       <select required name="pay_type"   style="width:20%;"  >
+							<option value="1" <%=data.pay_type==1?"selected":""%>>银行存款</option>						 
+                            <option value="2" <%=data.pay_type==2?"selected":""%>>账扣支付</option> 					 
+                            <option value="3" <%=data.pay_type==3?"selected":""%>>现金</option> 
+                            <option value="4" <%=data.pay_type==4?"selected":""%>>支付宝</option>						 
+                            <option value="5" <%=data.pay_type==5?"selected":""%>>财付通</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>付款金额：</label>
+                    <div class="control">
+                        <input type="text" required name="pay_money" value="<%=data.pay_money||""%>" placeholder="预付交易款金额" pattern="float" id="pay_money"  min="1">
+                    </div>
+                </div>
+              
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>要求付款日期：</label>
+                    <div class="control">			 
+                           <input type="date" name="day" value="<%=data.day||""%>" required />                              							  
+                    </div>
+                </div>
+               <div class="control-group">
+				<label class="control-label" for=""></label>
+				<div class="control">
+				<button class="btn preview" type="button" data-slug="shop_count.preview">预览</button>
+				<%sessionStorage.setItem("preview",JSON.stringify(data))%>
+				<button class="btn-primary" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>				 
+				</div>
+			</div>			 
+          </form>
+			</script>
+        </div>
+		 	
+		<script type="text/javascript">
+		$(function(){			
+			$('input[type="date"]').val(lib.tools.getDate());			  
+			$(document).on('autoinput','#search',function(e,data){
+				if(data){
+					$('#salon_id').val(data.salon_id);
+					$('#merchant_id').val(data.merchant_id);
+					$('#merchantname').val(data.merchantname);
+				}
+			});	
+
+			/*
+			$(document).on('blur','input[name="cost_money"]',function(){
+				var cost_money=$('input[name="cost_money"]').val();
+			    var pay_money=$('input[name="pay_money"]').val();
+				if(cost_money&&pay_money){
+					cost_money=parseFloat(cost_money);
+					pay_money=parseFloat(pay_money);
+					if(pay_money>=cost_money){
+						$('#cost_money_help').show().text("换算消费额必须要大于付款金额");
+					}
+				}
+			});*/
+			
+			$(document).on('click','.preview',function(){
+				var data=lib.tools.getFormData($(this).closest('form'));
+				data=$.extend(JSON.parse(sessionStorage.getItem("preview")),data);
+				if(data.salon){
+					data.salon.salonname=$('#search').val();
+					var sn=$('#sn').text();
+					if(!data.salon.sn){
+						data.salon.sn=sn;
+					}
+				}else{
+					data.salon={
+						salonname:$('#search').val(),
+						sn:$('#sn').text()
+					}
+				}
+				data.merchant={
+					name:$('#merchantname').val()
+				}
+				sessionStorage.setItem('preview',JSON.stringify(data));
+				window.open("detail.html?preview=preview");
+			})
+		})
+	</script> 	
+    </body>
+</html>
+ 

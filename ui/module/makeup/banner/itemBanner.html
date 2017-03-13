@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+
+        <style>
+          .box-warpper{
+            position:relative;
+            margin:15px;          
+          }
+
+          .banner{
+            display: inline-block;
+            margin:10px;
+            width:28%;
+            min-width:350px;            
+            border:1px solid  #ddd;          
+          }
+
+          ul{
+            display:inline-block;
+            min-width:300px;
+            padding:5px 10px;
+            width:95%;
+          }
+
+          .clearfix:after{
+            content: "020"; 
+            display: block; 
+            height: 0; 
+            clear: both; 
+            visibility: hidden;  
+          }
+          .clearfix {
+            zoom: 1; 
+          }          
+          
+          ul li{
+            padding:5px 2px;
+          }
+          .fl{
+            float:left;
+          }
+          .fr{
+            float:right;
+          }
+          .fr a{
+            margin:0 10px;
+          }
+
+          li div img{
+           width:180px;
+           height:120px;
+          }
+
+          li div label{
+            display:inline-block;
+            min-width:50px;
+            width:10%;
+          }
+
+          li div input{
+            min-width:110px;
+            width:60%;
+          }
+
+          .add-button{
+            height: 320px;
+            line-height: 320px;
+            text-align: center;
+          }
+
+          #banner-button{
+            cursor:pointer;
+          }
+
+          .operation{
+            position:absolute!important;
+            bottom:0px;
+            left:0px;
+            width:100%;
+            height:32px;
+            background:rgba(0,0,0,0.5);
+            color:#ddd;
+            line-height:32px;
+            text-align:center;
+            -webkit-transition:all 0.2s ease 0s;
+            -moz-transition:all 0.2s ease 0s;
+            transition:all 0.2s ease 0s;
+          }
+
+          .operation{
+            font-size:1.5rem;
+            height:0px;
+            overflow:hidden;
+            cursor: pointer;
+          } 
+
+          .thumbnails-item{
+            position:relative;
+            line-height: 120px;
+            height:120px;
+            text-align: center;             
+          }
+
+          .dashed{
+            border:1px dashed #ddd;
+          }
+
+          .thumbnails-item:hover .operation{
+              height:32px;
+          }
+
+          input:disabled{
+            cursor: inherit;
+            background:none;                
+/*            opacity: 1;*/
+/*            background-color: #fff;*/
+/*            border:none;*/
+/*            box-shadow:none!important;*/
+          }
+          .hidden{
+             display:none!important;
+          }     
+        </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="itemBanner.html">项目Banner</a>    
+        </div>
+
+        <div class="box-warpper" id="warpper">           
+            <script type="text/template" id="warpper-t">
+            <%
+              var item2 = "";
+              var item3 = "";
+              var item4 = "";
+              data.data.forEach(function(item,i){
+                  if(item.type == "2"){
+                    item2 = item;
+                  }
+                  if(item.type == "3"){
+                    item3 = item;
+                  } 
+                  if(item.type == "4"){
+                    item4 = item;
+                  }  
+              })
+            %>
+
+            <form class="banner" data-role="form" url="<%=item2 ? item2.image : ''%>">
+                <ul>
+                    <li class="clearfix">
+                        <input type="hidden" name="id" value="<%= item2 ? item2.banner_id : ''%>">
+                        <input type="hidden" name="type" value="<%= item2 ? item2.type : '2'%>">
+                        <div class="fl"><h3><strong>快时尚Banner</strong></h3></div>
+                        <div class="fr">
+                            <button class='link save <%= item2 ? "hidden" : "" %>' data-slug="banner.create2,banner.edit2">保存</button>
+                            <button type="reset" class='link cancel <%= item2 ? "hidden" : "" %>'>取消</button>
+                            <button type="button" class='link edit <%= item2 ? "" : "hidden" %>' data-slug="banner.edit2">编辑</button>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="thumbnails-item <%= item2 ? '' : 'dashed'%>">
+                          <%if(item2){%>
+                              <div class="thumbnails-item-btn" style="display:none">
+                                  <button type="button" class="btn-primary" id="uploader2">上传</button>
+                              </div>
+
+                              <div class="thumbnails-item-img">
+                                  <img src='<%=item2.image%>'>
+                                  <input type="hidden" name="image" value='<%=item2.image%>' required>
+                                  <div class="operation hidden">
+                                      <i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;<i class="fa fa-times-circle-o"></i>
+                                  </div>
+                              <div>                          
+                          <%}else{%> 
+                              <div class="thumbnails-item-btn">
+                                  <button type="button" class="btn-primary" id="uploader2">上传</button>
+                              </div>                             
+                          <%}%>
+                        </div>
+                    </li>
+                    <li style="padding:0"><span class="control-help imageTip" style="display:none">请先上传图片</span></li>
+                    <li style="border-top:1px solid #ddd;">
+                        <div style="margin-top:10px">
+                            <label><span>题目：</span></label>
+                            <input type="text" name="name" value="<%=item2.name%>" placeholder="1~20个字符，必填" required <%= item2 ? "disabled" : "" %>/>
+                        </div>                        
+                    </li>
+                </ul>          
+            </form>
+
+            <form class="banner" data-role="form" url="<%=item3 ? item3.image : ''%>">
+                <ul>
+                    <li class="clearfix">
+                        <input type="hidden" name="id" value="<%= item3 ? item3.banner_id : ''%>">
+                        <input type="hidden" name="type" value="<%= item3 ? item3.type : '3'%>">
+                        <div class="fl"><h3><strong>专家Banner</strong></h3></div>
+                        <div class="fr">
+                            <button class='link save <%= item3 ? "hidden" : "" %>'>保存</button>
+                            <button type="reset" class='link cancel <%= item3 ? "hidden" : "" %>'>取消</button>
+                            <button type="button" class='link edit <%= item3 ? "" : "hidden" %>'>编辑</button>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="thumbnails-item <%= item3 ? '' : 'dashed'%> ">
+                          <%if(item3){%>
+                              <div class="thumbnails-item-btn" style="display:none">
+                                  <button type="button" class="btn-primary" id="uploader3">上传</button>
+                              </div>
+
+                              <div class="thumbnails-item-img">
+                                  <img src='<%=item3.image%>'>
+                                  <input type="hidden" name="image" value='<%=item3.image%>' required>
+                                  <div class="operation hidden">
+                                      <i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;<i class="fa fa-times-circle-o"></i>
+                                  </div>
+                              <div>                          
+                          <%}else{%> 
+                              <div class="thumbnails-item-btn">
+                                  <button type="button" class="btn-primary" id="uploader3">上传</button>
+                              </div>                             
+                          <%}%>  
+                        </div>
+                    </li>
+                    <li style="padding:0"><span class="control-help" style="display:none">请先上传图片</span></li>
+                    <li style="border-top:1px solid #ddd;">
+                        <div style="margin-top:10px">
+                            <label><span>题目：</span></label>
+                            <input type="text" name="name" value="<%=item3.name%>" placeholder="1~20个字符，必填" required <%= item3 ? "disabled" : "" %>/>
+                        </div>
+                    </li>
+                </ul>          
+            </form>
+
+            <form class="banner" data-role="form" url="<%=item4 ? item4.image : ''%>">
+                <ul>
+                    <li class="clearfix">
+                        <input type="hidden" name="id" value="<%= item4 ? item4.banner_id : ''%>">
+                        <input type="hidden" name="type" value="<%= item4 ? item4.type : '4'%>">
+                        <div class="fl"><h3><strong>半永久Banner</strong></h3></div>
+                        <div class="fr">
+                            <button class='link save <%= item4 ? "hidden" : "" %>'>保存</button>
+                            <button type="reset" class='link cancel <%= item4 ? "hidden" : "" %>'>取消</button>
+                            <button type="button" class='link edit <%= item4 ? "" : "hidden" %>'>编辑</button>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="thumbnails-item <%= item4 ? '' : 'dashed'%>">
+                          <%if(item4){%>
+                              <div class="thumbnails-item-btn" style="display:none">
+                                  <button type="button" class="btn-primary" id="uploader4">上传</button>
+                              </div>
+
+                              <div class="thumbnails-item-img">
+                                  <img src='<%=item4.image%>'>
+                                  <input type="hidden" name="image" value='<%=item4.image%>' required>
+                                  <div class="operation hidden">
+                                      <i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;<i class="fa fa-times-circle-o"></i>                                      
+                                  </div>
+                              <div>                          
+                          <%}else{%> 
+                              <div class="thumbnails-item-btn">
+                                  <button type="button" class="btn-primary" id="uploader4">上传</button>
+                              </div>                             
+                          <%}%>
+
+                        </div>
+                    </li>
+                    <li style="padding:0"><span class="control-help" style="display:none">请先上传图片</span></li>
+                    <li style="border-top:1px solid #ddd;">
+                        <div style="margin-top:10px">
+                            <label><span>题目：</span></label>
+                            <input type="text" name="name" value="<%=item4.name%>"  placeholder="1~20个字符，必填" required <%= item4 ? "disabled" : "" %> />
+                        </div>
+                    </li>
+                </ul>          
+            </form>           
+        </script>                                 
+        </div>
+        <script src="itemBanner.js"></script>
+    </body>
+</html>

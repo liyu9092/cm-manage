@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+		<meta charset="utf-8"/>
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+           <a>付款管理 </a><span>&gt;</span><a href="index.html">付款列表</a>
+		   <div class="flex-box">
+			<div class="flex-item">
+				<h4>付款列表</h4>
+			</div>
+			<div>
+				<a class="btn-primary" data-slug="pay_manage.create" href="edit.html"><i class="fa fa-plus" ></i>新增</a>
+			</div>
+		</div>
+        </div>
+        <div class="wrapper">
+			<form data-role="hash">	
+				<div class="input-group placeholder-switch">			
+					<select  name="key">
+						<option value="1" data-placeholder="请输入店铺名称">店铺名称</option>
+						<option value="3" data-placeholder="请输入店铺编号">店铺编号</option>
+						<option value="2" data-placeholder="请输入商户名称">商户名称</option>
+					</select>
+					<input type="text" placeholder="请输入店铺名称" name="keyword">
+				</div>
+				<label>实际付款日期：</label>
+				<span class="date-group">
+					<input type="date" data-role="start" placeholder="YYYY-MM-DD"  name="pay_time_min"/>
+					到<input type="date" data-role="end"  placeholder="YYYY-MM-DD"  name="pay_time_max"/>
+				</span>
+				<button class="btn">搜索</button>
+				<button type="button" class="btn" id="filter-toggle-btn">
+					筛选条件 <i class="fa fa-angle-down"></i>
+				</button>				
+				<button class="btn" form="export"><i class="fa fa-file-excel-o"></i> 导出</button>
+				<div class="filter-box" style="display:none">
+					<div class="flex-box">
+						<div class="filter-title">付款类型：</div>
+						<div class="flex-item">
+							<label data-role="hash"><input type="radio" name="type" value="0" checked/><span>全部</span></label>
+							<label data-role="hash"><input type="radio" name="type" value="1"/><span>预付交易款返还</span></label>
+							<label data-role="hash"><input type="radio" name="type" value="2"/><span>业务投资款返还</span></label>              
+						</div>
+					</div>
+					<div class="flex-box">
+						<div class="filter-title">付款方式：</div>
+						<div class="flex-item">
+							<label data-role="hash"><input type="radio" name="pay_type" value="0" checked/><span>全部</span></label>
+							<label data-role="hash"><input type="radio" name="pay_type" value="1"/><span>银行存款</span></label>
+							<label data-role="hash"><input type="radio" name="pay_type" value="2"/><span>账扣返还</span></label>              
+							<label data-role="hash"><input type="radio" name="pay_type" value="3"/><span>现金</span></label>              
+							<label data-role="hash"><input type="radio" name="pay_type" value="4"/><span>支付宝</span></label>              
+							<label data-role="hash"><input type="radio" name="pay_type" value="5"/><span>财付通</span></label>
+						</div>
+					</div>
+					<div class="flex-box">
+						<div class="filter-title">付款状态：</div>
+						<div class="flex-item">
+							<label data-role="hash"><input type="radio" name="state" value="0" checked/><span>全部</span></label>
+							<label data-role="hash"><input type="radio" name="state" value="1"/><span>待提交</span></label>
+							<label data-role="hash"><input type="radio" name="state" value="2"/><span>待审批</span></label>
+							<label data-role="hash"><input type="radio" name="state" value="3"/><span>待付款</span></label>
+							<label data-role="hash"><input type="radio" name="state" value="4"/><span>已付款</span></label>              
+						</div>
+					</div>
+				</div>			  
+			</form>
+			<form action="pay_manage/export" data-role="export" id="export"></form>
+           <div class="table" ajat="pay_manage/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+							<th>店铺编号</th>                       
+							<th>店铺名称</th>
+							<th>付款单号</th>						 
+                            <th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">付款类型 <i class="fa fa-sort"></i></a></th>                          
+                            <th>付款金额</th>
+							<th><a data-role="hash" href="#page=1&sort_key=pay_type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">付款方式 <i class="fa fa-sort"></i></a></th>							
+							<!--
+							<th><a data-role="hash" href="#page=1&sort_key=require_day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">要求付款日期 <i class="fa fa-sort"></i></a></th>			       
+							-->
+                            <th><a data-role="hash" href="#page=1&sort_key=pay_day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">实际付款日期 <i class="fa fa-sort"></i></a></th>
+							<th>创建日期</th>
+                            <th>制单人</th>
+							<th>备注</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+               <tbody>
+			   <%if(data.data){%>
+				<%var type=["","付交易代收款","付业务投资款"]%>
+				<%var pay_type=["","银行存款","账扣返还","现金","支付宝","财付通"]%>
+				<%var state=["","待提交","待审批","待付款","已付款"]%>
+				<%var data=data.data%>
+				<%data.forEach(function(item,i){%>
+				<tr>
+					<td><%=i+1%></td>
+					<td><%=item.salon?item.salon.sn:""%></td>
+					<td><%=item.salon?item.salon.salonname:""%></td>
+					<td><%=item.code%></td>
+					<td><%=type[item.type]%></td>
+					<td><%=item.money%></td>
+					<td><%=pay_type[item.pay_type]%></td>
+					<!--
+					<td><%=item.require_day%></td>
+					-->
+					<td><%=item.pay_day%></td>				 
+					<td><%=item.created_at?new Date(item.created_at).format("yyyy-MM-dd"):""%></td>
+					<td>
+						<%if(item.from==1){%>
+							<%=item.make_user?item.make_user.name:""%>
+						<%}else{%>
+							<%=item.salon_user?item.salon_user.username:""%>
+						<%}%>
+					</td>
+					<td title="<%=item.remark%>"><%=item.remark&&item.remark.length>7?item.remark.substring(0,7)+"...":item.remark%></td>
+					<td><%=item.state==1&&item.from==2?"审批不通过":state[item.state]%></td>
+					<%
+						var page="invest";
+						if(item.type==1){
+							if(item.pay_type==2){
+								page="pay-account";
+							}else{
+								page="collection";
+							}
+						}
+					%>
+					<td><a class="link" href="detail-<%=page%>.html?id=<%=item.id%>" data-slug="pay_manage.show,pay_manage.update">查看</a></td>
+                  </tr>
+				  <%})%>
+				  <%}%>
+              </tbody>
+            </table>          
+            <div class="pager"> </div>
+			</script>
+        </div>
+    </div>
+	   
+	<script type="text/javascript">
+
+	</script>
+</body>
+</html>

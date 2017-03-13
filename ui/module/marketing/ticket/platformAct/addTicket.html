@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+    <meta charset="utf-8">
+    <title>臭美管理后台</title>
+    <script type="text/javascript" src="/js/include.js"></script>
+    <style>
+    .table tbody tr:hover{
+    background:none;
+    }
+    input[type=date]{
+        width:150px;
+    }
+    textarea{
+        width:100%;
+    }
+    </style> 
+    </head>
+
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理</a>
+            <span>&gt;</span>
+            <a href="index.html">平台活动</a>
+            <span>&gt;</span><%= query.type=='add' ? '新增活动' : '编辑活动'%>
+            <div class="flex-box">
+            <div class="flex-item">
+            <h4><%= query.type=='add' ? '新增活动' : '编辑活动'%></h4>
+            </div>
+            </div>
+            <hr />
+        </div>
+
+    <div class="wrapper">
+        <form class="form-vertical" data-role="form" id="form">
+        <script type="text/template" id="form-t">       
+        <ul class="nav-step flex-box">
+            <li class="flex-item">
+                <a>
+                    <i class="fa fa-check-circle"></i>
+                    <span>1.活动基本信息</span>
+                </a>
+            </li>
+
+            <li class="flex-item"> 
+                <a>
+                    <i class="fa fa-check-circle"></i>
+                    <span>2.选择用户</span>
+                </a>
+            </li>
+
+            <li class="flex-item active">
+                <span class="arrow">3.定义现金券</span>
+            </li>
+        </ul>
+
+        <table class="table" width="100%">
+            <thead>
+                <tr>
+                <th>现金券设定</th>
+                </tr>                              
+            </thead>
+
+            <tbody>
+            <tr>
+            <td>
+            <div style="margin:15px">
+                <span style="display: inline-block;width:130px">券金额:</span>
+                <input type="text" class="nonzero" name="money" value="<%=data.money||1%>" required maxlength="3" 
+                <%=query.type =='edit' ? 'disabled' : '' %> pattern='float'/>
+                <strong>&nbsp;&nbsp;元&nbsp;&nbsp;</strong>
+                <span class="weak">（不可修改，可填写1~999)</span>
+                <span class="control-help" style="display:none;"></span>
+            </div>
+
+            <div style="margin:15px">
+                <span style="display: inline-block;width:130px">满额使用(单个项目)</span>
+                <input type="text" name="enoughMoney" value="<%=data.enoughMoney || 0 %>" maxlength="3"
+                pattern='float'/>
+                <strong>&nbsp;&nbsp;元&nbsp;&nbsp;以上可用</strong>
+                <span class="weak">(大于或等于该数值可使用，0为不限制，可填写0~999) </span>
+                <span class="control-help" style="display:none;"></span>
+            </div>
+
+            <hr />
+
+            <div style="margin:15px">
+                <span style="display: inline-block;width:130px">券总数:</span>
+
+                <span>
+                    <label class="radio">
+                        <input type="radio" name="checkTotalNumber" value="0" 
+                        <%= (!data.totalNumber || data.totalNumber == "0") ? 'checked' : ''%> 
+                        <%= query.type =='edit' ? 'disabled' : '' %>>
+                        <span>不限</span>
+                    </label>
+                    <input type="hidden" id="ticketNumHidden" name="totalNumber" value="0" 
+                    <%= query.type =='edit' ? 'disabled' : '' %>>
+                </span>
+
+
+                <span style="margin-right: 15px;border-left:1px solid #ddd"></span>
+
+                <span>
+                    <label class="radio">
+                        <input type="radio" name="checkTotalNumber" value="1" 
+                        <%=(data.totalNumber && data.totalNumber*1 > 0) ? 'checked' : ''%>
+                        <%= query.type =='edit' ? 'disabled' : '' %>>
+                        <span>自定义</span>
+                    </label>
+
+                    <input type="text" class="nonzero" id="ticketNumInput" name="totalNumber" required 
+                    disabled="disabled" pattern='number' <%= query.type =='edit' ? 'disabled' : '' %> maxlength="6"
+                    value="<%=(data.totalNumber && data.totalNumber*1 > 0) ? data.totalNumber : '1'%>"/>
+                    <strong>&nbsp;&nbsp;张&nbsp;&nbsp;</strong>
+                    <span class="weak">(不可修改，可填写1~999999）</span>
+                    <span class="control-help" style="display:none;"></span>
+                </span>
+            </div> 
+
+            <hr />  
+
+            <div style="margin:15px">
+                <span style="display: inline-block;width:130px">领券上限：</span>
+                <input type="text" class="nonzero" name="getSingleLimit" value="<%=data.getSingleLimit || 1%>" 
+                maxlength="6" required pattern='number' max="20" min="1" />
+                <strong>&nbsp;&nbsp;张&nbsp;&nbsp;</strong>
+                <span class="weak">(每人本活动领券总上限，每次活动只可获取一张,填写1~20)</span>
+                <span class="control-help" style="display:none;"></span>
+            </div>                                                                 
+            </td>
+            </tr>                                 
+            </tbody>
+        </table>
+
+
+        <table class="table" width="100%">
+            <thead>
+                <tr>
+                <th colspan="2">时间限制</th>
+                </tr>                              
+            </thead>
+
+        <tbody>
+            <tr>
+                <td>活动（获取）时间</td>
+                <td>
+                <%
+                if(data.getTimeStart){data.getTimeStart = new Date(data.getTimeStart).format('yyyy-MM-dd');}
+                if(data.getTimeEnd){data.getTimeEnd = new Date(data.getTimeEnd).format('yyyy-MM-dd');}
+                %>
+                <input type="date" id="date0001" class="start" min="<%=new Date().format('yyyy-MM-dd')%>" name="getTimeStart" 
+                value="<%=data.getTimeStart?data.getTimeStart:new Date().format("yyyy-MM-dd")%>" required
+				/>
+                <span>至</span>
+                <input type="date" class="end" min="<%=new Date().format('yyyy-MM-dd')%>" name="getTimeEnd" 
+                value="<%=data.getTimeEnd?data.getTimeEnd:new Date(new Date().getTime()+60*60*24*1000*7).format("yyyy-MM-dd")%>" required
+					match="date0001" matchmsg="截止时间不能小于起始时间"
+				/>
+                <span class="control-help" style="display:none;"></span>
+                </td>
+            </tr>    
+
+            <tr>
+            <td>券有效时间</td>
+            <td>
+            <div style="margin:15px">
+                <%
+                var avaDateChecked = false;
+                if(data.addActLimitStartTime && data.addActLimitEndTime){
+                    avaDateChecked = true;
+                }
+                if(!data.addActLimitStartTime && !data.addActLimitEndTime && !data.fewDay){
+                    avaDateChecked = true;
+                }
+                %>
+                <label class="radio">
+                    <input type="radio" class="avaDateRadio" name="avaDate" value="1" <%=avaDateChecked?'checked':'' %>>
+                    <span>指定有效期</span>
+                </label> 
+                <%
+                if(data.addActLimitStartTime){
+                    data.addActLimitStartTime = new Date(data.addActLimitStartTime).format('yyyy-MM-dd');
+                }
+                if(data.addActLimitEndTime){
+                    data.addActLimitEndTime = new Date(data.addActLimitEndTime).format('yyyy-MM-dd');
+                }
+
+                %>
+                <input type="date" class="start" id="avaDateStart" name="addActLimitStartTime" required
+                min="<%=new Date().format('yyyy-MM-dd')%>" <%= avaDateChecked ? '' :'disabled' %>
+                value="<%=data.addActLimitStartTime?data.addActLimitStartTime:new Date().format('yyyy-MM-dd')%>" />
+
+                <span>至</span>
+
+                <input type="date" class="end"  id="avaDateEnd" name="addActLimitEndTime" required
+                min="<%=new Date().format('yyyy-MM-dd')%>"  <%= avaDateChecked ? '' :'disabled' %>
+                value="<%=data.addActLimitEndTime?data.addActLimitEndTime:new Date(new Date().getTime()+60*60*24*1000*7).format('yyyy-MM-dd')%>"
+					match="avaDateStart" matchmsg="截止时间不能小于起始时间"
+				/>
+                <span class="control-help" style="display:none;"></span>        
+            </div>
+
+            <hr />
+
+            <div style="margin:15px">
+                <label class="radio">
+                    <input type="radio" class="avaDateRadio" name="avaDate" value="2" <%=data.fewDay ? 'checked' :'' %> />
+                    <span>自定义有效期区间</span>
+                </label>
+
+                <input type="text" id="avaDay" name="fewDay" value="<%=data.fewDay||15%>" class="nonzero" pattern='number'required maxLength="3" <%=data.fewDay ? '' :'disabled' %>  />
+                <span class="weak">天内有效（获取现金券后）</span>
+                <span class="control-help" style="display:none;"></span> 
+            </div>    
+        </td>
+        </tr>                               
+        </tbody>
+        </table>
+
+        <table class="table" width="100%">
+            <thead>
+                <tr>
+                    <th>使用限制</th>
+                </tr>                              
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>
+                        <div style="margin:10px"><strong>指定项目类别支付可用</strong></div>
+                        <div id="itemType" ajat-one="true" ajat="platform/getItemType#domid=itemType&tempid=itemType-t&limitItemTypes=<%=data.limitItemTypes%>">
+
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <%
+                          var useLimitTypes = data.useLimitTypes ? data.useLimitTypes.toString() : "";
+                        %>
+
+                        <label class="checkbox">
+                            <input type="checkbox" name="useLimitTypes" value="2" <%= useLimitTypes=="2" ? 'checked':''%>>
+                            <span>限制首单使用</span>
+                        </label>                                      
+                    </td>                                
+                </tr>                                   
+            </tbody>
+        </table>
+
+        <table class="table" width="100%">
+            <thead>
+                <tr>
+                    <th colspan="3">
+                    <%if(lib.query.type=='add'){%>
+                        <label class="checkbox">
+                            <input type="checkbox" id="smsControl" checked>
+                            <span>发送手机短信</span>
+                        </label>
+                     <%}else{%>
+                        <label class="checkbox">
+                            <input type="checkbox" id="smsControl" <%=data.sendSms ? 'checked' : ''%>>
+                            <span>发送手机短信</span>
+                        </label>                     
+                     <%}%>     
+                    </th>
+                </tr>                              
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>手机短信内容</td>
+                    <td style="width:30%">
+                        <%if(lib.query.type=='add'){%>
+                            <textarea name="sendSms" id="smsTextArea" minlength="10" maxlength="500" required placeholder="亲爱的，[useMoney]元现金券已存入你的账户，登录臭美美发APP在个人中心查看，APP下载地址http://t.cn/RZXyLPg，退订回复TD">亲爱的，[useMoney]元现金券已存入你的账户，登录臭美美发APP在个人中心查看，APP下载地址http://t.cn/RZXyLPg，退订回复TD</textarea>
+                        <%}else{%>
+                            <textarea name="sendSms" id="smsTextArea" minlength="10" maxlength="500" required <%=data.sendSms ? '' : 'disabled'%> placeholder="亲爱的，[useMoney]元现金券已存入你的账户，登录臭美美发APP在个人中心查看，APP下载地址http://t.cn/RZXyLPg，退订回复TD"><%=data.sendSms || '亲爱的，[useMoney]元现金券已存入你的账户，登录臭美美发APP在个人中心查看，APP下载地址http://t.cn/RZXyLPg，退订回复TD'%></textarea>
+                        <%}%>
+                    </td>
+                    <td>
+                        <p class="weak">
+                            【说明】勾选之后必填，建议使用默认短信模板<br/>
+                            10~500个汉字的长度<br/>
+                            [useMoney]:接收短信用户获取的现金券金额<br/>
+                            [name]:活动名称<br/>
+                            [overtime]:接收短信用户获取的现金券有效结束时间
+                        </p>
+                    </td>
+                </tr>                                 
+            </tbody>
+        </table>                                                                                                                                               
+        <div class="control-group">
+            <a class="btn" href="index.html" style="margin-right:20px">取消</a>
+            <button class="btn-primary">提交</button>
+        </div>
+        </script> 
+        </form>                                                                 
+    </div>
+
+    <script type="text/template" id="itemType-t">
+    <%
+    var itemsObj = {};
+    if(protocol.custom.limitItemTypes){
+        var items = protocol.custom.limitItemTypes.split(",");
+        items.forEach(function(item,i){
+            itemsObj[item] = true;
+        });
+    }
+    %>        
+    <%data.forEach&&data.forEach(function(item,i){%>
+        <label class="checkbox" style="display:<%=item.typename=='其他'?'none':''%>">
+        <input type="checkbox" name="limitItemTypes" value="<%=item.typeid%>" <%=itemsObj[item.typeid] ? "checked":""%> <%=(query.status=='3'||query.status=='4') ? 'disabled':''%>>
+        <span><%=item.typename%></span>
+        </label> 
+    <%})%>
+    </script>  
+    <script src="addTicket.js"></script>                
+    </body>
+</html>

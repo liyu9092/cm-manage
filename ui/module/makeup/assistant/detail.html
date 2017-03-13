@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <style>
+        .td{width:15%;min-width: 150px;}   
+     
+        .tab td{
+            padding:0;
+            text-align: center!important;
+            height:33px;  
+        }            
+      </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a>
+            <span>&gt;</span><a href="index.html">专家列表</a>
+            <span>&gt;</span><a href="detail.html">查看专家助理资料</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>查看专家助理资料</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">      
+            <div class="table" style="width:70%;float:left" id="table-wrapper">
+                <script type="text/template" id="table-t">
+                <div style="position:absolute;right:20px;top:40px;">
+
+                    <a type="button" class="btn mr-20" href="edit.html#id=<%=data.id%>" 
+                    data-slug="assistant.update">
+                        编辑
+                    </a>
+                    &nbsp;
+                    <button type="button" class="btn mr-20" onclick="history.back()">
+                        返回
+                    </button>                  
+                </div> 
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <td class="td">姓名：</td>
+                            <td colspan="3"><%=data.name%></td>
+                        </tr>
+
+                        <tr>
+                            <%var sexText = {"1":"男","2":"女"} %>
+                            <td class="td">性别：</td>
+                            <td colspan="3"><%=sexText[data.sex]%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">出生日期：</td>
+                            <td colspan="3"><%=data.birthday%></td>
+                        </tr>
+
+                        <tr>
+                            <% var type={'0':'无填写类型', '1':'身份证', '2':'军官证', '3':'驾驶证', '4':'护照'}%>
+                            <td class="td">证件类型：</td>
+                            <td><%=type[data.credential]%></td>
+                            <td class="td">证件编号：</td>
+                            <td><%=data.cardId%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">手机号：</td>
+                            <td colspan="3"><%=data.mobilePhone%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">微信：</td>
+                            <td colspan="3"><%=data.wechat%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">QQ号：</td>
+                            <td colspan="3"><%=data.qq%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="td">邮箱：</td>
+                            <td colspan="3"><%=data.email%></td>
+                        </tr>  
+
+                        <tr>
+                            <td class="td">所属专家：</td>
+                            <td colspan="3"><%=query.relegation%></td>
+                        </tr> 
+
+                        <tr>
+                            <td class="td">完成数汇总：</td>
+                            <td colspan="3"><%=data.itemOver%></td>
+                        </tr>
+                         
+                         <%if(data.beautyItem && data.beautyItem.noGift){ var gift = data.beautyItem.noGift;%>
+                             <%for(var i=0;i<gift.length;i++){%>
+                                 <%if(i%2 == 0){%>
+                                    <tr>
+                                        <td class="td"><%=gift[i].name%>：</td>
+                                        <td><%=gift[i].quantity%></td>
+                                        <td class="td"><%=gift[i+1] ? gift[i+1].name+"：" :''%></td>
+                                        <td><%=gift[i+1] ? gift[i+1].quantity:''%></td>
+                                    </tr>                                    
+                                 <%}%>
+                             <%}%>                       
+                        <%}%>
+
+                        <%if(data.beautyItem && data.beautyItem.isGift){ var isGift = data.beautyItem.isGift; %>
+                            <%for(var i=0;i<isGift.length;i++){%>
+                            <tr>
+                                <td class="td"><%=isGift[i].name%>：</td>
+                                <td colspan="3">
+                                 <%=isGift[i].quantity%>
+                                </td>
+                            </tr>
+                            <%}%>                             
+                        <%}%>
+
+                        <tr>
+                            <td class="td">录入时间：</td>
+                            <td colspan="3"><%=data.createTime%></td>
+                        </tr>                         
+
+                        <tr>
+                            <% var statusText = {"0":"禁用中","1":"启用中"}; %>
+                            <td class="td">状态：</td>
+                            <td colspan="3"><%=statusText[data.status]%></td>
+                        </tr>                                               
+                    </tbody>                     
+                </table>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2">工作信息</th>                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="td">在职编号：</td>
+                            <td><%=data.number%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">工作年限：</td>
+                            <td><%=data.workingLife%></td>
+                        </tr>                       
+                    </tbody>                     
+                </table> 
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2">个人说明</th>                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="height:100px">
+                            <td class="td">自我描述：</td>
+                            <td><%=data.introduce%></td>
+                        </tr>                       
+                    </tbody>                     
+                </table>                                                                           
+            </div>               
+            </script>
+        </div>
+
+        <div style="float:left;margin:15px 0 15px 20px;">
+            <div style="margin-bottom:5px"><strong>个人图片：</strong></div>
+            <div class="control-thumbnails-item" style="width:240px;height:160px">
+                <img style="width:240px;height:160px"/>            
+            </div>
+        </div>
+
+        <script>
+            (function(){
+                function init(){
+                    var promise = lib.ajat('assistant/show/'+lib.query.id+'#domid=table-wrapper&tempid=table-t').render();
+                    promise.done(function(data){
+                        if(data.data.photo){
+                            var image = JSON.parse(data.data.photo);
+                            $('img').attr('src',image.thumbimg);                 
+                        }
+                    }); 
+                }                
+                init();
+            })();
+        </script>          
+    </body>
+</html>

@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+		<meta charset="utf-8"/>
+		<title>臭美管理后台</title>
+		<script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>店铺管理</a>
+            <span>&gt;</span><a href="index.html">店铺账号</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>店铺账号</h4>
+				</div>
+				<div>
+					<a class="btn-primary" data-slug="salonAccount.save" href="edit.html">
+					<i class="fa fa-plus" style="padding-right:5px"></i>新增</a>
+				</div>
+			</div>
+        </div>
+        <div class="wrapper">
+           <form data-role="hash" class="position-group">
+				<div class="input-group input-switch">
+					<select>
+						<option value="0">店铺搜索</option>
+						<option value="1">商户搜索</option>
+						<option value="2">用户名</option>
+					</select>
+					<input class="input-search" type="text" placeholder="请输入店铺名" name="salonname">
+					<input class="input-search" type="text" placeholder="请输入商户名" name="name" style="display:none">
+					<input class="input-search" type="text" placeholder="请输入用户名" name="username" style="display:none">
+					<button class="btn btn-search">
+						<i class="fa fa-search"></i>
+					</button>
+				</div>
+			</form>
+            <div class="table" id="table" ajat="salonAccount/index?<%=query._%>#domid=table&tempid=table-t">
+			<script type="text/template" id="table-t">
+				<table>
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>店铺</th>
+							<th>用户名</th>
+							<th><a data-role="hash" href="#page=1&sort_key=roleType&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">用户角色 <i class="fa fa-sort"></i></a></th>
+							<th>创建日期 </th>
+							<th><a data-role="hash" href="#page=1&sort_key=status&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">状态  <i class="fa fa-sort"></i></a></th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<%data=data.data%>
+						<%var role=["普通用户","超级管理员"]%>
+						<%var status=["正常使用","已停用","已删除"]%>
+						<%data.forEach&&data.forEach(function(item,i){%>
+						<tr>
+							<td><%=i+1%></td>
+							<td class="<%=item.name?"colswrap":""%>">
+								<%if(item.salonname){%>
+								<strong><%=item.salonname%></strong><br />
+								<%}%>
+								<span class="weak">所属商户：<%=item.name%></span>
+							</td>
+							<td><%=item.username%></td>
+							<td><%=role[item.roleType-1]%></td>
+							<%if(item.addTime){
+								item.addTime = lib.tools.getDate(item.addTime);
+							}%>
+							<td><%=item.addTime%></td>
+							<td><%=status[item.status-1]%></td>
+							<td>
+								<form data-role="normal" action="salonAccount/resetPwd" data-confirm="确认重置密码？" onsuccess="parent.lib.popup.result()" data-slug="salonAccount.resetPwd">
+									<input type="hidden" value="<%=item.salonUserId%>" name="salonUserId" />
+									<button class="link">重置密码</button>
+								</form>
+								<span class="space"></span>
+								<form action="salonAccount/delAct" data-role="normal" data-slug="salonAccount.del" data-confirm="确认删除此数据吗？" onsuccess="remove" >
+									<input type="hidden" name="salonUserId" value="<%=item.salonUserId%>" />
+									<input type="hidden" name="type" value="2" />
+									<button class="link">删除</button>
+								</form>
+							</td>
+						</tr>
+						<%})%>
+					</tbody>
+				</table>
+				<div class="pager"></div>
+			</script>
+            </div>
+        </div>
+	   <script type="text/javascript">
+			
+		</script>
+    </body>
+</html>

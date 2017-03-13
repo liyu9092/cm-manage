@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>消息管理</a><span>&gt;</span><a href="index.html">消息列表</a>
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4>消息列表</h4>
+			</div>
+			<div>
+				<a class="btn-primary" href="edit.html" data-slug="message.create" ><i class="fa fa-plus"></i>新增</a>
+			</div>
+		 </div>		 
+        </div>		
+        <div class="wrapper">
+			<form data-role="hash" id="hashform">   
+                    <label>标题：</label> 
+                    <input type="text" placeholder="请输入标题" name="title">
+					<span class="space"></span>
+                   <label>状态：</label>
+                   <select name="status" id="select">
+                        <option value="">全部</option>
+                        <option value="0">未上线</option>
+                        <option value="1">已上线</option>
+                    </select>
+                
+                    <span class="space"></span>
+                    <label>上线时间：</label> 
+                    <span class="date-group">
+                        <input type="date" data-role="start" name="starttime" id="ontime1" disabled/>
+						至<input type="date" data-role="end" name="endtime"  id="ontime2" disabled/>
+                    </span>
+                    <button class="btn">搜索</button>
+			</form>
+		 <div class="table" ajat="<%if(query._){%>message/index?<%=query._%><%}%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>标题</th>
+                            <th>上线时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                <tbody>
+					<%if(data.data){%>
+					 <%var status=["未上线","已上线"]%>
+					 <%data=data.data%>
+					 <%data.forEach(function(item,i){%>
+					 <tr>
+							<td><%=i+1%></td>
+							<td><%=item.title%></td>
+							<td><%=item.onlinetime?new Date(item.onlinetime*1000).format('yyyy-MM-dd hh:mm:ss'):""%></td>
+							<td><%=status[item.status]%></td>
+							<td>
+							<a class="link" target="_blank" href="<%if(item.content_id){%>preview.html?id=<%=item.id%><%}else{%>preview.html?url=<%=encodeURIComponent(item.url)%><%}%>">预览</a>	
+							<%if(item.status!=1){%>
+							<form class="online" data-slug="message.online" action="/message/online/?id=<%=item.id%>" data-role="normal" data-confirm="确认上线" >
+								<span class="space"></span>
+								<button class="link"> 上线</button>			 
+							</form>
+							<%}%>
+							<%if(item.status!=1){%>
+							<span class="space"></span> 
+							<a class="link" data-slug="message.update" href="edit.html?id=<%=item.id%>">修改</a>	
+							<%}%>
+							<span class="space"></span>
+							<form data-slug="message.destroy" action="/message/destroy/?id=<%=item.id%>" data-role="normal" data-confirm="确认删除？" onsuccess="remove">
+								<button class="link">删除</button>
+							</form>				   
+						   </td>
+					  </tr>
+					  <%})%>
+					<%}%>
+                </tbody>
+            </table>		
+				<div class="pager"> </div>
+			</script>
+        </div>
+	</div>
+	
+	  <script type="text/javascript">
+			document.onreadystatechange=function(){};
+			$(function(){		
+				document.getElementById("hashform")._getFormData=function(){
+					var data=lib.tools.getFormData($(this));
+					if(data.status!=1){
+						data.starttime="";
+						data.endtime="";
+					}
+					return data;
+				}
+				if(!lib.query._){
+					$('#ontime2').val(lib.tools.getDate());
+					var time=(new Date().getTime()-7*86400000)/1000;
+					$('#ontime1').val(lib.tools.getDate(time));
+					$('form[data-role="hash"]').submit();
+				}
+				$('#select').on('change',function(){
+					var val=$(this).val();
+					if(val!=1){
+						$(".date-group input").attr({"disabled":"disabled"});
+					}else{
+						$(".date-group input").removeAttr("disabled");
+					}
+				})
+
+			});
+			$(document).on('success','.online',function(){
+				$(window).trigger('hashchange');
+				parent.lib.popup.result({bool:true,text:'操作成功'});
+			})
+		</script>  
+    </body>
+</html>

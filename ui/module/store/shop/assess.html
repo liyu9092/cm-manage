@@ -1,0 +1,286 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <script type="text/javascript" src="/js/validator.js"></script>
+      <link rel="stylesheet" href="shop.css" />     
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>店铺管理</a>
+            <span>&gt;</span>
+            <a href="index.html">店铺列表</a>
+            <span>&gt;</span><%=query.type=="add"?"新增店铺":"编辑店铺"%>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4><%=query.type=="add" ? "新增店铺" : "编辑店铺"%></h4>
+				</div>
+			</div>
+			<hr />
+        </div>
+
+        <div class="wrapper">
+            <form class="form-vertical" data-role="form" id="form">
+                <script type="text/template" id="form-t">
+					<div class="detail-operation">
+						<button type="button" class="btn btn-cancel">取消</button>
+						<span class="space"></span>
+						<button class="btn-primary">提交</button>
+					</div>
+					<ul class="nav-step flex-box">
+						<li class="flex-item">
+							<a href="add.html">
+								<i class="fa fa-check-circle"></i>
+								<span>1.店铺基本信息</span>
+							</a>
+						</li>
+                        <li class="flex-item">
+                            <a href="picture.html">
+                                <i class="fa fa-check-circle"></i>
+                                <span>2.店铺图片信息</span>
+                            </a>
+                        </li>                        
+						<li class="flex-item">
+							<a href="bank.html">
+								<i class="fa fa-check-circle"></i>
+								<span>3.银行账号信息</span>
+							</a>
+						</li>
+						<li class="flex-item active"><span class="arrow">4.准入评估信息</span></li>
+						<li class="flex-item"><i></i><span>5.附件上传</span></li>
+                        <li class="flex-item"><span>6.财务结算</span></li>
+					</ul>
+                   <div>
+                       <p><strong>店铺信息</strong></p>
+                       <p class="border-dash"></p>
+                   </div> 
+
+                   <div class="control-group">
+                        <label class="control-label" for="">店铺面积：</label>
+                        <div class="control">
+                            <input type="text" name="salonArea" placeholder="店铺面积" value="<%=data.salonArea%>" pattern="float" patternmsg="店铺面积有误">
+                            <span class="unit">m<sup>2</sup></span>
+                        </div>
+                    </div> 
+
+                    <div class="control-group">
+                        <label class="control-label" for="">镜台数量：</label>
+                        <div class="control">
+                            <input type="text" name="dressingNums" placeholder="镜台数量" value="<%=data.dressingNums%>" pattern="number" maxlength="9" patternmsg="镜台数量有误">
+                            <span class="unit">个</span>
+                        </div>
+                    </div> 
+
+                    <div class="control-group">
+                        <label class="control-label" for="">员工总人数：</label>
+                        <div class="control">
+                            <input type="text" name="staffNums" placeholder="员工总人数" value="<%=data.staffNums%>" pattern="number" maxlength="9" patternmsg="员工总人数有误">
+                            <span class="unit">个</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="">发型师人数：</label>
+                        <div class="control">
+                            <input type="text" name="stylistNums" placeholder="发型师人数" value="<%=data.stylistNums%>" pattern="number" maxlength="9" patternmsg="发型师人数有误">
+                            <span class="unit">个</span>
+                        </div>
+                    </div> 
+
+                   <div>
+                       <p><strong>销售信息</strong></p>
+                       <p class="border-dash"></p>
+                   </div>                 
+
+                    <div class="control-group">
+                        <label class="control-label" for="">店铺平均月销售额：</label>
+                        <div class="control">
+                            <input type="text" name="monthlySales" placeholder="店铺平均月销售额" value="<%=data.monthlySales%>" pattern="float"
+                            patternmsg="店铺平均月销售额有误">
+                            <span class="unit">万元</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="">年销售总额：</label>
+                        <div class="control">
+                            <input type="text" name="totalSales" placeholder="年销售总额" value="<%=data.totalSales%>" pattern="float"
+                            patternmsg="年销售总额有误">
+                            <span class="unit">万元</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="">本店客单价： </label>
+                        <div class="control">
+                            <input type="text" name="price" placeholder="本店客单价" value="<%=data.price%>" pattern="float"
+                            patternmsg="本店客单价有误">
+                            <span class="unit">元</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="">充值卡占月销售额： </label>
+                        <div class="control">
+                            <input type="text" name="payScale" placeholder="充值卡占月销售额" value="<%=data.payScale%>" pattern="float" len="2" decimal="2" patternmsg="充值卡占月销售额有误">
+                            <span class="unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="">销售最多的充值卡金额：</label>
+                        <div class="control">
+                            <input type="text" name="payMoney" placeholder="销售最多的充值卡金额" value="<%=data.payMoney%>" pattern="float" patternmsg="销售最多的充值卡金额有误">
+                            <span class="unit">元</span>
+                            <input type="text" name="payMoneyScale" pattern="float" len="2" decimal="2" placeholder="销售最多的充值卡金额折扣" value="<%=data.payMoneyScale%>" patternmsg="销售最多的充值卡金额折扣有误">
+                            <span class="unit">折</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="">占全部充值总额：</label>
+                        <div class="control">
+                            <input type="text" name="payCountScale" placeholder="占全部充值总额" value="<%=data.payCountScale%>" pattern="float" len="2" decimal="2" patternmsg="占全部充值总额有误">
+                            <span class="unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="">每月非充值卡现金占销售额：</label>
+                        <div class="control">
+                            <input type="text" name="cashScale" placeholder="每月非充值卡现金占销售额" value="<%=data.cashScale%>" pattern="float" len="2" decimal="2" patternmsg="每月非充值卡现金占销售额有误">
+                            <span class="unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="">洗剪吹占销售额：</label>
+                        <div class="control">
+                            <input type="text" name="blowScale" placeholder="洗剪吹占销售额" value="<%=data.blowScale%>" pattern="float" len="2" decimal="2" patternmsg="洗剪吹占销售额有误">
+                            <span class="unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="">烫染占销售额：</label>
+                        <div class="control">
+                            <input type="text" name="hdScale" placeholder="烫染占销售额" value="<%=data.hdScale%>" pattern="float" len="2" decimal="2" patternmsg="烫染占销售额有误">
+                            <span class="unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <p><strong>合作信息</strong></p>
+                        <p class="border-dash"></p>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="">O2O平台合作：</label>
+                        <div class="control">
+                        <input type="text" name="platformName" placeholder="O2O平台合作" value="<%=data.platformName%>" maxlength="50"
+                        patternmsg="O2O平台合作有误">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="">合作O2O销售额占比：</label>
+                        <div class="control">
+                            <input type="text" name="platformScale" placeholder="合作O2O销售额占比" value="<%=data.platformScale%>" pattern="float" len="2" decimal="2" patternmsg="合作O2O销售额占比有误">
+                            <span class="unit">%</span>
+                        </div>
+                    </div>   
+
+                   <div>
+                       <p><strong>其他信息</strong></p>
+                       <p class="border-dash"></p>
+                   </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="">本店正常工作时间每日最多可接待人次理论数：</label>
+                        <div class="control">
+                            <input type="text" name="receptionNums" placeholder="本店正常工作时间每日最多可接待人次理论数" value="<%=data.receptionNums%>" pattern="number" maxlength="9" patternmsg="本店正常工作时间每日最多可接待人次理论数有误">
+                            <span class="unit">人</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="">平均每月实际接待 ：</label>
+                        <div class="control">
+                            <input type="text" name="receptionMons" placeholder="平均每月实际接待" value="<%=data.receptionMons%>" pattern="number" maxlength="9" patternmsg="平均每月实际接待有误">
+                            <span class="unit">人次</span>
+                        </div>
+                    </div> 
+
+                    <div class="control-group">
+                        <label class="control-label" for="">店铺成立时间： </label>
+                        <%
+						if(data.setupTime==0){
+							data.setupTime="";
+						}else if(!isNaN(data.setupTime)){                            
+                            data.setupTime = lib.tools.getDate(data.setupTime);
+                        }
+                        %>
+                        <div class="control">
+                            <input type="date" name="setupTime" placeholder="店铺成立时间" value="<%=data.setupTime%>" min="1950-01-01" max="2030-01-01" placeholder="YYYY-MM-DD">
+                        </div>
+                    </div> 
+
+                    <div class="control-group">
+                        <label class="control-label" for="">店铺租金：</label>
+                        <div class="control">
+                            <input type="text" name="hotdyeScale" placeholder="店铺租金" value="<%=data.hotdyeScale%>" pattern="float"
+                            patternmsg="店铺租金有误">
+                            <span class="unit">元</span>
+                        </div>
+                    </div>    
+
+                    <div class="control-group">
+                        <label class="control-label" for="">店铺租赁合同剩余有效期： </label>
+                        <div class="control">
+                            <input type="text" name="lastValidity" placeholder="店铺租赁合同剩余有效期" value="<%=data.lastValidity%>" pattern="number" maxlength="9" patternmsg="店铺租赁合同剩余有效期有误">
+                            <span class="unit">个月</span>
+                        </div>
+                    </div> 
+
+                    <div class="control-group">
+                        <label class="control-label">店铺类型：</label>
+
+                        <label class="checkbox">
+                            <input type="checkbox" name="salonType" value="1">
+                            <span>纯社区店</span>
+                        </label>
+
+                        <label class="checkbox">
+                            <input type="checkbox" name="salonType" value="2">
+                            <span>社区商圈店</span>
+                        </label>
+
+                        <label class="checkbox">
+                            <input type="checkbox" name="salonType" value="3">
+                            <span>商圈店</span>
+                        </label>
+
+                        <label class="checkbox">
+                            <input type="checkbox" name="salonType" value="4">
+                            <span>商场店</span>
+                        </label>
+
+                        <label class="checkbox">
+                            <input type="checkbox" name="salonType" value="5">
+                            <span>工作室(写字楼)店</span>
+                        </label>
+                    </div>  
+
+                    <div class="control-group">
+                        <label class="control-label" for=""></label>
+                        <button class="btn" type="button" id="preview-btn" style="margin-right:20px">预览</button>
+                        <button class="btn-primary">下一步</button>
+                    </div>
+                </script>                 
+            </form>
+        </div>  
+        <script type="text/javascript" src="assess.js"></script>     
+    </body>
+</html>

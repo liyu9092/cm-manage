@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <style>.first-td{width: 15%;padding-left: 30px!important;}</style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>交易管理</a>
+            <span>&gt;</span><a href="index.html">臭美券查询</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>臭美券详情</h4>
+                </div>
+                <div class="flex-item">
+                    <button id="cancleButton" type="button" class="btn fr" onclick="history.back()">
+                        取消
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper" id="table-wrapper"
+        ajat="<%if(query.id){%><%=query.method%><%=query.id%><%}%>#domid=table-wrapper&tempid=table-t">
+        <script type="text/template" id="table-t">
+            <div class="table">
+                <table>
+                    <tbody>
+
+                        <tr>
+                            <td class="first-td">臭美券密码</td>
+                            <td><%=data.ticket && data.ticket.ticketno%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">订单编号</td>
+                            <td><%=data.order && data.order.ordersn%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">购物车序号</td>
+                            <td><%=data.order && data.order.shopcartsn%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">第三方流水号</td>
+                            <td><%=data.paymentlog && data.paymentlog.tn%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">项目名称</td>
+                            <td><%=data.item && data.item.itemname%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">店铺名称【邀请码】</td>
+                            <td>
+                             <%=data.salon && data.salon.salonname%>
+                            【<%=data.salonRecommendCode && data.salonRecommendCode.recommend_code%>】
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">用户臭美号</td>
+                            <td><%=data.user && data.user.username%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">用户手机号</td>
+                            <td><%=data.user && data.user.mobilephone%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">订单金额</td>
+                            <td><%=data.order && data.order.priceall%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">现金券抵扣金额</td>
+                            <%if(data.vouchers && data.order){%>
+                                <%var a = +data.vouchers.vUseMoney; var b = +data.order.priceall%>
+                                <td><%= (a <= b) ? a : b %></td>
+                            <%}else{%>
+                                <td></td>
+                            <%}%>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">实付金额</td>
+                            <td><%=data.order && data.order.actuallyPay%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">金额构成</td>
+                            <td>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">名称</th>
+                                            <th>金额（元）</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <%
+                                        var firstArr  = [],secondArr = [];
+                                        var textArr= {"2":"支付宝","3":"微信","4":"余额","9":"现金券","10":"易联"};
+                                        data.fundflows && data.fundflows.forEach(function(item,i){
+                                            if(item.pay_type=="4" || item.pay_type=="9") {
+                                                firstArr.push({"type":textArr[item.pay_type],"amt":item.money});
+                                            }
+                                            if(item.pay_type=="2" || item.pay_type=="3" || item.pay_type=="10"){
+                                                secondArr.push({"type":textArr[item.pay_type],"amt":item.money});
+                                            }
+                                        });
+                                        %>
+
+                                        <%if(firstArr.length > 0){%>
+                                            <tr>
+                                                <td rowspan="<%=Math.max(firstArr.length + 1,2)%>">
+                                                臭美余额
+                                                </td>
+                                            </tr>
+                                            <%firstArr.forEach(function(item,i){%>
+                                            <tr>
+                                                <td><%=item.type%></td>
+                                                <td><%=item.amt%></td>
+                                            </tr>
+                                            <%})%>
+                                        <%}%>
+
+                                        <%if(secondArr.length > 0){%>
+                                            <tr>
+                                                <td rowspan="<%=Math.max(secondArr.length + 1,2)%>">
+                                                第三方支付
+                                                </td>
+                                            </tr>
+                                            <%secondArr.forEach(function(item,i){%>
+                                            <tr>
+                                                <td><%=item.type%></td>
+                                                <td><%=item.amt%></td>
+                                            </tr>
+                                            <%})%>
+                                        <%}%>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">臭美券动态</td>
+                            <td>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>时间</th>
+                                            <th>行为</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%
+                                        var trendsText = {
+                                            '2':'未使用',
+                                            '4':'使用完成',
+                                            '6':'申请退款',
+                                            '7':'退款完成',
+                                            '8':'退款拒绝',
+                                            '10':'退款中'
+                                        };
+
+                                        %>
+                                        <%data.trends && data.trends.forEach(function(obj,i){ %>
+                                        <tr>
+                                            <td class="formatHms"><%=obj.add_time %></td>
+                                            <td><%=obj.remark || trendsText[obj.status] %></td>
+                                        </tr>
+                                        <%}) %>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">券动态</td>
+                            <td>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>活动编码</th>
+                                            <th>券编号</th>
+                                            <th>券金额</th>
+                                            <th>券有效期</th>
+                                            <th>券状态</th>
+                                            <th>时间</th>
+                                        </tr>
+                                    <thead>
+                                    <tbody>
+                                        <%
+                                        var statusText= {
+                                            '1':'未使用',
+                                            '2':'已使用',
+                                            '3':'待激活',
+                                            '5':'已失效',
+                                            '10':'未上线'
+                                        };
+                                        %>
+                                        <% if(data.vouchers){%>
+                                        <tr>
+                                            <td><%=data.vouchers.vcSn%></td>
+                                            <td><%=data.vouchers.vSn%></td>
+                                            <td><%=data.vouchers.vUseMoney%></td>
+                                            <td class="format"><%=data.vouchers.vUseEnd %></td>
+                                            <td><%=statusText[data.vouchers.vStatus]%></td>
+                                            <td class="format"><%=data.vouchers.vUseTime%></td>
+                                        </tr>
+                                        <%}%>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">佣金信息</td>
+                            <td>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>店铺等级</th>
+                                            <th>佣金率</th>
+                                            <th>佣金</th>
+                                            <th>邀请码（店名）</th>
+                                        </tr>
+                                    <thead>
+                                    <tbody>
+                                    <%var grade={"1":"S","2":"A","3":"B","4":"C","5":"新落地","6":"淘汰区"}%>
+                                    <%if(data.commission){%>
+                                        <tr>
+                                            <td><%=grade[data.commission.grade]%></td>
+                                            <td><%=data.commission.rate%></td>
+                                            <td><%=data.commission.amount%></td>
+                                            <td>
+                                                <%=data.recommend_code && data.recommend_code.recommend_code%>
+                                                (<%=data.recommend_code && data.recommend_code.salonname%>)
+                                            </td>
+                                        </tr>
+                                    <%}%>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">设备信息</td>
+                            <td>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>用户设备号</th>
+                                            <th>微信OpenId</th>
+                                            <th>系统</th>
+                                            <th>手机型号</th>
+                                            <th>网络</th>
+                                            <th>APP版本</th>
+                                        </tr>
+                                    <thead>
+                                    <tbody>
+                                    <%if(data.platform){%>
+                                        <tr>
+                                            <td><%=data.platform.DEVICE_UUID%></td>
+                                            <td><%=data.platform.OPENID%></td>
+                                            <td><%=data.platform.DEVICE_OS%></td>
+                                            <td><%=data.platform.DEVICE_MODEL%></td>
+                                            <td><%=data.platform.DEVICE_NETWORK%></td>
+                                            <td><%=data.platform.DEVICE_TYPE == 'WECHAT' ? '微信公众号（H5）' : data.platform.VERSION%></td>
+                                        </tr>
+                                    <%}%>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </script>
+        </div>
+    </body>
+</html>

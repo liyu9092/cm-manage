@@ -1,0 +1,293 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<%
+				var title="项目列表";
+				if(query.p=="special"){
+					title="项目特价";
+				}else if(query.p=="warehouse"){
+					title="项目仓库";
+				}
+			%>
+			<a>店铺管理 </a><span>&gt;</span><a href="../index.html">店铺资料</a><span>&gt;</span><a href="index.html#<%=query._%>"><%=title%></a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4><%=title%>-<%=query.salonname%></h4>
+				</div>
+				<%if(query.p=="item"){%>
+				<div><a href="sort.html#typeid=1&page_size=10000&<%=query._%>" data-slug="item.sort" class="btn">项目排序</a></div>
+				<%}%>
+			</div>
+		</div>
+		<div class="wrapper">
+			<form action="item/export" data-role="export" id="export" data-slug="merchant.export"></form>
+			<form data-role="hash" ajat="#domid=hash&tempid=hash-t" id="hash" ajat-one="true">
+				<script type="text/template" id="hash-t">
+				<div class="position-group">
+					<div class="input-group input-switch">
+						<select>
+							<option value="0">项目名称 </option>
+						</select>
+						<input class="input-search" type="text" name="itemname"  placeholder="请输入项目名称">
+						<button class="btn btn-search">
+							<i class="fa fa-search"></i>
+						</button>
+					</div>
+					&nbsp;
+					<button class="btn" id="filter-toggle-btn" type="button">
+						筛选条件 <i class="fa fa-angle-down"></i>
+					</button>
+					<%if(query.p=="item"||query.p=="special"){%>
+					&nbsp;
+					<button class="btn" form="export" data-slug="item.export"><i class="fa fa-file-excel-o"></i> 导出</button>
+					<%}%>
+					<%if(query.p=="warehouse"){%>
+					&nbsp;
+					<span style="position:relative">
+						<button class="btn" id="btn-import" data-slug="warehouse.import"><i class="fa fa-file-excel-o"></i> 导入</button>
+					</span>
+					<%}%>
+				</div>
+				<div class="filter-box" style="display:none">
+					<%if(query.p=="warehouse"){%>
+					<div class="flex-box">
+						<div class="filter-title">项目类型：</div>
+						<div class="flex-item">
+							<label data-role="hash">
+								<input type="radio" name="item_type" value="0" checked />
+								<span>全部</span>
+							</label>
+							<label data-role="hash">
+								<input type="radio" name="item_type" value="1"/>
+								<span>普通项目</span>
+							</label>
+							<label data-role="hash">
+								<input type="radio" name="item_type" value="2"/>
+								<span>闲时特价</span>
+							</label>
+						</div>
+					</div>
+					<%}%>
+					<div class="flex-box">
+						<div class="filter-title">项目分类：</div>
+						<div class="flex-item" ajat="item/type#domid=type&tempid=type-t" id="type" ajat-one="true"></div>
+					</div>
+					<div class="flex-box">
+						<div class="filter-title">项目规格：</div>
+						<div class="flex-item">
+							<label data-role="hash">
+								<input type="radio" name="norms_cat_id" value="0" checked />
+								<span>全部</span>
+							</label>
+							<label data-role="hash">
+								<input type="radio" name="norms_cat_id" value="1"/>
+								<span>有规格</span>
+							</label>
+							<label data-role="hash">
+								<input type="radio" name="norms_cat_id" value="2"/>
+								<span>无规格</span>
+							</label>
+						</div>
+					</div>
+					<div class="flex-box">
+						<div class="filter-title">项目期限：</div>
+						<div class="flex-item">
+							<label data-role="hash">
+								<input type="radio" name="exp_time" value="0" checked />
+								<span>全部</span>
+							</label>
+							<label data-role="hash">
+								<input type="radio" name="exp_time" value="1"/>
+								<span>有期限</span>
+							</label>
+							<label data-role="hash">
+								<input type="radio" name="exp_time" value="2"/>
+								<span>无期限</span>
+							</label>
+						</div>
+					</div> 
+					<%if(query.p=="item"){%>
+					<div class="flex-box">
+						<div class="filter-title">库存数量：</div>
+						<div class="flex-item">
+							<label data-role="hash">
+								<input type="radio" name="total_rep" value="" checked />
+								<span>全部</span>
+							</label>
+							<label data-role="hash">
+								<input type="radio" name="total_rep" value="1"/>
+								<span>有限制</span>
+							</label>
+							<label data-role="hash">
+								<input type="radio" name="total_rep" value="2"/>
+								<span>无限制</span>
+							</label>
+						</div>
+					</div> 
+					<%}%>
+					<div class="flex-box">
+						<div class="filter-title">限制资格：</div>
+						<div class="flex-item">
+							<label data-role="hash">
+								<input type="radio" name="buylimit" value="0" checked />
+								<span>全部</span>
+							</label>
+							<label data-role="hash">
+								<input type="radio" name="buylimit" value="1"/>
+								<span>有限制</span>
+							</label>
+							<label data-role="hash">
+								<input type="radio" name="buylimit" value="2"/>
+								<span>无限制</span>
+							</label>
+						</div>
+					</div> 
+				</div>
+				</script>				
+			</form>
+			<div class="table" ajat="<%if(query.p=='item'){%>item/index<%}else if(query.p=='special'){%>onsale/index<%}else if(query.p=='warehouse'){%>warehouse/index<%}%>?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+			<%
+			var slugObject={
+				item:"itemInfo.update,item.show",
+				special:"itemInfo.updateSpecialItem,onsale.show",
+				warehouse:"itemInfo.update"
+			}%>
+			<table>
+				<thead>
+					<tr>
+						<%if(query.p=="warehouse"){%>
+						<th width="50px"><label class="select-all"><input type="checkbox"/><span>全选</span></label></th>
+						<%}%>
+						<th>序号</th>
+						<th>项目名称</th>
+						<%if(query.p=="warehouse"){%>
+						<th><a data-role="hash" href="#page=1&sort_key=cat&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">项目类型  <i class="fa fa-sort"></i></a></th>
+						<%}%>
+						<th><a data-role="hash" href="#page=1&sort_key=typeid&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">项目分类 <i class="fa fa-sort"></i></a></th>
+						<th><a data-role="hash" href="#page=1&sort_key=norms_cat_id&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">规格 <i class="fa fa-sort"></i></a></th>
+						<th><a data-role="hash" href="#page=1&sort_key=minPrice&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">原价 <i class="fa fa-sort"></i></a></th>
+						<th><a data-role="hash" href="#page=1&sort_key=minPriceOri&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">臭美价 <i class="fa fa-sort"></i></a></th>
+						<th><a data-role="hash" href="#page=1&sort_key=minPriceGroup&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">集团价 <i class="fa fa-sort"></i></a></th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<%data=data.data%>
+					<%data.forEach(function(item,i){%>
+					 <tr>
+						<%if(query.p=="warehouse"){%>
+						<td><label><input type="checkbox" name="_ids" value="<%=item.itemid%>"/><span></span></label></td>
+						<%}%>
+						<td><%=i+1%></td>
+						<td><%=item.itemname%></td>
+						<%if(query.p=="warehouse"){%>
+						<td><%=item.item_type==1?"普通项目":"闲时特价"%></td>
+						<%}%>
+						<td><%=item.typename%></td>
+						<td>
+							<%if(item.userId!=0){%>
+								<%=item.salon_norms_cat.length>0?item.salon_norms_cat:"无"%>
+							<%}else{%>
+								<%=item.salon_norms_cat.length>0?"":"无"%>
+							<%}%>
+						</td>
+						<td>￥<%=item.minPriceOri%><%if(item.salon_norms_cat.length>0&&item.maxPriceOri!=item.minPriceOri){%>-<%=item.maxPriceOri%><%}%></td>
+						<td>￥<%=item.minPrice%><%if(item.salon_norms_cat.length>0&&item.maxPrice!=item.minPrice){%>-<%=item.maxPrice%><%}%></td>
+						<td>￥<%=parseInt(item.minPriceGroup)%><%if(item.salon_norms_cat.length>0&&item.maxPriceGroup!=item.minPriceGroup){%>-<%=parseInt(item.maxPriceGroup)%><%}%></td>
+						<td>
+							<%if(query.p=="item"||query.p=="special"){%>
+							<form data-slug="item.down" action="item/down/<%=item.itemid%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+								<button class="link" >下架</button>
+							</form>
+							<span class="space"></span>
+							<%}%>
+							<%if(query.p=="warehouse"){%>
+							<form data-slug="warehouse.puton" action="warehouse/puton" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+								<button class="link" >上架</button>
+								<input type="hidden" name="ids" value="<%=item.itemid%>" />
+							</form>
+							<%}%>
+							<span class="space"></span>
+							<%
+							var slug=slugObject[query.p];
+							if(query.p=="warehouse"){
+								slug+=(item.item_type==1?",item.show":",onsale.show")
+							}%>
+							<a class="link" data-slug="<%=slug%>" href="detail.html?p=<%=query.p%>&salonid=<%=query.salonid%>&salonname=<%=query.salonname%>&id=<%=item.itemid%>&type=<%=item.item_type==1?"item":"special"%>">查看</a>
+						</td>
+					</tr> 
+					<%})%>
+				</tbody>
+			</table>
+			<%if(query.p=="warehouse"){%>
+			<%if(data&&data.length>0){%>
+			<div class="table-bottom">
+				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
+				<form disabled action="warehouse/puton" disabled data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+					<button class="btn" >上架</button>
+					<input type="hidden" name="ids" />
+				</form>
+			</div>
+			<%}%>
+			<%}%>
+			<div class="pager">
+			</div>
+			</script>
+		</div>
+	</div>
+	<script type="text/template" id="type-t">
+		<label data-role="hash">
+			<input type="radio" name="typeid" value="0" checked />
+			<span>全部</span>
+		</label>
+		<%data.forEach(function(item){%>
+			<label data-role="hash">
+				<input type="radio" name="typeid" value="<%=item.typeid%>"/>
+				<span><%=item.typename%></span>
+			</label>
+		<%})%>
+	</script>
+	<script type="text/javascript">
+		$(function(){
+			$('#table').on('click','input',function(){
+				if($('tbody label input:checked').length>0){
+					$('.table-bottom form').attr('disabled',false);
+				}else{
+					$('.table-bottom form').attr('disabled',true);
+				}
+				var arr=[];
+				$('#table label input:checked').each(function(){
+					arr.push(this.value);
+				})
+				$('.table-bottom input[name="ids"]').val(arr)
+			})
+			var uploader = lib.puploader.create({
+				'loaderText':'数据正在导入中...',
+				'successText':'数据导入成功',
+				'failText':'数据导入失败',
+				'browse_button' : 'btn-import',
+				'domain'        : cfg.getHost() + "warehouse/import?token="+localStorage.getItem('token')+"&salon_id="+lib.query.salonid,
+				'file_data_name': 'item',
+				'auto_start'    : true,
+				'filters'       : {mime_types:[{ title : "json files", extensions : "json" }],
+								max_file_size : '10mb', //最大只能上传10mb的文件
+								prevent_duplicates : true //不允许选取重复文件
+								}
+			},function(obj){
+				obj.bind('FileUploadedSuccess',function(up){
+					setTimeout(function(){
+						$(window).trigger('hashchange')           
+					}, 2000)            
+				})
+			});
+		})
+	</script>
+  </body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理</a><span>&gt;</span><a href="index.html">红包列表</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4> 红包列表 </h4>
+                </div>
+            </div>      
+        </div> 
+
+        <div class="wrapper">
+            <form data-role="hash">                       
+               <div class="input-group input-switch">
+                    <select>
+                        <option value="0">红包编号</option>
+                        <option value="1">分享手机号</option>
+                        <option value="3">红包名称</option>
+                    </select>
+                    <input type="text" class="input-search" name="bonusSn" placeholder="红包编号">
+                    <input type="text" class="input-search hide" name="mobilephone" class="hide" placeholder="分享手机号">
+                    <input type="text" class="input-search hide" name="laisee_name" class="hide" placeholder="红包名称">
+                </div>
+
+                <span class="space"></span>
+                <label>红包状态：</label>
+                <select name="bonusStatus">
+                    <option value="">全部</option>
+                    <option value="N">已过期</option>
+                    <option value="Y">进行中</option>
+                </select>  
+
+                <span class="space"></span>
+                <span>生成时间：</span>
+                <span class="date-group">
+                    <input type="date" data-role="start" name="start_time" placeholder="yyyy-MM-dd"/>
+                    到
+                    <input type="date" data-role="end" name="end_time" placeholder="yyyy-MM-dd"/>
+                </span>
+                <button class="btn" type="submit">搜索</button>
+            </form>
+
+            <form action="bonus/export" data-role="export">
+                <button class="btn" data-slug="bonus.export">
+                <i class="fa fa-file-excel-o"></i> 导出
+                </button>
+            </form>
+                          
+           <div class="table" ajat="bonus/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+            <script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>红包编号</th>
+                            <th>红包名称</th>
+                            <th>红包总金额</th>
+                            <th>已领现金券数</th>
+                            <th>生成时间</th>
+                            <th>到期时间</th>
+                            <th>红包状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <%var data=data.data%>
+					  <%var map={"Y":"进行中","N":"已失效","E":"已过期"}%>
+                      <%data.forEach(function(item,i){%>
+                       <tr>
+                        <td><%=i+1%></td>
+                        <td><%=item.bonusSn%></td>
+                        <td><%=item.laisee_name%></td>
+                        <td><%=item.bonusAmount%></td>
+                        <td><%=item.receiveNum%></td>  
+                        <td><%=item.add_time%></td>        
+                        <td><%=item.over_time%></td>                  
+                        <td><%=map[item.status]%></td>
+                        <td>
+							<a class="link" data-slug="bonus.show" href="detail.html?id=<%=item.order_ticket_id%>">查看&gt;</a>
+							<%if(item.status=="Y"){%>
+							<span class="space"></span>
+							<form data-slug="bonus.close" action="bonus/close/<%=item.order_ticket_id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+								<button class="link">失效</button>
+							</form>
+							<%}%>
+                        </td>
+                        </tr>
+                        <%})%>                    
+                    </tbody>
+            </table>        
+             <div class="pager"> </div>
+            </script>
+        </div>
+            </div>            
+    </body>
+</html>

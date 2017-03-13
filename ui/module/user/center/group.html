@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>用户中心 </a><span>&gt;</span><a href="index.html">集团用户数</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>集团用户数</h4>
+				</div>
+			</div>
+		</div>
+		<div class="wrapper">
+			<form data-role="hash">
+				<input type="text" name="keyword" placeholder="请输入集团名称/集团码" />
+				<button class="btn">搜索</button>
+			</form>
+			<div class="table" ajat="user/company?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+			<table>
+              <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>集团码</th>
+                  <th>集团名称</th>
+                  <th>用户数</th>
+                </tr>
+              </thead>
+              <tbody>			  
+				<%var data=data.data%>
+				<%data.forEach(function(item,i){%>
+                <tr>
+                  <td><%=i+1%></td>
+                  <td><%=item.code%></td>
+                  <td><%=item.name%></td>
+                  <td><%=item.total%></td>
+                </tr>
+				<%})%>
+              </tbody>
+            </table>
+			<div class="pager">
+			</div>
+			</script>
+		</div>
+	</div>
+  </body>
+</html>

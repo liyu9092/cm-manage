@@ -1,0 +1,44 @@
+<style type="text/css">
+	.popup-form input,.popup-form textarea{
+		width:400px;
+	}
+	.popup-form .control-label{
+		width:120px;
+	}
+</style>
+<form data-role="form" class="popup-form">
+	 <div class="control-group">
+		<label class="control-label" for="">名称：</label>
+		<div class="control">
+			<input type="text" name="title" value="<%=data.title%>" placeholder="0~20个字" maxlength="20" >
+		</div>
+	</div> 
+	 <div class="control-group">
+		<label class="control-label" for="">内容：</label>
+		<div class="control">
+			<textarea class="large" name="content" placeholder="0~50000个字" maxlength="50000"><%=data.content?data.content.replace(/<br\/>|<br>/g,"\n"):""%></textarea>
+		</div>
+	</div>
+	<%var id=parseInt(Math.random()*100000)%>
+	<div class="control-group">
+		<label class="control-label" for="">图片：</label>
+		<div class="control">
+			<div class="control-image">
+				<div class="control-thumbnails" id="control-thumbnails2" data-max="10">
+					<div class="control-image-upload">
+						<div id="upload-<%=id%>">
+							<i class="fa fa-image"></i>
+							<em>上传图片</em>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="weak">
+			请上传JPG或PNG格式的图片，此图片将显示在项目详情中，0~10张<br />
+			名称，内容，图片必须填一个，上传图片不做裁剪（没编辑按钮），只可上传和删除,<br />
+			上传最大尺寸是8000*8000，最大体积是20M
+			</div>
+			<span class="control-help" style="display:none">名称，内容，图片不能都为空!</span>
+		</div>
+	</div>
+</form>

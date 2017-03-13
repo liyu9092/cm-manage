@@ -1,0 +1,119 @@
+<%
+function inArray(obj,array){
+    for(var i =0,len= array.length;i<len;i++){
+        if (obj == array[i]){
+            return true;
+        }
+    }
+    return false;
+}
+var listInfos ={
+    '1':{
+    'name':'无创水光'
+    },
+    '2':{
+    'name':'无创水光'
+    },
+    '3':{
+    'name':'优立塑'
+    },
+    '4':{
+    'name':'3D发际线헤어라인',
+    'makeup':'3D发际线-补色记录  헤어라인-리터치'
+    },
+    '5':{
+    'name':'韩式美瞳线아이라인',
+    'makeup':'韩式美瞳线-补色记录 아이라인- 리터치 기록'
+    },
+    '6':{
+    'name':'3D水晶唇입술',
+    'makeup':'3D水晶唇-补色记录  입술-리터치'
+    },
+    '7':{
+    'name':'韩式立体眉눈썹',
+    'makeup':'韩式立体眉-补色记录  눈썹- 리터치 기록'
+    },
+    '8':{
+    'name':'3D发际线헤어라인',
+    'makeup':'3D发际线-补色记录  헤어라인-리터치'
+    },
+    '9':{
+    'name':'韩式美瞳线아이라인',
+    'makeup':'韩式美瞳线-补色记录 아이라인- 리터치 기록'
+    },
+    '10':{
+    'name':'3D水晶唇입술',
+    'makeup':'3D水晶唇-补色记录  입술-리터치'
+    },
+    '11':{
+    'name':'韩式立体眉눈썹',
+    'makeup':'韩式立体眉-补色记录  눈썹- 리터치 기록'
+    },
+}
+
+orderInfo.beauty_order_item.forEach(function(item,index){ 
+if (listInfos[item.item_id]){
+    %>
+<div class="list active">
+    <div class="list-header">
+        <span class="list-title"><%=listInfos[item.item_id].name%></span>
+        <div class="displayOnView slideBtn fr">
+            <div class="slideUp">收起 <i class="fa fa-angle-up"></i></div>
+            <div class="slideDown">展开 <i class="fa fa-angle-down"></i></div>
+        </div>
+        <div class="displayOnView editBtn fr">
+            <%if (!item.makeup1 && !inArray(item.item_id,[1,2,3])){%>
+            <a class="link" data-id='<%=item.id%>' data-item='<%=item.item_id%>' data-action='makeup1'>补色</a>
+            <%}%>
+            <%if ( item.makeup1 && !item.makeup2 && inArray(item.item_id,[6,10])){%>
+            <a class="link" data-id='<%=item.id%>' data-action='makeup2'>二次补色</a>
+            <%}%>
+            <a class="link" data-id='<%=item.id%>' data-action='edit'>编辑</a>
+        </div>
+        <div class="displayOnEdit fr">
+            <a class="btn" data-action="view" data-id='<%=item.id%>'>取消</a>
+            <a class="btn link" data-action="save">保存</a>
+        </div>
+    </div>
+    <div class="list-content" ajat="#domid=ajatDom_<%=item.id%>&tempid=./template/order_component/plan_desc&action=view&id=<%=item.id%>" id="ajatDom_<%=item.id%>"  id="ajatDom_<%=item.id%>"></div>
+</div>
+<%if (item.makeup1){%>
+<div class="list active makeup1">
+    <div class="list-header">
+        <span class="list-title"><%=listInfos[item.item_id].makeup%></span>
+        <div class="displayOnView slideBtn fr">
+            <div class="slideUp">收起 <i class="fa fa-angle-up"></i></div>
+            <div class="slideDown">展开 <i class="fa fa-angle-down"></i></div>
+        </div>
+        <div class="displayOnView editBtn fr">
+            <a class="link" data-id='<%=item.id%>' data-type='makeup1' data-action='edit'>编辑</a>
+        </div>
+        <div class="displayOnEdit fr">
+            <a class="btn" data-action="view"  data-type='makeup1' data-id='<%=item.id%>'>取消</a>
+            <a class="btn link" data-action="save">保存</a>
+        </div>
+    </div>
+    <div class="list-content" ajat="#domid=ajatDom_<%=item.id%>_makeup1&tempid=./template/order_component/plan_desc&action=view&id=<%=item.id%>&type=makeup1" id="ajatDom_<%=item.id%>_makeup1"  id="ajatDom_<%=item.id%>_makeup1"></div>
+</div>
+<%}%>
+<%if (item.makeup2){%>
+<div class="list active makeup2">
+    <div class="list-header">
+        <span class="list-title"><%=listInfos[item.item_id].makeup%></span>
+        <div class="displayOnView slideBtn fr">
+            <div class="slideUp">收起 <i class="fa fa-angle-up"></i></div>
+            <div class="slideDown">展开 <i class="fa fa-angle-down"></i></div>
+        </div>
+        <div class="displayOnView editBtn fr">
+            <a class="link" data-id='<%=item.id%>' data-type='makeup2' data-action='edit'>编辑</a>
+        </div>
+        <div class="displayOnEdit fr">
+            <a class="btn" data-action="view" data-type='makeup2' data-id='<%=item.id%>'>取消</a>
+            <a class="btn link" data-action="save">保存</a>
+        </div>
+    </div>
+    <div class="list-content" ajat="#domid=ajatDom_<%=item.id%>_makeup2&tempid=./template/order_component/plan_desc&action=view&id=<%=item.id%>&type=makeup2" id="ajatDom_<%=item.id%>_makeup2"  id="ajatDom_<%=item.id%>_makeup2"></div>
+</div>
+<%}%>
+<%}%>
+<%})%>

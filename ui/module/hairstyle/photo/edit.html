@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+		<a>图片管理</a><span>&gt;</span><a href="index.html">图片库</a><span>&gt;</span><span id="breadcrumb-current"><%=query._?"编辑图片":"新增图片"%></span>
+			<div class="flex-box">
+			<div class="flex-item">
+				<h4><%=query._?"编辑图片":"新增图片"%></h4>
+			</div>		 
+		</div>
+		<hr />
+	</div>	
+	
+	<div class="wrapper" ajat="<%if(query.id){%>ImageStyle/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		<form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>ImageStyle/update/<%=data.id%><%}else{%>ImageStyle/create<%}%>">
+			<div class="detail-operation">
+				<button class="btn btn-cancel" type="button" >取消</button>
+				<span class="space"></span>
+				<button class="btn-primary" data-slug="<%if(query.id){%>ImageStyle.update<%}else{%>ImageStyle.create<%}%>">提交</button>
+			</div>
+		
+		<div class="control-group">
+					 
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>风格名称：</label>
+                   <div class="control">
+						<select required name="style">
+						<option value="1" <%=data.style==1?"selected":""%>>可爱</option>
+						<option value="2" <%=data.style==2?"selected":""%>>时尚</option>
+						<option value="3" <%=data.style==3?"selected":""%>>青春</option>
+						<option value="4" <%=data.style==4?"selected":""%>>优雅</option>
+						<option value="5" <%=data.style==5?"selected":""%>>柔美</option>
+						<option value="6" <%=data.style==6?"selected":""%>>知性</option>
+						<option value="7" <%=data.style==7?"selected":""%>>浪漫</option>
+						<option value="8" <%=data.style==8?"selected":""%>>华丽</option>
+						<option value="9" <%=data.style==9?"selected":""%>>摩登</option>
+					</select>
+					</select>
+				</div>
+                </div>
+			   <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>长度：</label>
+                     <label>
+                    <input type="radio" name="length" value="1"
+                    <%=!data.length||data.length==1 ? "checked" : "" %>>
+                    <span>长发</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" name="length" value="2" 
+                    <%=data.length==2 ? "checked" : "" %>>
+                    <span>中发</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" name="length" value="3"
+                    <%=data.length==3 ? "checked" : "" %>>
+                    <span>短发</span>
+                    </label>
+					 <span class="control-help" style="display:none;"></span>
+                </div> 
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>卷度：</label>
+                     <label>
+                    <input type="radio" name="curl" value="1"
+                    <%=!data.curl||data.curl==1 ? "checked" : "" %>>
+                    <span>全卷</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" name="curl" value="2" 
+                    <%=data.curl==2 ? "checked" : "" %>>
+                    <span>半卷</span>
+                    </label>
+
+                   
+					  <label>
+                    <input type="radio" name="curl" value="3"
+                    <%=data.curl==3 ? "checked" : "" %>>
+                    <span>C卷</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" name="curl" value="4" 
+                    <%=data.curl==4 ? "checked" : "" %>>
+                    <span>外翻</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" name="curl" value="5"
+                    <%=data.curl==5 ? "checked" : "" %>>
+                    <span>直发</span>
+                    </label>
+					 <label>
+                    <input type="radio" name="curl" value="6"
+                    <%=data.curl==6 ? "checked" : "" %>>
+                    <span>纹理</span>
+                    </label>
+					 <span class="control-help" style="display:none;"></span>
+                </div> 
+				
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>颜色：</label>
+                     <label>
+                    <input type="radio" name="color" value="1"
+                    <%=!data.color||data.color==1 ? "checked" : "" %>>
+                    <span>冷色</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" name="color" value="2" 
+                    <%=data.color==2 ? "checked" : "" %>>
+                    <span>暖色</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" name="color" value="3"
+                    <%=data.color==3 ? "checked" : "" %>>
+                    <span>中性</span>
+                    </label>
+					   <label>
+                    <input type="radio" name="color" value="4"
+                    <%=data.color==4 ? "checked" : "" %>>
+                    <span>时尚</span>
+                    </label>
+					 <span class="control-help" style="display:none;"></span>
+                </div>  
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>风格图片：</label>
+					<div class="control">
+						 <div class="control-image">
+								<div class="control-single-image">
+									<img src="<%=data.thumb%>" alt="" data-original="<%=data.original%>"/>
+									<div class="control-image-ud">
+										<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
+									</div>
+									<input type="hidden" name="thumb" class="thumb" value="<%=data.thumb%>">
+									<input type="hidden" name="original" class="original" value="<%=data.original%>" required requiredmsg="请上传图片" data-helpid="image-help">
+								</div>
+							</div>
+						 <span class="space"></span>
+						 <div class="weak">支持jpg、png格式，图片规格必须为480*600px</div>
+						<div class="control-help" style="display:none" id="image-help"></div>
+					</div>
+                </div>
+					 
+				<div class="control-group">
+					<label class="control-label" for=""></label>
+					<div class="control">
+					<button class="btn-primary" data-slug="<%if(query.id){%>ImageStyle.update<%}else{%>ImageStyle.create<%}%>">提交</button>
+			   </div>
+			</div>
+			</div>
+		  </form>
+		  </script>
+	</div>
+	 <script type="text/javascript">
+			$('#form').on('_ready',function(){
+				lib.puploader.image({
+					browse_button: 'imageUpload',
+					auto_start:true,
+					imageLimitSize:"480*600",
+					filters: {
+						mime_types : [
+							{ title : "Image files", extensions : "jpg,png,jpeg" },
+						]
+					},
+					max_file_size:'2mb'
+				});
+			});
+	 </script>
+  </body>
+</html>

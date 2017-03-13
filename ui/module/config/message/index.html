@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>系统配置</a><span>&gt;</span><a> APP消息盒子</a><span>&gt;</span><a href="index.html">全量消息列表</a>
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4>全量消息列表</h4>
+			</div>
+			<div>
+				<a class="btn-primary" href="edit.html" data-slug="messageBox.addPushConf" ><i class="fa fa-plus"></i>新增</a>
+			</div>
+		 </div>		 
+        </div>		
+        <div class="wrapper">
+			<form data-role="hash" id="hashform">   
+				<div class="input-group placeholder-switch">
+					<select name=""><option value="">消息标题</option></select>
+					<input type="text" placeholder="请输入标题" name="messageTitle">
+				</div>
+				<span class="space"></span>
+				<label>发送时间：</label> 
+				<span class="date-group">
+					<input type="date" data-role="start" name="startTime"/>
+					至<input type="date" data-role="end" name="endTime"/>
+				</span>
+				<button class="btn">搜索</button>
+			</form>
+		 <div class="table" ajat="messageBox/messageList?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>消息标题</th>
+                            <th style="width:190px;">消息内容</th>
+                            <th>创建时间</th>
+                            <th>发送时间</th>
+                            <th>已读用户数</th>
+							<th>推送用户数</th>
+                            <th>接收用户</th>
+							<th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                <tbody>
+					<%if(data.data){%>
+					 <%var status=["未上线","已上线"]%>
+					 <%data=data.data%>
+					 <%data.forEach(function(item,i){%>
+					 <tr>
+							<td><%=i+1%></td>
+							<td><%=item.title%></td>
+							<td><%=item.content%></td>
+							<td><%=item.createTime%></td>
+							<td><%=item.sendTime%></td>
+							<td><%=item.readNum%></td>
+							<td><%=item.pushNum%></td>
+							<td><%=item.receiveTypeName%></td>
+							<td>
+								<%if(item.status=="DONE"){%>
+									已发送
+								<%}else if(item.status=="DOING"){%>
+									发送中
+								<%}else{%>
+									未发送
+								<%}%>
+							</td>
+							<td>
+							<%if(item.status=="DONE"||item.status=="DOING"){%>
+							<a class="link" data-slug="messageBox.showMessage" href="edit.html?id=<%=item.id%>&disabled=true">查看</a>	
+							<%}else{%>
+							<a class="link" data-slug="messageBox.showMessage,messageBox.editMessage" href="edit.html?id=<%=item.id%>">编辑</a>	
+							<span class="space"></span>
+							<form data-slug="messageBox.delMessage" action="messageBox/delMessage" data-role="normal" data-confirm="确认删除？" onsuccess="remove">
+								<button class="link">删除</button>
+								<input type="hidden" value="<%=item.id%>" name="pushId" />
+							</form>	
+							<%}%>
+						   </td>
+					  </tr>
+					  <%})%>
+					<%}%>
+                </tbody>
+            </table>		
+				<div class="pager"> </div>
+			</script>
+        </div>
+	</div>
+	
+	  <script type="text/javascript">
+			document.onreadystatechange=function(){};
+			$(function(){		
+				document.getElementById("hashform")._getFormData=function(){
+					var data=lib.tools.getFormData($(this));
+					if(data.status!=1){
+						data.starttime="";
+						data.endtime="";
+					}
+					return data;
+				}
+				if(!lib.query._){
+					$('#ontime2').val(lib.tools.getDate());
+					var time=(new Date().getTime()-7*86400000)/1000;
+					$('#ontime1').val(lib.tools.getDate(time));
+					$('form[data-role="hash"]').submit();
+				}
+				$('#select').on('change',function(){
+					var val=$(this).val();
+					if(val!=1){
+						$(".date-group input").attr({"disabled":"disabled"});
+					}else{
+						$(".date-group input").removeAttr("disabled");
+					}
+				})
+
+			});
+			$(document).on('success','.online',function(){
+				$(window).trigger('hashchange');
+				parent.lib.popup.result({bool:true,text:'操作成功'});
+			})
+		</script>  
+    </body>
+</html>

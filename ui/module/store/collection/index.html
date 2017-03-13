@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>店铺结算 </a><span>&gt;</span><a href="index.html">代收单</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>代收单</h4>
+				</div>
+			</div>
+		</div>
+		<div class="wrapper">
+			<form data-role="hash">
+				<div class="input-group placeholder-switch">
+					<select  name="key">
+						<option value="1" data-placeholder="请输入店铺名">店铺搜索</option>
+						<option value="2" data-placeholder="请输入商户名">商户搜索</option>
+						<option value="3" data-placeholder="请输入店铺编号">店铺编号</option>
+					</select>
+					<input type="text" placeholder="请输入店铺名" name="keyword">
+				</div>
+				代收日期 
+				<span class="date-group">
+					<input type="date" data-role="start" name="pay_time_min" placeholder="YYYY-MM-DD"/>到
+					<input type="date" data-role="end" name="pay_time_max" placeholder="YYYY-MM-DD"/>
+				</span>
+				<button class="btn">搜索</button>
+			</form>
+			<form action="shop_count/delegate_export" data-role="export" data-slug="shop_count.delegate_export">
+				<button class="btn"><i class="fa fa-file-excel-o"></i> 导出</button>
+			</form>
+			<div class="table" ajat="<%if(query._){%>shop_count/delegate_list?<%=query._%><%}%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+				<table>
+				  <thead>
+					<tr>
+					  <th>序号</th>
+					  <th>店铺编号</th>
+					  <th>店铺名称</th>
+					  <th>代收单号</th>
+					  <th>代收金额</th>
+					  <th><a href="#sort_key=day&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>&page=1" data-role="hash">代收日期 <i class="fa fa-sort"></i></a></th>
+					  <th>操作</th>
+					</tr>
+				  </thead>
+				  <tbody>
+					<%if(data.data){%>
+					<%data=data.data%>
+					<%data.forEach&&data.forEach(function(item,i){%>
+					<tr>
+					  <td><%=i+1%></td>
+					  <td><%=item.salon?item.salon.sn:""%></td>
+					  <td><%=item.salon?item.salon.salonname:""%></td>
+					  <td><%=item.code%></td>
+					  <td><%=item.money%></td>
+					  <td><%=item.day%></td>
+					  <td>
+						 <a class="link" data-slug="shop_count.delegate_detail" href="detail.html?id=<%=item.id%>">查看</a>
+					  </td>
+					</tr>
+					<%})%>
+					<%}%>
+				  </tbody>
+				</table>
+				<div class="pager">
+				</div>
+			</script>
+		</div>
+	</div>
+	<script type="text/javascript">
+		document.onreadystatechange=function(){};
+		$(function(){
+			if(!lib.query._){
+				$('input[type="date"]').val(lib.tools.getDate());
+				$('form[data-role="hash"]').submit();
+			}
+		});
+	</script>
+  </body>
+</html>

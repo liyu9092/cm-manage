@@ -1,0 +1,847 @@
+<%
+var action =  protocol.custom.action;
+var id =  protocol.custom.id;
+var type =  protocol.custom.type;
+var projectInfo = {};
+function inArray(obj,array){
+for(var i =0,len= array.length;i<len;i++){
+if (obj == array[i]){
+return true;
+}
+}
+return false;
+}
+if (type == 'makeup1' || type == 'makeup2'){
+    projectInfo=projectList[id][type] || {};
+    projectInfo['id']=id;
+    projectInfo['attr']=projectList[id][type].attr || projectList[id][type];
+    projectInfo['base_id']=projectList[id].id;
+    projectInfo['item_id']=projectList[id].item_id;
+}else{
+    projectInfo=projectList[id];
+}
+if (action == 'edit'){
+var formUrl = "";
+    if (type == 'makeup1'){
+        formUrl = 'book/relatively/'+query.id
+    }else if(type == 'makeup2'){
+        formUrl = 'book/relatively2/'+query.id
+    }else{
+        formUrl = 'book/update/'+projectInfo.id
+    }
+%>
+<form action="<%=formUrl%>"  data-role="form">
+<table>
+    <tbody>
+     <%if (type == 'makeup1' || type == 'makeup2'){%>
+     <input type="hidden" name="base_id" value="<%=projectInfo.base_id%>">
+     <%}%>
+        <%if (inArray(projectInfo.item_id,[7,11])){ %>
+        <%if (type == 'makeup1' || type == 'makeup2'){%>
+        <tr>
+            <td class="td">施术方案시술부위</td>
+            <td>
+                <input type="text" name="operation" value="<%= projectInfo.attr && projectInfo.attr.operation%>">
+            </td>
+        </tr>
+        <%}else{%>
+        <tr>
+            <td class="td">眉毛技法눈썹기법</td>
+            <td>
+                <label>
+                    <input type="checkbox"  <%if (projectInfo.attr && inArray(1,projectInfo.attr.eyebrow_method)){%>checked="checked"<%}%> name="eyebrow_method" value="1">
+                    <span>Combo</span>
+                </label>
+                <label>
+                    <input type="checkbox"  <%if (projectInfo.attr && inArray(2,projectInfo.attr.eyebrow_method)){%>checked="checked"<%}%> name="eyebrow_method" value="2">
+                    <span>ambo</span>
+                </label>
+                <label>
+                    <input type="checkbox" <%if (projectInfo.attr && inArray(3,projectInfo.attr.eyebrow_method)){%>checked="checked"<%}%> name="eyebrow_method" value="3">
+                    <span>machine</span>
+                </label>
+                <label>
+                    <input type="checkbox" <%if (projectInfo.attr && inArray(4,projectInfo.attr.eyebrow_method)){%>checked="checked"<%}%> name="eyebrow_method" value="4">
+                    <span>그라데이션</span>
+                </label>
+            </td>
+        </tr>
+        <%}%>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>眉型设计눈썹디자인：</td>
+                            <td>
+                                <label>
+                                    <input type="checkbox" <%if (projectInfo.attr && inArray(1,projectInfo.attr.eyebrow_design)){%>checked="checked"<%}%> name="eyebrow_design" value="1">
+                                    <span>自然眉자연형</span>
+                                </label>
+                                <br/>
+                                <label>
+                                    <input type="checkbox" <%if (projectInfo.attr && inArray(2,projectInfo.attr.eyebrow_design)){%>checked="checked"<%}%> name="eyebrow_design" value="2">
+                                    <span>一字眉일자형</span>
+                                </label>
+                            </td>
+                            <td>色号及调配比例색소색깔과 비율</td>
+                            <td><input type="text" name="color_pro" value="<%= projectInfo.attr && projectInfo.attr.color_pro%>"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <%}%>
+        <%if (inArray(projectInfo.item_id,[5,9])){ %>
+        <%if (type == 'makeup1' || type == 'makeup2'){ %>
+        <tr>
+            <td class="td">施术方案시술부위</td>
+            <td>
+                <input type="text" name="operation" value="<%= projectInfo.attr && projectInfo.attr.operation%>">
+            </td>
+        </tr>
+        <%}%>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>眼线设计<br/>아이라인디자인</td>
+                            <td>
+                                <label>
+                                    <input type="checkbox" <%if (projectInfo.attr && inArray(1,projectInfo.attr.eyeliner_design)){%>checked="checked"<%}%> name="eyeliner_design" value="1">
+                                    <span>自然眉자연형</span>
+                                </label>
+                                <br/>
+                                <label>
+                                    <input type="checkbox" <%if (projectInfo.attr && inArray(2,projectInfo.attr.eyeliner_design)){%>checked="checked"<%}%> name="eyeliner_design" value="2">
+                                    <span>尾部加长型고리형</span>
+                                </label>
+                            </td>
+                            <td>色号及调配比例색소색깔과 비율</td>
+                            <td><input type="text" name="color_pro" value="<%= projectInfo.attr && projectInfo.attr.color_pro%>"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <%}%>
+        <%if (inArray(projectInfo.item_id,[6,10])){ %>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>唇色设计입술디자인</td>
+                            <td>
+                                <label>
+                                    <input type="checkbox" <%if (projectInfo.attr && inArray(1,projectInfo.attr.lip_design)){%>checked="checked"<%}%> name="lip_design" value="1">
+                                    <span>红色빨강색</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" <%if (projectInfo.attr && inArray(2,projectInfo.attr.lip_design)){%>checked="checked"<%}%> name="lip_design" value="2">
+                                    <span>粉色 핑크색</span>
+                                </label>
+                                <br/>
+                                <label>
+                                    <input type="checkbox" <%if (projectInfo.attr && inArray(3,projectInfo.attr.lip_design)){%>checked="checked"<%}%> name="lip_design" value="3">
+                                    <span>橘色 오렌지색</span>
+                                </label>
+                            </td>
+                            <td>色号及调配比例색소색깔과 비율</td>
+                            <td><input type="text" name="color_pro" value="<%= projectInfo.attr && projectInfo.attr.color_pro%>"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <%}%>
+        <%if (projectInfo.item_id == 3){ %>
+        <tr>
+            <td class="td">治疗部位</td>
+            <td>
+                <label>
+                    <input type="checkbox" name="treat_body" <%if (projectInfo.attr && inArray(1,projectInfo.attr.treat_body)){%>checked="checked"<%}%> value="1">
+                    <span>腰部</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="treat_body" <%if (projectInfo.attr && inArray(2,projectInfo.attr.treat_body)){%>checked="checked"<%}%> value="2">
+                    <span>腹部</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="treat_body" <%if (projectInfo.attr && inArray(3,projectInfo.attr.treat_body)){%>checked="checked"<%}%> value="3">
+                    <span>上腹部</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="treat_body" <%if (projectInfo.attr && inArray(4,projectInfo.attr.treat_body)){%>checked="checked"<%}%> value="4">
+                    <span>大腿</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="treat_body" <%if (projectInfo.attr && inArray(5,projectInfo.attr.treat_body)){%>checked="checked"<%}%> value="5">
+                    <span>小腿</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="treat_body" <%if (projectInfo.attr && inArray(6,projectInfo.attr.treat_body)){%>checked="checked"<%}%> value="6">
+                    <span>背部</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="treat_body" <%if (projectInfo.attr && inArray(7,projectInfo.attr.treat_body)){%>checked="checked"<%}%> value="7">
+                    <span>臀部</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">治疗前尺寸</td>
+            <td>
+                <label>
+                    <input type="text" name="befor_size" value="<%= projectInfo.attr && projectInfo.attr.befor_size%>">
+                    <span>CM</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">治疗后尺寸</td>
+            <td>
+                <label>
+                    <input type="text" name="after_size" value="<%= projectInfo.attr && projectInfo.attr.after_size%>">
+                    <span>CM</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>治疗能力发数</td>
+                            <td>
+                                <label>
+                                    <input type="text" name="treat_num" value="<%= projectInfo.attr && projectInfo.attr.treat_num%>">
+                                    <span>发</span>
+                                </label>
+                            </td>
+                            <td>治疗时间</td>
+                            <td><label>
+                                <input type="text" name="treat_time" value="<%= projectInfo.attr && projectInfo.attr.treat_time%>">
+                                <span>分钟</span>
+                            </label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <%}%>
+    <%if (inArray(projectInfo.item_id,[4,8])){ %>
+    <tr>
+        <td colspan="2" class="pad-n bor-n">
+            <table class="inner-table bor-n">
+                <tbody>
+                    <tr>
+                        <td>发际线颜色색깔</td>
+                        <td>
+                            <label>
+                                <input type="checkbox" name="hair_color" <%if (projectInfo.attr && inArray(1,projectInfo.attr.hair_color)){%>checked="checked"<%}%> value="1">
+                                <span>黑色 검정색</span>
+                            </label>
+                            <br/>
+                            <label>
+                                <input type="checkbox" name="hair_color" <%if (projectInfo.attr && inArray(2,projectInfo.attr.hair_color)){%>checked="checked"<%}%> value="2">
+                                <span>咖啡色커피색</span>
+                            </label>
+                        </td>
+                        <td>色号及调配比例색소색깔과 비율</td>
+                        <td><input type="text" name="color_pro" value="<%= projectInfo.attr && projectInfo.attr.color_pro%>"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <%}%>
+    <%if (inArray(projectInfo.item_id,[1,2,3])){ %>
+
+    <%if (inArray(projectInfo.item_id,[1,2])){%>
+    <%
+    var stostes={
+        "1":{
+            "type":"N5",
+            "nums":"0"
+            },
+        "2":{
+            "type":"N10",
+            "nums":"0"
+            },
+        "3":{
+            "type":"MITOCELL HOME",
+            "nums":"0"
+            },
+        "4":{
+            "type":"PRODERM",
+            "nums":"0"
+            }
+    }
+
+    orderStoste = projectInfo.attr && projectInfo.attr.stoste || [];
+    for(var i = 0;i<orderStoste.length;i++){
+        for (var j=1;j<5;j++){
+            if (orderStoste[i].type == stostes[j].type){
+                stostes[j]['selected'] = true;
+                stostes[j]['nums'] = orderStoste[i].nums;
+            }
+        }
+    }
+    %>
+    <script type="text/javascript">
+    var getStoste = function(){
+        var  $stostes= $('.stoste input[name=type]:checked'),returnValue=[];
+        $.each($stostes,function(){
+            var stoste = {
+                'type': $(this).val(),
+                'nums': Number($(this).siblings('input[name=nums]').val()) || 0
+            }
+            returnValue.push(stoste);
+        })
+        return returnValue;
+    }
+    $('.checkbox').on('click','input[type=checkbox]',function(){
+        var $this = $(this)
+        if ($this.is(':checked')){
+            $this.siblings('input[type=text]').removeAttr('disabled');
+        }else{
+            $this.siblings('input[type=text]').attr('disabled','disabled');
+        }
+    })
+    </script>
+    <tr>
+        <td class="td">皮肤状况</td>
+        <td>
+                <label>
+                    <input type="checkbox" <%if (projectInfo.attr && inArray(1,projectInfo.attr.skinConcerns)){%>checked="checked"<%}%> name="skinConcerns" value="1">
+                    <span>腰毛粗大</span>
+                </label>
+                <label>
+                    <input type="checkbox" <%if (projectInfo.attr && inArray(2,projectInfo.attr.skinConcerns)){%>checked="checked"<%}%> name="skinConcerns" value="2">
+                    <span>皮肤暗沉</span>
+                </label>
+                <label>
+                    <input type="checkbox" <%if (projectInfo.attr && inArray(3,projectInfo.attr.skinConcerns)){%>checked="checked"<%}%> name="skinConcerns" value="3">
+                    <span>敏感脆弱</span>
+                </label>
+                <label>
+                    <input type="checkbox" <%if (projectInfo.attr && inArray(4,projectInfo.attr.skinConcerns)){%>checked="checked"<%}%> name="skinConcerns" value="4">
+                    <span>干燥粗糙</span>
+                </label>
+                <label>
+                    <input type="checkbox" <%if (projectInfo.attr && inArray(5,projectInfo.attr.skinConcerns)){%>checked="checked"<%}%> name="skinConcerns" value="5">
+                    <span>细小皱纹</span>
+                </label>
+                <label>
+                    <input type="checkbox" <%if (projectInfo.attr && inArray(6,projectInfo.attr.skinConcerns)){%>checked="checked"<%}%> name="skinConcerns" value="6">
+                    <span>痤疮痕迹</span>
+                </label>
+                <label>
+                    <input type="checkbox" <%if (projectInfo.attr && inArray(7,projectInfo.attr.skinConcerns)){%>checked="checked"<%}%> name="skinConcerns" value="7">
+                    <span>皮肤松弛</span>
+                </label>
+                <label>
+                    <input type="checkbox" <%if (projectInfo.attr && inArray(8,projectInfo.attr.skinConcerns)){%>checked="checked"<%}%> name="skinConcerns" value="8">
+                    <span>其他</span>
+                </label>
+        </td>
+    </tr>
+    <tr>
+        <td class="td">选择原液</td>
+        <td>
+            <%for(var i=1;i<5;i++){%>
+            <%var current = stostes[i];%>
+                <label class="checkbox stoste">
+                    <input type="checkbox" <%= current.selected == true ? "checked='checked'" : ""%> name="type" value="<%=current.type%>">
+                    <span><%=current.type%></span>
+                    <span>   用量</span>
+                    <input <%= current.selected == true ? "" : "disabled='disabled'"%>  name="nums" pattern="number"  type="text" value="<%=current.nums%>">
+                    <span>支</span>
+                </label>
+                <%if (i <4){%>
+                <br/>
+                <%}%>
+            <%}%>
+            <br/>
+        </td>
+    </tr>
+    <%}%>
+    <tr>
+        <td class="td">备注</td>
+        <td>
+            <textarea name="remark" style="width:500px;"><%=projectInfo.attr && projectInfo.attr.remark%></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="pad-n bor-n">
+            <table class="inner-table bor-n">
+                <tbody>
+                    <tr>
+                        <td>美导</td>
+                        <td><div class="control complete"><input class="searchInput" id="search" type="text" ajat-complete="others/search/1/${value}#domid=complete-position-guide_user_<%=projectInfo.id%>&tempid=/module/makeup/order/template/list-t" autocomplete="off" value="<%= projectInfo.guide_user ? projectInfo.guide_user.name+'（'+projectInfo.guide_user.number+'）':''%>"/>
+                        <input type="hidden" name="guideId" class="inputId" value="<%=projectInfo.guide_user && projectInfo.guide_user.artificer_id%>">
+                        <div class="complete-position" id="complete-position-guide_user_<%=projectInfo.id%>" style="width:20%;min-width:250px;" ></div>
+                        <span id="sn" class="weak"></span></div></td>
+                        <td>美容师</td>
+                        <td><div class="control complete"><input class="searchInput" id="search" type="text" ajat-complete="others/search/2/${value}#domid=complete-position-beautician_user_<%=projectInfo.id%>&tempid=/module/makeup/order/template/list-t" autocomplete="off" value="<%=projectInfo.beautician_user ? projectInfo.beautician_user.name+'（'+projectInfo.beautician_user.number+'）':''%>"/>
+                        <input type="hidden" name="beauticianId" class="inputId" value="<%=projectInfo.beautician_user && projectInfo.beautician_user.artificer_id%>">
+                        <div class="complete-position" id="complete-position-beautician_user_<%=projectInfo.id%>" style="width:20%;min-width:250px;" ></div>
+                        <span id="sn" class="weak"></span></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="td">操作日期</td>
+        <td><input name="opt_time" type="_datetime" value="<%= projectInfo.attr && projectInfo.attr.opt_time%>"></td>
+    </tr>
+    <%}else{%>
+    <tr>
+        <td class="td">针的种类<br/>니들의 종류</td>
+        <td>
+            <input type="text" name="needle_type" value="<%= projectInfo.attr && projectInfo.attr.needle_type%>">
+        </td>
+    </tr>
+    <tr>
+        <td class="td">其他说明기타</td>
+        <td>
+            <textarea style="width:500px" name="note"><%= projectInfo.attr && projectInfo.attr.note%></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="pad-n bor-n">
+            <table class="inner-table bor-n">
+                <tbody>
+                    <tr>
+                        <td>院长원장</td>
+                        <td><div class="control complete"><input class="searchInput" id="search" type="text" ajat-complete="artificer/search/${value}#domid=complete-position-dean_user_<%=projectInfo.id%>&tempid=/module/makeup/order/template/list-t" autocomplete="off" value="<%= projectInfo.dean_user ? projectInfo.dean_user.name+'（'+projectInfo.dean_user.number+'）' : ''%>"/>
+                        <input type="hidden" name="deanId" class="inputId" value="<%=projectInfo.dean_user && projectInfo.dean_user.artificer_id%>">
+                        <div class="complete-position" id="complete-position-dean_user_<%=projectInfo.id%>" style="width:20%;min-width:250px;" ></div>
+                        <span id="sn" class="weak"></span></div></td>
+                        <td>助理통역</td>
+                        <td><div class="control complete"><input class="searchInput" id="search" type="text" ajat-complete="assistant/search/${value}#domid=complete-position-assistant_user_<%=projectInfo.id%>&tempid=/module/makeup/order/template/list-t" autocomplete="off" value="<%= projectInfo.assistant_user ? projectInfo.assistant_user.name+'（'+projectInfo.assistant_user.number+'）':''%>"/>
+                        <input type="hidden" name="assistantId" class="inputId" value="<%= projectInfo.assistant_user && projectInfo.assistant_user.artificer_id%>">
+                        <div class="complete-position" id="complete-position-assistant_user_<%=projectInfo.id%>"  style="width:20%;min-width:250px;" ></div>
+                        <span id="sn" class="weak"></span></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="pad-n bor-n">
+            <table class="inner-table bor-n">
+                <tbody>
+                    <tr>
+                        <td>美导상담자</td>
+                        <td><div class="control complete"><input class="searchInput" id="search" type="text" ajat-complete="others/search/1/${value}#domid=complete-position-guide_user_<%=projectInfo.id%>&tempid=/module/makeup/order/template/list-t" autocomplete="off" value="<%=projectInfo.guide_user ? projectInfo.guide_user.name+'（'+projectInfo.guide_user.number+'）':''%>"/>
+                        <input type="hidden" name="guideId" class="inputId" value="<%=projectInfo.guide_user &&projectInfo.guide_user.artificer_id%>">
+                        <div class="complete-position" id="complete-position-guide_user_<%=projectInfo.id%>" style="width:20%;min-width:250px;" ></div>
+                        <span id="sn" class="weak"></span></div></td>
+                        <td>施术日期시술날짜</td>
+                        <td><input type="_datetime" value="<%= projectInfo.attr && projectInfo.attr.opt_time%>"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <%}%>
+</tbody>
+</table>
+</form>
+<%}else if (action == 'view'){%>
+<table>
+    <tbody>
+        <%if (inArray(projectInfo.item_id,[7,11])){ %>
+        <%if (type == 'makeup1' || type == 'makeup2'){%>
+        <tr>
+            <td class="td">施术方案시술부위</td>
+            <td>
+                <%=projectInfo.attr && projectInfo.attr.operation%>
+            </td>
+        </tr>
+        <%}else{%>
+        <tr>
+            <td class="td">眉毛技法눈썹기법</td>
+            <td>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(1,projectInfo.attr.eyebrow_method)){%>checked="checked"<%}%> name="eyebrow_method" value="1">
+                    <span>Combo</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(2,projectInfo.attr.eyebrow_method)){%>checked="checked"<%}%> name="eyebrow_method" value="2">
+                    <span>ambo</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(3,projectInfo.attr.eyebrow_method)){%>checked="checked"<%}%> name="eyebrow_method" value="3">
+                    <span>machine</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(4,projectInfo.attr.eyebrow_method)){%>checked="checked"<%}%> name="eyebrow_method" value="4">
+                    <span>그라데이션</span>
+                </label>
+            </td>
+        </tr>
+        <%}%>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>眉型设计눈썹디자인：</td>
+                            <td>
+                                <label>
+                                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(1,projectInfo.attr.eyebrow_design)){%>checked="checked"<%}%> name="eyebrow_design" value="1">
+                                    <span>自然眉자연형</span>
+                                </label>
+                                <br/>
+                                <label>
+                                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(2,projectInfo.attr.eyebrow_design)){%>checked="checked"<%}%> name="eyebrow_design" value="2">
+                                    <span>一字眉일자형</span>
+                                </label>
+                            </td>
+                            <td>色号及调配比例색소색깔과 비율</td>
+                            <td><%= projectInfo.attr && projectInfo.attr.color_pro%></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <%}%>
+        <%if (inArray(projectInfo.item_id,[5,9])){ %>
+        <%if (type == 'makeup1' || type == 'makeup2'){ %>
+        <tr>
+            <td class="td">施术方案시술부위</td>
+            <td>
+                <%= projectInfo.attr && projectInfo.attr.operation%>
+            </td>
+        </tr>
+        <%}%>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>眼线设计<br/>아이라인디자인</td>
+                            <td>
+                                <label>
+                                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(1,projectInfo.attr.eyeliner_design)){%>checked="checked"<%}%> name="eyeliner_design" value="1">
+                                    <span>自然眉자연형</span>
+                                </label>
+                                <br/>
+                                <label>
+                                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(2,projectInfo.attr.eyeliner_design)){%>checked="checked"<%}%> name="eyeliner_design" value="2">
+                                    <span>尾部加长型고리형</span>
+                                </label>
+                            </td>
+                            <td>色号及调配比例색소색깔과 비율</td>
+                            <td><%= projectInfo.attr && projectInfo.attr.color_pro%></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <%}%>
+        <%if (inArray(projectInfo.item_id,[6,10])){ %>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>唇色设计입술디자인</td>
+                            <td>
+                                <label>
+                                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(1,projectInfo.attr.lip_design)){%>checked="checked"<%}%> name="lip_design" value="1">
+                                    <span>红色빨강색</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(2,projectInfo.attr.lip_design)){%>checked="checked"<%}%> name="lip_design" value="2">
+                                    <span>粉色 핑크색</span>
+                                </label>
+                                <br/>
+                                <label>
+                                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(3,projectInfo.attr.lip_design)){%>checked="checked"<%}%> name="lip_design" value="3">
+                                    <span>橘色 오렌지색</span>
+                                </label>
+                            </td>
+                            <td>色号及调配比例색소색깔과 비율</td>
+                            <td><%= projectInfo.attr && projectInfo.attr.color_pro%></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <%}%>
+        <%if (projectInfo.item_id == 3){ %>
+        <tr>
+            <td class="td">治疗部位</td>
+            <td>
+                <label>
+                    <input type="checkbox" disabled="disabled" name="treat_body" <%if (projectInfo.attr && inArray(1,projectInfo.attr.treat_body)){%>checked="checked"<%}%> value="1">
+                    <span>腰部</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" name="treat_body" <%if (projectInfo.attr && inArray(2,projectInfo.attr.treat_body)){%>checked="checked"<%}%> value="2">
+                    <span>腹部</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" name="treat_body" <%if (projectInfo.attr && inArray(3,projectInfo.attr.treat_body)){%>checked="checked"<%}%> value="3">
+                    <span>上腹部</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" name="treat_body" <%if (projectInfo.attr && inArray(4,projectInfo.attr.treat_body)){%>checked="checked"<%}%> value="4">
+                    <span>大腿</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" name="treat_body" <%if (projectInfo.attr && inArray(5,projectInfo.attr.treat_body)){%>checked="checked"<%}%> value="5">
+                    <span>小腿</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" name="treat_body" <%if (projectInfo.attr && inArray(6,projectInfo.attr.treat_body)){%>checked="checked"<%}%> value="6">
+                    <span>背部</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" name="treat_body" <%if (projectInfo.attr && inArray(7,projectInfo.attr.treat_body)){%>checked="checked"<%}%> value="7">
+                    <span>臀部</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">治疗前尺寸</td>
+            <td>
+                <label>
+                    <%= projectInfo.attr && projectInfo.attr.befor_size%>
+                    <span>CM</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td class="td">治疗后尺寸</td>
+            <td>
+                <label>
+                    <%= projectInfo.attr && projectInfo.attr.after_size%>
+                    <span>CM</span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pad-n bor-n">
+                <table class="inner-table bor-n">
+                    <tbody>
+                        <tr>
+                            <td>治疗能力发数</td>
+                            <td>
+                                <label>
+                                    <%= projectInfo.attr && projectInfo.attr.treat_num%>
+                                    <span>发</span>
+                                </label>
+                            </td>
+                            <td>治疗时间</td>
+                            <td><label>
+                                <%= projectInfo.attr && projectInfo.attr.treat_time%>
+                                <span>分钟</span>
+                            </label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <%}%>
+    <%if (inArray(projectInfo.item_id,[4,8])){ %>
+    <tr>
+        <td colspan="2" class="pad-n bor-n">
+            <table class="inner-table bor-n">
+                <tbody>
+                    <tr>
+                        <td>发际线颜色색깔</td>
+                        <td>
+                            <label>
+                                <input type="checkbox" disabled="disabled" name="hair_color" <%if (projectInfo.attr && inArray(1,projectInfo.attr.hair_color)){%>checked="checked"<%}%> value="1">
+                                <span>黑色 검정색</span>
+                            </label>
+                            <br/>
+                            <label>
+                                <input type="checkbox" disabled="disabled" name="hair_color" <%if (projectInfo.attr && inArray(2,projectInfo.attr.hair_color)){%>checked="checked"<%}%> value="2">
+                                <span>咖啡色커피색</span>
+                            </label>
+                        </td>
+                        <td>色号及调配比例색소색깔과 비율</td>
+                        <td><%= projectInfo.attr && projectInfo.attr.color_pro%></td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <%}%>
+    <%if (inArray(projectInfo.item_id,[1,2,3])){ %>
+    <%if (inArray(projectInfo.item_id,[1,2])){%>
+    <%
+    var stostes={
+        "1":{
+            "type":"N5",
+            "nums":"0"
+            },
+        "2":{
+            "type":"N10",
+            "nums":"0"
+            },
+        "3":{
+            "type":"MITOCELL HOME",
+            "nums":"0"
+            },
+        "4":{
+            "type":"PRODERM",
+            "nums":"0"
+            }
+    }
+
+    orderStoste = projectInfo.attr && projectInfo.attr.stoste || [];
+    for(var i = 0;i<orderStoste.length;i++){
+        for (var j=1;j<5;j++){
+            if (orderStoste[i].type == stostes[j].type){
+                stostes[j]['selected'] = true;
+                stostes[j]['nums'] = orderStoste[i].nums;
+            }
+        }
+    }
+    %>
+    <script type="text/javascript">
+    var getStoste = function(){
+        var  $stostes= $('.stoste input[name=type]:checked'),returnValue=[];
+        $.each($stostes,function(){
+            var stoste = {
+                'type': $(this).val(),
+                'nums': Number($(this).siblings('input[name=nums]').val()) || 0
+            }
+            returnValue.push(stoste);
+        })
+        return returnValue;
+    }
+    </script>
+    <tr>
+        <td class="td">皮肤状况</td>
+        <td>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(1,projectInfo.attr.skinConcerns)){%>checked="checked"<%}%> name="skinConcerns" value="1">
+                    <span>腰毛粗大</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(2,projectInfo.attr.skinConcerns)){%>checked="checked"<%}%> name="skinConcerns" value="2">
+                    <span>皮肤暗沉</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(3,projectInfo.attr.skinConcerns)){%>checked="checked"<%}%> name="skinConcerns" value="3">
+                    <span>敏感脆弱</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(4,projectInfo.attr.skinConcerns)){%>checked="checked"<%}%> name="skinConcerns" value="4">
+                    <span>干燥粗糙</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(5,projectInfo.attr.skinConcerns)){%>checked="checked"<%}%> name="skinConcerns" value="5">
+                    <span>细小皱纹</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(6,projectInfo.attr.skinConcerns)){%>checked="checked"<%}%> name="skinConcerns" value="6">
+                    <span>痤疮痕迹</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(7,projectInfo.attr.skinConcerns)){%>checked="checked"<%}%> name="skinConcerns" value="7">
+                    <span>皮肤松弛</span>
+                </label>
+                <label>
+                    <input type="checkbox" disabled="disabled" <%if (projectInfo.attr && inArray(8,projectInfo.attr.skinConcerns)){%>checked="checked"<%}%> name="skinConcerns" value="8">
+                    <span>其他</span>
+                </label>
+        </td>
+    </tr>
+    <tr>
+        <td class="td">选择原液</td>
+        <td>
+            <%for(var i=1;i<5;i++){%>
+            <%var current = stostes[i];%>
+                <label class="checkbox stoste">
+                    <input type="checkbox" disabled="disabled" <%= current.selected == true ? "checked='checked'" : ""%> name="type" value="<%=current.type%>">
+                    <span><%=current.type%></span>
+                    <span>   用量</span>
+                    <input <%= current.selected == true ? "" : "disabled='disabled'"%>  name="nums" pattern="number"  type="text" value="<%=current.nums%>">
+                    <span>支</span>
+                </label>
+                <%if (i <4){%>
+                <br/>
+                <%}%>
+            <%}%>
+            <br/>
+        </td>
+    </tr>
+    <%}%>
+    <tr>
+        <td class="td">备注</td>
+        <td>
+            <%=projectInfo.attr && projectInfo.attr.remark.replace(/\n/g,'<br/>')%>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="pad-n bor-n">
+            <table class="inner-table bor-n">
+                <tbody>
+                    <tr>
+                        <td>美导</td>
+                        <td><%= projectInfo.guide_user ? projectInfo.guide_user.name+'（'+projectInfo.guide_user.number+'）':''%></td>
+                        <td>美容师</td>
+                        <td><%=projectInfo.beautician_user ? projectInfo.beautician_user.name+'（'+projectInfo.beautician_user.number+'）':''%></td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="td">操作日期</td>
+        <td><%= projectInfo.attr && projectInfo.attr.opt_time%></td>
+    </tr>
+    <%}else{%>
+    <tr>
+        <td class="td">针的种类<br/>니들의 종류</td>
+        <td><%= projectInfo.attr && projectInfo.attr.needle_type%></td>
+    </tr>
+    <tr>
+        <td class="td">其他说明기타</td>
+        <td><%= projectInfo.attr && projectInfo.attr.note%></td>
+    </tr>
+    <tr>
+        <td colspan="2" class="pad-n bor-n">
+            <table class="inner-table bor-n">
+                <tbody>
+                    <tr>
+                        <td>院长원장</td>
+                        <td><%= projectInfo.dean_user ? projectInfo.dean_user.name+'（'+projectInfo.dean_user.number+'）' : ''%></td>
+                        <td>助理통역</td>
+                        <td><%= projectInfo.assistant_user ? projectInfo.assistant_user.name+'（'+projectInfo.assistant_user.number+'）':''%></td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="pad-n bor-n">
+            <table class="inner-table bor-n">
+                <tbody>
+                    <tr>
+                        <td>美导상담자</td>
+                        <td><%=projectInfo.guide_user ? projectInfo.guide_user.name+'（'+projectInfo.guide_user.number+'）':''%></td>
+                        <td>施术日期시술날짜</td>
+                        <td><%= projectInfo.attr && projectInfo.attr.opt_time%></td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <%}%>
+</tbody>
+</table>
+<%}%>

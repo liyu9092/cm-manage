@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+	  <link rel="stylesheet" href="/module/system/user/login.css" />
+  </head>
+  <body>
+  
+		<div class="login">
+			<div class="flex-box">
+				<div class="flex-item">
+					<div class="slogan">
+						<img src="/images/logo.png" alt="" /><br />
+						<div class="fonts"></div>
+					</div>
+				</div>
+				<form>
+					<h4 class="tc">臭美管理后台登录</h4>
+					<ul>
+						<div class="control-help"></div>
+						<li><input type="text" class="login-field" placeholder="帐号" id="account" autofocus="true"/><i class="fa fa-user" style="font-size:18px;top:10px"></i></li>
+						<li><input type="password" class="login-field" placeholder="密码" id="password"/><i class="fa fa-key" style="font-size:19px"></i></li>
+						<li><input type="text" class="code login-field" placeholder="验证码" id="code" autocomplete="off"/><i class="fa fa-barcode" style="font-size:16px;top:12px"></i> <a class="link"><img id="codeImage" /><span class="space"></span>换一张</a></li>
+						<li><button class="btn-primary">立即登录</button></li>
+					</ul>
+				</form>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(function(){
+				var str="美发O2O领跑者 ";
+				var slogan=$('.slogan');
+				var i=0;
+				var fonts=slogan.find('.fonts');
+				var interval=setInterval(function(){
+					fonts.append('<span class="font">'+str.charAt(i)+'</span>');
+					i++;
+					if(i==str.length){
+						clearInterval(interval);
+					}
+					if(i==2){
+						slogan.find('img').addClass('fadeIn');
+					}
+				},130);
+				
+				function uuid(len, radix) {
+					var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+					var uuid = [],i,radix = radix || chars.length;
+					if (len) {
+						for (i = 0; i < len; i++) uuid[i] = chars[0 | Math.random() * radix];
+					} else {
+						var r;
+						uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
+						uuid[14] = '4';
+						for (i = 0; i < 36; i++) {
+							if (!uuid[i]) {
+								r = 0 | Math.random() * 16;
+								uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r];
+							}
+						}
+					}
+					return uuid.join('');
+				}
+				 var uniqid = uuid(32);
+				$('#codeImage').attr('src',cfg.getHost()+'captcha?uniqid='+uniqid).parent().on('click',function(){
+					uniqid = uuid(32);
+					document.getElementById('codeImage').src=cfg.getHost()+'captcha?uniqid='+uniqid;
+				});
+				$('form').on('submit',function(e){
+					var account=$.trim($('#account').val());
+					var password=$.trim($('#password').val());
+					var code=$.trim($('#code').val());
+					var help=$('.control-help');
+					if(!account){
+						help.show().text('请输入帐号');
+						return false;
+					}
+					if(!password){
+						help.show().text('请输入密码');
+						return false;
+					}
+					if(!code){
+						help.show().text('请输入验证码');
+						return false;
+					}
+					help.hide();
+					$('.btn-primary').text('正在登录...');
+					lib.ajax({
+						url:'login',
+						type:'POST',
+						data: {username: account, password: password, captcha: code,uniqid:uniqid },
+						success:function(data){
+							if(data.result==1){
+								localStorage.setItem('token',data.data.token);
+								delete data.data.token;
+								data.data.account=account
+								lib.setSession({user:data.data});
+								localStorage.removeItem('access.data');
+								location.href='/index.html';
+							}else{
+								$('.btn-primary').text('登录');
+								help.show().text(data.msg||"系统错误!");
+								$('#codeImage').trigger('click');
+							}
+						},
+						done:function(){}
+					})
+					e.preventDefault();
+				});
+				if(lib.getSession()&&lib.getSession().account){
+					$('#account').val(lib.getSession().account);
+				}
+			});
+		</script>
+  </body>
+</html>

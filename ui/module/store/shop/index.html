@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <link rel="stylesheet" href="shop.css" /> 
+    </head>
+    <body>
+
+    <div class="breadcrumb">
+      <a>店铺管理</a>
+      <span>&gt;</span><a href="index.html">店铺列表</a>
+      <div class="flex-box">
+      <div class="flex-item">
+		<h4>店铺列表</h4>
+      </div>
+    </div>
+    
+    </div>
+      <div class="wrapper">
+		<form action="salon/export" data-role="export" id="export" >
+		   
+	  </form>
+        <form data-role="hash" id="form" class="shop-hash-form">
+          <div class="position">
+            <div class="input-group input-switch">
+              <select>
+                <option value="0">店铺搜索</option>
+                <option value="1">店铺编号</option>
+                <option value="2">商户名称</option>
+                <option value="3">业务代表</option>
+              </select>
+              <input type="text" class="input-search" name="salonname" placeholder="请输入店铺名称" 
+              maxlength="16"/>
+              <input type="text" class="input-search hide" name="sn" placeholder="请输入店铺编号" 
+              maxlength="16"/>
+              <input type="text" class="input-search hide" name="merchantName" placeholder="请输入商户名称" maxlength="16"/>
+              <input type="text" class="input-search hide" name="businessName" placeholder="请输入业务代表" maxlength="16"/>
+              <button type="submit" class="btn btn-search">
+                <i class="fa fa-search"></i>
+              </button>
+            </div>
+            <a class="btn" id="filter-toggle-btn">
+              筛选条件 <i class="fa fa-angle-down"></i>
+            </a>
+      			<button class="btn" form="export" data-slug="salon.export">
+              <i class="fa fa-file-excel-o"></i> 导出
+            </button>			  
+          </div>
+
+
+          <div class="filter-box" style="display:none">
+            <div class="flex-box">
+              <div class="filter-title">店铺状态：</div>
+              <div class="flex-item">
+				<label data-role="hash">
+					<input type="radio" name="salestatus" value="" checked />
+					<span>全部</span>
+				</label>
+                <label data-role="hash">
+					<input type="radio" name="salestatus" value="1"/>
+					<span>正常合作</span>
+				</label>
+				<label data-role="hash">
+					<input type="radio" name="salestatus" value="0"/>
+					<span>终止合作</span>
+				</label>
+              </div>
+            </div>  
+                      
+            <div class="flex-box">
+              <div class="filter-title">店铺类型：</div>
+              <div class="flex-item">
+        				<label data-role="hash">
+        					<input type="radio" name="shopType" checked value=""/>
+        					<span>全部</span>
+        				</label>
+        				<label data-role="hash">
+        					<input type="radio" name="shopType" value="1"/>
+        					<span>预付款店</span>
+        				</label>
+        				<label data-role="hash">
+        					<input type="radio" name="shopType" value="2"/>
+        					<span>投资店</span>
+        				</label>
+        				<label data-role="hash">
+        					<input type="radio" name="shopType" value="3"/>
+        					<span>金字塔店</span>
+        				</label>
+                <label data-role="hash">
+                  <input type="radio" name="shopType" value="4"/>
+                  <span>高端店</span>
+                </label>
+                <label data-role="hash">
+                  <input type="radio" name="shopType" value="5"/>
+                  <span>写字楼店</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="flex-box filter-tab">
+              <div class="filter-title">区域类型：</div>
+              <div id="area" class="flex-item" ajat="salonList/getProvinces?type=3&areaId=1#domid=area&tempid=area_t" ajat-one="true">
+              <script type="text/template" id="area_t">
+              <%
+              var arr = [];
+              for(var i=0; i<data.length;i++){
+              arr.push(data[i].tid);
+              }
+              %>
+			  <label data-role="hash" ajat-click="salonList/getProvinces?type=4&areaId=<%=arr%>#domid=circle&tempid=circle_t">
+				 <input type="radio" name="district" checked value=""/>
+				 <span>全部</span>
+			  </label>
+              <%
+              for(var i=0; i<data.length;i++){
+              %>
+				<label data-role="hash" ajat-click="salonList/getProvinces?type=4&areaId=<%=data[i].tid%>#domid=circle&tempid=circle_t">
+					<input type="radio" name="district" value="<%=data[i].tid%>"/>
+					<span><%=data[i].tname%></span>
+				</label>
+              <%}%>
+              <input type="hidden" ajat="salonList/getProvinces?type=4&areaId=<%=query.district||arr%>#domid=circle&tempid=circle_t" ajat-one="true">
+              </script>
+              </div>
+            </div>
+          
+            <div class="flex-box">
+              <div class="filter-title">商圈类型：</div>
+              <div class="flex-item" id="circle">
+              <script type="text/template" id="circle_t">
+			  <label data-role="hash">
+				  <input type="radio" name="zone" checked value=""/>
+				  <span>全部</span>
+			  </label>
+              <%for(var i=0; i<data.length;i++){%>
+			  <label data-role="hash">
+				<input type="radio" name="zone"  value="<%=data[i].areaid%>"/>
+				<span><%=data[i].areaname%></span>
+			  </label>
+              <%}%>
+              </script>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div class="table" id="table" ajat="salon/index?<%=query._%>#domid=table&tempid=table-t">
+          <script type="text/template" id="table-t">
+          <table>
+            <thead>
+              <tr>
+                <th>序号</th>
+                <th>编号</th>
+                <th>店铺</th>
+                <th><a data-role="hash" href="#page=1&sort_key=shopType&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">店铺类型 <i class="fa fa-sort"></i></a></th>
+                <th>区域</th>
+                <th>所属商圈</th>
+                <th>业务代表</th>
+                <th><a data-role="hash" href="#page=1&sort_key=salestatus&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">状态 <i class="fa fa-sort"></i></a></th>
+                <th>操作</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% 
+              var row = data.data;
+              for(var i = 0 ; i< row.length ; i++){ 
+                var t = row[i].shopType , typeName = "" , statusText = "";
+                if(t == "1") typeName = "预付款店";
+                if(t == "2") typeName = "投资店";
+                if(t == "3") typeName = "金字塔店";
+                if(t == "4") typeName = "高端店";
+                if(t == "5") typeName = "写字楼店";
+                if(row[i].salestatus == "0") statusText = "终止合作";
+                if(row[i].salestatus == "1") statusText = "正常合作";
+              %>
+              <tr>
+                <td><%=i+1%></td>
+                <td><%=row[i].sn%></td>
+                <td class="colswrap"><strong><%=row[i].salonname%></strong><p class="weak">所属商户：<%=row[i].name%></p></td>
+                <td><%=typeName%></td>
+                <td><%=row[i].districtName%></td>
+                <td><%=row[i].zoneName%></td>
+                <td><%=row[i].businessName%></td>
+                <td><%=statusText%></td>
+                <td><a class="link" data-slug="salon.getSalon" href="detail.html?type=detail&salonid=<%=row[i].salonid%>">查看&gt;&gt;</a></td>
+              </tr>
+              <%}%>
+            </tbody>
+          </table>
+          <div class="pager"></div>          
+          </script>
+        </div>
+      </div>
+    </body>
+</html>

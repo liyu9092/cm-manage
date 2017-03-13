@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+        <div class="breadcrumb">
+            <a>交易管理</a><span>&gt;</span><a href="ticket.html">臭美券查询</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>臭美券查询</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <form data-role="hash">          
+                <div class="input-group placeholder-switch">
+                    <select name="key">
+                      <option value="1" data-placeholder="请输入臭美券密码">臭美券密码</option>
+                      <option value="2" data-placeholder="请输入用户手机号" selected="selected">用户手机号</option>
+                      <option value="3" data-placeholder="请输入店铺名称">店铺名称</option>
+                      <option value="4" data-placeholder="请输入用户设备号">用户设备号</option>
+                      <option value="6" data-placeholder="请输入活动编码">活动编码</option>
+                    </select>
+                    <input type="text" class="input-search" name="keyword" maxlength="16" 
+                    placeholder="请输入用户手机号"/>
+                </div> 
+
+                <span class="date-group" style="padding-left:15px">
+                    <select name="time_key" >
+                        <option value="2">付款时间</option>
+                        <option value="1">消费时间</option>
+                    </select>
+                    <input type="date" name="min_time" data-role="start" placeholder="YYYY-MM-DD"/>
+                    <span style="padding:0 10px">到</span>
+                    <input type="date" name="max_time" data-role="end" placeholder="YYYY-MM-DD"/>
+                </span>
+
+                <span class="date-group">
+                    <span style="padding:0 5px 0 15px">臭美券状态</span>
+                    <select name="state" >
+                        <option value="0">全部</option>
+                        <option value="2">未消费</option>
+                        <option value="4">已消费</option>
+                        <option value="6">申请退款</option>
+                        <option value="8">退款中</option>
+                        <option value="7">退款成功</option>
+                        <option value="9">退款失败</option>
+                    </select>
+                </span>
+
+                <button class="btn" type="submit">搜索</button>
+            </form>
+
+            <form action="ticket/export" data-role="export" data-slug="ticket.export">
+                <input type="hidden" name="currentpage" value="true"/>
+                <button class="btn" type="submit">
+                    <i class="fa fa-file-excel-o"></i> 导出
+                </button>
+            </form>
+
+            <div class="table" ajat="ticket/index?<%=query._%>#domid=table&tempid=table-t&timeout=30000" id="table">
+            <script type="text/template" id="table-t">
+
+              <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">              
+               <%if(data.total == 0){%>
+                 当前页面下所有订单金额统计为：0.00元  实付金额:  0.00元                 
+               <%}else{var all_amount = 0 ,paied_amount=0;%>
+                <%data.data && data.data.forEach(function(item,i){
+                  all_amount   += item.priceall_ori*100;
+                  paied_amount += item.actuallyPay*100;
+                })%>
+                当前页面下所有订单金额统计为：<%=all_amount/100%>元，实付金额:  <%=paied_amount/100%>元 
+              <%}%>
+              </div> 
+                     
+            <table>
+              <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>臭美券密码</th>
+                  <th>订单编号</th>
+                  <th>付款时间</th>
+                  <th>消费时间</th>
+                  <th>活动编码</th>
+                  <th>用户手机号</th>
+                  <th>用户设备号</th>
+                  <th>店铺名称</th>
+                  <th>订单金额</th>
+                  <th>实付金额</th>
+                  <th>购物车序号</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>             
+                <%var status=["正常","停用","注销"]%>
+                <%var data=data.data%>
+                <%data.forEach(function(item,i){%>
+                <tr>
+                  <td><%=i+1%></td>
+                  <td><%=item.ticketno.substr(0,2)+"****"+item.ticketno.substr(item.ticketno.length-2)%></td>
+                  <td><%=item.ordersn%></td>
+                  <td class="formatHms"><%=item.add_time%></td>
+                  <td class="formatHms"><%=item.use_time%></td>
+                  <td><%=item.voucher && item.voucher.vcSn%></td>
+                  <td><%=item.user && item.user.mobilephone%></td>
+                  <td><%=item.platform && item.platform.DEVICE_UUID%></td>
+                  <td><%=item.salon && item.salon.salonname%></td>
+                  <td><%=item.priceall_ori%></td>
+                  <td><%=item.actuallyPay%></td>
+                  <td><%=item.shopcartsn%></td>
+                  <td>
+                     <a class="link" data-slug="ticket.show"
+                     href="../order/detail.html?method=ticket/show/&id=<%=item.order_ticket_id%>">查看&gt</a>
+                  </td>
+                </tr>
+                <%})%>
+              </tbody>
+            </table>
+            <div class="pager">
+            </div>
+            </script>
+        </div>
+    </div>
+  </body>
+</html>

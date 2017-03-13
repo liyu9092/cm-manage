@@ -1,0 +1,468 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+	  <style type="text/css">
+		.table-detail tbody td:nth-child(odd){
+			width:50%;
+			background:transparent;
+		}
+		.table-detail thead th{
+			padding-left:20px;
+		}
+		.off-code{
+			padding:0;
+		}
+	  </style>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>用户中心 </a><span>&gt;</span><a href="index.html">用户列表 </a><span>&gt;</span>用户信息
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>用户信息</h4>
+				</div>
+			</div>
+			<hr />
+		</div>
+		
+		<div class="wrapper" ajat="user/show/<%=query.id%>#domid=detail&tempid=detail-t" id="detail">
+			<script type="text/template" id="detail-t">
+			<div class="detail-operation">
+				<button type="button" class="btn btn-edit" data-slug="user.update">
+					编辑
+				</button>
+				<button class="btn-primary" data-slug="user.update" form="form" style="display:none">提交</button>
+				<span class="space"></span>
+				<button class="btn" onclick="history.back()" >
+					取消
+				</button>
+			</div>
+			
+			<br />
+			
+			<div class="detail">
+				<div class="table-detail">
+					<table>
+						<thead>
+							<tr>
+								<th colspan="2" style="line-height:32px">
+									个人资料
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>臭美号：  <%=data.username%></td>
+								<td>头像：
+									<img src="<%=data.img%>" alt="" width="60px" height="60px" />
+								</td>
+							</tr>
+							<tr>
+								<td>昵称：  <%=data.nickname%> </td>
+								<td>性别： <%=data.sex%></td>
+							</tr>
+							<tr>
+								<td>发长：  <%if(data.hair_type==1){%>
+										长发
+									<%}else if(data.hair_type==2){%>
+										中发
+									<%}else if(data.hair_type==3){%>
+										短发
+									<%}%>
+									</td>
+								<td>
+									常住地区： 
+									<%if(data.area){%>
+										<%=data.area.split(",").join("")%>
+									<%}%>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">生日：<%=data.birthday%></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<br />
+				<div class="table-detail">
+					<table>
+						<thead>
+							<tr>
+								<th colspan="2" style="line-height:32px">
+									帐户信息
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>注册时间：  <%=data.add_time%></td>
+								<td>注册方式：手机注册</td>
+							</tr>
+							<tr>
+								<td>绑定手机号：  <%=data.mobilephone%></td>
+								<td>会员等级：<%=data.level?"V"+data.level:""%></td>
+							</tr>
+							<tr>
+								<td colspan="2">成长值：<%=data.growth%></td>
+							</tr>
+							<!--
+							<tr>
+								<td>登录密码：<%=data.password%></td>
+								<td>支付密码：<%=data.costpwd%></td>
+							</tr>
+							<tr>
+								<td>加入集团：<%=data.companyName%></td>
+								<td>活动邀请码：<%=!data.salonname?data.recommendCode:""%></td>
+							</tr>
+							<tr>
+								<td colspan="2">店铺邀请码：<%=data.salonname?data.recommendCode:""%></td>
+							</tr>-->
+						</tbody>
+					</table>
+				</div>
+				
+			</div>
+			<div class="update" style="display:none">
+				<form action="user/update/<%=query.id%>" data-role="form" id="form">
+				<div class="table-detail">
+					<table>
+						<thead>
+							<tr>
+								<th colspan="2" style="line-height:32px">
+									个人资料
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>臭美号：  <%=data.username%></td>
+								<td>头像： 
+									<div class="control-single-image">
+										<img src="<%=data.img%>" alt="" style="width:100px;height:100px;">
+										<div class="control-image-ud">
+											<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
+										</div>
+										<input type="hidden" name="img" class="original" value="<%=data.img%>" required requiredmsg="请上传图片" data-helpid="image-help"  />
+									</div>
+									<span class="space"></span>
+									<span class="weak">
+										请上传JPG或PNG格式的图标，尺寸为512×512px，容量小于800KB
+									</span>
+
+									<div class="control-help" id="image-help" style="display:none;margin-left:38px"></div>
+								</td>
+							</tr>
+							<tr>
+								<td>昵称： <input type="text" name="nickname" value="<%=data.nickname%>" required/></td>
+								<td>性别： <%=data.sex%></td>
+							</tr>
+							<tr>
+								<td>发长：
+									<select name="hair_type">
+									  <option value="1" <%=data.hair_type==1?"selected":""%>>长发</option>
+									  <option value="2" <%=data.hair_type==2?"selected":""%>>中发</option>
+									  <option value="3" <%=data.hair_type==3?"selected":""%>>短发</option>
+									</select>
+								</td>
+								<td>
+									常住地区：
+									<span>
+										<select id="province" required style="width:100px" requiredmsg="请选择省份"
+										ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t&sid=<%=data.area.split(",")[0]%>" 
+										ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t&sid=<%=data.area.split(",")[1]%>">
+										</select>
+										<select id="city" required style="width:100px" requiredmsg="请选择城市"
+										ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t&sid=<%=data.area.split(",")[2]%>">
+										</select>
+										<select id="area" required  style="width:100px" requiredmsg="请选择城区"></select>
+										<span class="control-help" style="display: none;"></span>
+									</span>
+									<input type="hidden" name="area" id="hidden"/>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">生日： <input type="date" name="birthday" value="<%=data.birthday%>" required/></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<br />
+				<div class="table-detail">
+					<table>
+						<thead>
+							<tr>
+								<th colspan="2" style="line-height:32px">
+									帐户信息
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>注册时间：  <%=data.add_time%></td>
+								<td>注册方式：手机注册</td>
+							</tr>
+							<tr>
+								<td>绑定手机号：  <%=data.mobilephone%></td>
+								<td>会员等级：<%=data.level?"V"+data.level:""%></td>
+							</tr>
+							<tr>
+								<!--
+								<td>会员积分：  <input type="text" value="<%=data.grade%>" name="grade" required pattern="number" /></td>-->
+								<td colspan="2">成长值：<input type="text" value="<%=data.growth%>" name="growth" required pattern="number"/></td>
+							</tr>
+							<!--
+							<tr>
+								<td>登录密码：<%=data.password?"已设置":"未设置"%></td>
+								<td>支付密码：<%=data.costpwd?"已设置":"未设置"%></td>
+							</tr>
+							<tr>
+								<td>加入集团：<%=data.companyName%></td>
+								<td>活动邀请码：<%=!data.salonname?data.recommendCode:""%></td>
+							</tr>
+							<tr>
+								<td colspan="2">店铺邀请码：<%=data.salonname?data.recommendCode:""%></td>
+							</tr>
+							-->
+						</tbody>
+					</table>
+				</div>
+				
+				</form>
+			</div>
+			
+				<%
+					var codes=data.recommendCodes;
+					var code0=null;
+					var code1=null;
+					var code2=null;
+					var code3=null;
+					var code4=null;
+				%>
+				<%data.recommendCodes.forEach(function(code){%>
+					<%
+						if(code.type==1&&code.activity==2){
+							code0=code;
+						}
+						if(code.type==1&&code.activity==1){
+							code1=code;
+						}
+						if(code.type==2){
+							code2=code;
+						}
+						if(code.type==3){
+							code3=code;
+						}
+						if(code.type==4){
+							code4=code;
+						}
+					%>
+				<%})%>
+				<div class="table">
+					<table>
+						<thead>
+							<tr>
+								<th colspan="5" style="line-height:32px;padding-left:20px;font-size:14px;">
+									用户推荐情况
+								</th>
+							</tr>
+							<tr>
+								<th>码类型</th>
+								<th>码编号</th>
+								<th>店铺（活动）类型</th>
+								<th>填写时间</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>集团邀请码</td>
+								<td><%=data.companyCode?data.companyCode:"无"%></td>
+								<td><%=data.companyName?data.companyName:"无"%></td>
+								<td><%=data.companyCodeAddtime?new Date(data.companyCodeAddtime*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
+								<td><%if(data.companyCode){%>
+								<form data-slug="user.resetCode" action="user/resetCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+									<button data-slug="user.update" class="link">解绑集团码</button>
+									<input type="hidden" name="type" value="5" />
+								</form>
+								<span class="space"></span>
+								<%}%>
+								<form data-slug="user.setCode" action="user/setCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+									<button data-slug="user.update" type="button" class="link bind">绑定集团码</button>
+									<input type="hidden" name="code" />
+									<input type="hidden" name="type" value="5" />
+								</form>	
+								</td>
+							</tr>
+							<tr>
+								<td>商家邀请码</td>
+								<td><%=code0?code0.recommend_code:"无"%></td>
+								<td><%=code0?code0.salonname:"无"%></td>
+								<td><%=code0?new Date(code0.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
+								<td>
+									<%if(code0){%>
+									<form data-slug="user.resetCode" action="user/resetCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" class="link">解绑商家邀请码</button>
+										<input type="hidden" name="type" value="1" />
+										<input type="hidden" name="activity" value="2" />
+									</form>
+									<span class="space"></span>
+									<%}%>
+									<form  data-slug="user.setCode" action="user/setCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" type="button" class="link bind">绑定商家邀请码</button>
+										<input type="hidden" name="code" />
+										<input type="hidden" name="type" value="1" />
+										<input type="hidden" name="activity" value="2" />
+									</form>	
+								</td>
+							</tr>
+							<tr>
+								<td>活动邀请码</td>
+								<td><%=code1?code1.recommend_code:"无"%></td>
+								<td><%=code1?data.activityName:"无"%></td>
+								<td><%=code1&&code1.add_time?new Date(code1.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
+								<td>
+									<%if(code1){%>
+									<form data-slug="user.resetCode" action="user/resetCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" class="link">解绑活动邀请码</button>
+										<input type="hidden" name="type" value="1" />
+										<input type="hidden" name="activity" value="1" />
+									</form>
+									<span class="space"></span>
+									<%}%>
+									<form data-slug="user.setCode" action="user/setCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" type="button" class="link bind">绑定活动邀请码</button>
+										<input type="hidden" name="code" />
+										<input type="hidden" name="type" value="1" />
+										<input type="hidden" name="activity" value="1" />
+									</form>	
+								</td>
+							</tr>
+							<tr>
+								<td>店铺推荐码</td>
+								<td><%=code2?code2.recommend_code:"无"%></td>
+								<td>无</td>
+								<td><%=code2&&code2.add_time?new Date(code2.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
+								<td>
+									<%if(code2){%>
+									<form data-slug="user.resetCode" action="user/resetCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" class="link">解绑商家邀请码</button>
+										<input type="hidden" name="type" value="2" />
+									</form>
+									<span class="space"></span>
+									<%}%>
+									<form data-slug="user.setCode" action="user/setCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" type="button" class="link bind">绑定商家邀请码</button>
+										<input type="hidden" name="code" />
+										<input type="hidden" name="type" value="2" />
+									</form>	
+								</td>
+							</tr>
+							<tr>
+								<td>用户推荐码</td>
+								<td><%=code3?code3.recommend_code:"无"%></td>
+								<td>无</td>
+								<td><%=code3&&code3.add_time?new Date(code3.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
+								<td>
+									<%if(code3){%>
+									<form data-slug="user.resetCode" action="user/resetCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" class="link">解绑用户推荐码</button>
+										<input type="hidden" name="type" value="3" />
+									</form>
+									<span class="space"></span>
+									<%}%>
+									<form data-slug="user.setCode" action="user/setCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" type="button" class="link bind">绑定用户推荐码</button>
+										<input type="hidden" name="code" />
+										<input type="hidden" name="type" value="3" />
+									</form>	
+								</td>
+							</tr>
+							<tr>
+								<td>活动推荐码</td>
+								<td><%=code4?code4.recommend_code:"无"%></td>
+								<td>无</td>
+								<td><%=code4&&code4.add_time?new Date(code4.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
+								<td>
+									<%if(code4){%>
+									<form data-slug="user.resetCode" action="user/resetCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" class="link">解绑活动推荐码</button>
+										<input type="hidden" name="type" value="4" />
+									</form>
+									<span class="space"></span>
+									<%}%>
+									<form data-slug="user.setCode" action="user/setCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" type="button" class="link bind">绑定活动推荐码</button>
+										<input type="hidden" name="code" />
+										<input type="hidden" name="type" value="4" />
+									</form>	
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="tc form-button" style="display:none">
+					<button class="btn-primary" form="form" data-slug="user.update">提交</button>
+					<span class="space"></span>
+					<button class="btn" type="button" onclick="history.back()">取消</button>
+				</div>
+			</script>
+		</div>
+		<script type="text/template" id="province_t">
+		<option value="">省份</option>
+		<%data.forEach&&data.forEach(function(item){%>
+			<option <%=item.pname==protocol.custom.sid?"selected":""%> value="<%=item.pid%>"><%=item.pname%></option>
+		<%})%>
+		</script>
+
+		<script type="text/template" id="city_t">
+			<option value="">城市</option>
+			<%data.forEach&&data.forEach(function(item){%>
+				<option <%=item.iname==protocol.custom.sid?"selected":""%> value="<%=item.iid%>"><%=item.iname%></option>
+			<%})%>
+		</script>
+
+		<script type="text/template" id="area_t">
+			<option value="">地区</option>
+			<%data.forEach&&data.forEach(function(item){%>
+				<option <%=item.tname==protocol.custom.sid?"selected":""%> value="<%=item.tid%>"><%=item.tname%></option>
+			<%})%>
+		</script>
+		<script type="text/javascript">
+			$(document).on('click','.btn-edit',function(){
+				$('.detail').hide().siblings().show();
+				$(this).hide().siblings().show();
+				$('.form-button').show();
+			}).on('click','.bind',function(){
+				var $this=$(this);
+				parent.lib.popup.prompt({
+					placeholder:"请输入码号",
+					define:function(value){
+						$this.siblings('input[name="code"]').val(value);
+						$this.closest('form').submit();
+					}
+				})
+			});
+			$('#detail').one('_ready',function(){
+				$('#province,#city,#area').on('change',function(){
+					$('#hidden').val($('#province option:selected').text()+','+$('#city option:selected').text()+','+$('#area option:selected').text());
+				});
+				lib.puploader.image({
+					browse_button: 'imageUpload',
+					auto_start:true,
+					filters: {
+						mime_types : [
+							{ title : "Image files", extensions : "jpg,png,jpeg" },
+						]
+					},
+					max_file_size:'800kb',
+					imageLimitSize:"512*512"
+				});
+			}).on('_ready','#province,#city,#area',function(){
+				$(this).trigger('change');
+			});
+		</script>
+  </body>
+</html>

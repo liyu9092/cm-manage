@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+    <div class="breadcrumb">
+        <a>店铺结算 </a><span>&gt;</span><a href="index.html">转付单</a><span>&gt;</span><span id="breadcrumb-current"> <%=query.preview?"预览":"查看"%>付款单</span>
+    
+		<div class="flex-box">
+			<div class="flex-item">
+				<h4> <%=query.preview?"预览":"查看"%>付款单</h4>
+			 
+			</div>	
+		</div>
+		<hr />
+    </div>	
+	
+   <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		<%
+				if(query.preview=="preview"){
+					data=JSON.parse(sessionStorage.getItem("preview"));
+					if(!data.state){
+						data.state=2;
+					}
+				}
+			%>
+		<div class="detail-operation">
+			<button class="btn btn-cancel" type="button">返回</button>
+		</div>
+		<div class="table-detail">
+        <table>
+            <thead>             
+				<tr style="height:60px">
+                        <td  colspan="2">
+                             <%=data.salon?data.salon.salonname:""%>
+							 <span class="table-detail-sn">店铺编号：<%=data.salon?data.salon.sn:""%></span>
+                        </td>                       
+                    </tr>				 
+            </thead>
+              <tbody>
+			  <%var type=["","付交易代收款","付交易代收款","交易代收款返还"]%>
+				 <%var state=["","已付款","待提交","待审批","待付款"]%>
+				 <%var pay_type=["","银行存款","账扣返还","现金","支付宝","财付通"]%>
+                <tr>
+                  <td>付款单号：</td>
+                  <td><%=data.code%></td>
+                </tr>
+                <tr>
+                  <td>付款类型：</td>
+                  <td><%=type[data.type]%></td>
+                </tr>
+				<tr>
+                  <td>付款方式：</td>
+                  <td><%=pay_type[data.pay_type]%></td>
+                </tr>
+                <tr>
+                  <td>付款金额：</td>
+                  <td><%=data.pay_money%></td>
+                </tr>
+				<tr>
+                  <td>备注：</td>
+                  <td><%=data.remark%></td>
+                </tr>		
+				<%if(query.preview!="preview"){%>
+                <tr>
+                  <td>创建日期：</td>
+                  <td><%=data.created_at%></td>
+                </tr>			
+                <tr>
+                 <td>制单人</td>
+                  <td><%=data.user?data.user.name:session.user.name%></td>
+               </tr>
+			    <tr>
+                 <td>实际付款日期：</td>
+                  <td><%=data.pay_day%></td>
+                </tr>
+                <tr>				
+                  <td>状态</td>
+                  <td><%=state[data.state]%></td>
+                </tr>
+				<%}%>
+              </tbody>
+        </table>
+		</div>
+		  </script>
+        
+    </div> 
+   <script type="text/javascript">
+
+   </script>
+  </body>
+</html>

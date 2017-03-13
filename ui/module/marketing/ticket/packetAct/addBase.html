@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script> 
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理</a>
+            <span>&gt;</span>
+            <a href="index.html">红包活动</a>
+            <span>&gt;</span><%=query.id?"编辑":"新增"%>活动
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4><%=query.id?"编辑":"新增"%>活动</h4>
+                </div>
+            </div>
+            <hr />
+        </div>
+
+        <div class="wrapper">
+				<div id="form" ajat="<%if(query._){%>laisee/show/<%=query.id%><%}%>#domid=form&tempid=form-t">
+				<script type="text/template" id="form-t">
+				<%
+					if(query.id){
+						sessionStorage.setItem("formData",JSON.stringify(data));
+					}else{
+						data=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{}
+				}%>
+				<form class="form-vertical" data-role="form">
+                    <ul class="nav-step flex-box">
+                        <li class="flex-item active"><span class="arrow">1.活动基本信息</span></li>
+                        <li class="flex-item"><span>2.红包现金券配置</span></li>
+                        <li class="flex-item"><span>3.礼包配置</span></li>
+                        <li class="flex-item"><span>4.H5页面配置</span></li>
+                    </ul>
+
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span>红包名称：</label>
+                        <div class="control">
+                            <input type="text" name="laisee_name" maxlength="12" required value="<%=data.laisee_name%>" <%=query.id?"readonly":""%>>
+                        </div>
+                    </div> 
+
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span>活动简介：</label>
+                        <div class="control">
+							<textarea name="lc_remark" placeholder="包含活动策划案例，时间，逻辑规则，限制5000个字符" required maxlength="5000" style="height:150px;width:400px;"><%=data.lc_remark%></textarea>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span>红包的有效天数：</label>
+                        <div class="control">
+                            <input type="text" placeholder="从1开始的整数" name="effective" maxlength="6" pattern="number" min="1" required value="<%=data.effective||data.over_time%>">
+                        </div>
+                    </div> 
+
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span>活动领取金额上限：</label>
+                        <div class="control">
+                            <input type="text" placeholder="从1开始的整数" maxlength="6" name="total_money" pattern="number"  min="1" required value="<%=data.total_money%>">
+                        </div>
+                    </div>                                         
+
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span>红包领取金额预警：</label>
+                        <div class="control">
+                            <select name="amount_warning" required >
+                                <option <%=data.amount_warning==0?"selected":""%> value="0">无预警</option>
+                                <option <%=data.amount_warning==20?"selected":""%> value="20">上限20%</option>
+                                <option <%=data.amount_warning==30?"selected":""%> value="30">上限30%</option>
+                                <option <%=data.amount_warning==50?"selected":""%> value="50">上限50%</option>
+                                <option <%=data.amount_warning==50?"selected":""%> value="80">上限80%</option>
+                                <option <%=data.amount_warning==90?"selected":""%> value="90">上限90%</option>
+                                <option <%=data.amount_warning==100?"selected":""%> value="100">上限100%</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for=""></label>
+                        <div class="control">
+                            <input type="text" name="warning_phone" required pattern="^[0-9,]+$" nospace placeholder="预警通知11位手机号，最多可填8个，用“，”区分" <%=!data.warning_phone?"disabled":""%>  value="<%=data.warning_phone%>"/>
+                        </div>                        
+                    </div>                    
+
+                    <div class="control-group">
+                        <label class="control-label" for="">                            
+                            <label>
+                                <input type="checkbox" id="switch" value="3" <%=data.sms_on_gained?"checked":""%> >
+                                <span>手机短信内容</span>
+                            </label>
+                        </label>
+                        <div class="control">
+                            <textarea name="sms_on_gained" minlength="10" maxlength="500"  <%=!data.sms_on_gained?"disabled":""%> placeholder="限制500个汉字的长度,[useMoney]:接收短信用户获取的现金券金额,[name]:活动名称,[overtime]:接收短信用户获取的现金券有效结束时间" 
+                            style="height:150px;width:400px;" required><%=data.sms_on_gained||"【臭美美发】亲爱的，[useMoney]元现金券已存入你的账户，登录臭美美发APP在个人中心查看，APP下载地址http://t.cn/RZXyLPg，退订回复TD"%></textarea>
+							<span style="display:inline-block;vertical-align: middle;" class="weak">【说明】勾选之后必填，建议使用默认短信模板<br/>
+                                       10~500个汉字的长度<br/>
+                                       [useMoney]:接收短信用户获取的现金券金额<br/>
+                                       [name]:活动名称<br/>
+                                       [overtime]:接收短信用户获取的现金券有效结束时间</span>
+                        </div>                        
+
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for=""></label>
+                        <a class="btn" href="index.html">取消</a>
+						<span class="space"></span>
+                        <button class="btn-primary">下一步</button>
+                    </div>                                                                  
+            </form>
+			</script>
+			</div>
+        </div> 
+        <script>
+			lib.ajax({url:"laisee/itemTypes"}).done(function(data){
+				if(data.result==1){
+					sessionStorage.setItem("types",JSON.stringify(data.data));
+				}
+			})
+			$(document.body).on('click',"#switch",function(){
+				$(this).closest('.control-label').next().find("textarea").attr('disabled',!this.checked)
+			}).on('change',"select[name='amount_warning']",function(){
+				$(this).closest('.control-group').next().find("input").attr("disabled",this.value=="0"?true:false);
+			}).on("pass","input[name='warning_phone']",function(){
+				var $this=$(this);
+				var arr=this.value.split(',');
+				if(arr.length>8){
+					$this.trigger("error",{type:"error",errormsg:"最多可填8个手机号"});
+				}
+				arr.forEach(function(item){
+					if(item.length!=11){
+						$this.trigger("error",{type:"error",errormsg:"请检查手机号码是否是11位数字"});
+					}
+				})
+			});
+            lib.Form.prototype.save = function(data){
+				var formData=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{};
+				data=$.extend(formData,data);
+				sessionStorage.setItem("formData",JSON.stringify(data));
+                location.href = "addTicket.html"+(lib.query._?"?"+lib.query._:"")
+            }
+			var $form=$('#form')
+			$form.on("_ready",function(e,data){
+				if(data&&data.response){
+					if(data.response.status=="N"||data.response.status=="S"){
+						$form.find("input,select,textarea").attr("disabled",true);
+					}
+				}
+			});
+        </script>      
+    </body>
+</html>

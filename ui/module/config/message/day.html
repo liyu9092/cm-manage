@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+		<a>系统配置</a><span>&gt;</span><a>APP消息盒子</a><span>&gt;</span><a href="index.html">日增长推送</a> 
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4>日增长推送</h4>
+			</div>
+		 </div>		
+		<hr />
+	</div>	
+	
+	<div class="wrapper" ajat="messageBox/showDailyMessage#domid=form&tempid=form-t&xss=false" id="form">
+		<script type="text/template" id="form-t">
+		<form  method="post" class="form-vertical" data-role="form" action="messageBox/dailyMessagePush" data-xss="none">
+				<div class="detail-operation">
+					<button class="btn" onclick="location.reload();" style="display:none;" type="button" >取消</button>
+					<span class="space"></span>
+					<button class="btn-primary edit" type="button" data-slug="messageBox.dailyMessagePush">编辑</button>
+					<button class="btn-primary" style="display:none;" data-slug="messageBox.dailyMessagePush">提交</button>			
+				</div>
+                <div class="control-group">
+                    <label class="control-label">开启/暂停本推送：</label>
+					<div class="control">
+						<label class="switch"><input disabled type="checkbox" id="switch" <%=data.isPush=="Y"?"checked":""%>/><span></span></label>
+						
+					</div>
+                </div>  
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>接收信息用户：</label>
+                    <div class="control">
+						<label>
+							<input type="checkbox" name="receive" checked disabled><span>安装未注册</span>
+							<input type="hidden" name="receiveType" value="DAILYAPPNOTREG" />
+						</label>
+						<span class="weak" style="margin-left:-10px">（默认选中，不能去掉）</span>
+						<div>前一天安装了截止今天的19:00:00  还未注册的用户，今天的 19:00:00进行发送；<br />
+1、在19:00:00之前成功保存修改，修改信息当天生效，当天发送；<br />
+2、在19:00:00之后（包括19点）成功保存修改，则修改信息第二天生效，第二天发送；</div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>消息标题：</label>
+                    <div class="control">
+                        <input type="text" required maxlength="16" disabled minlength="2" placeholder="2~16个字" name="title" value="<%=data.title%>">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>消息内容：</label>
+                    <div class="control">
+					<input type="text" required maxlength="40" disabled minlength="5" placeholder="5~40个字" name="content" value="<%=data.content%>">
+					</div>
+                </div>
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>消息编辑：</label>
+					<div class="control">
+						<label>
+							<input type="radio" name="switch1" value="1" class="radio-editor" disabled
+							<%=data.link||!data.detail ? "checked" : "" %>>
+							<span>信息链接</span>
+						</label>
+						<label>
+							<input type="radio" name="switch1" value="2" class="radio-editor" disabled
+							<%=data.detail ? "checked" : "" %>>
+							<span>连接自动生成</span>
+						</label>
+						<div style="margin-top:10px">
+							<input type="text" name="link" disabled placeholder="信息链接需以http或者https开头" required value="<%=data.link%>" style="<%=data.detail?"display:none":""%>" pattern="^(http|https)://" patternmsg="链接地址不正确"/>
+							<div id="editor-wrap">
+								<div id="editor" type="text/plain" style="width:800px;height:300px;"></div>
+								<div class="weak">详情中的图片建议尺寸：690x320px</div>
+								<textarea type="hidden" id="hidden" class="hide" required name="detail"><%=data.detail%></textarea>
+							</div>
+							<div class="hide">
+								<div id="edui_simpleupload" class="edui-box edui-button edui-for-simpleupload edui-default">
+									<div id="edui_simpleupload_state" class="edui-default">
+										<div class="edui-button-wrap edui-default">
+											<div id="edui15_body"  title="单图上传" class="edui-button-body edui-default" >
+												<div class="edui-box edui-icon edui-default" id="ueditor-upload">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+						<br />
+					</div>
+                </div>
+				<div class="control-group" style="margin-top:-30px">
+					<label for="" class="control-label">&nbsp;</label>
+					<div class="control">
+						<label>
+							<input type="checkbox" disabled name="push" checked><span>消息推送</span>
+						</label>
+						<span class="weak" style="margin-left:-10px">（默认选中不可去除）</span>
+					</div>
+				</div>
+		  </form>
+		  </script>
+		 
+	</div>
+		<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+		<script type="text/javascript" src="/ueditor/ueditor.all.js"></script>
+		<script type="text/javascript" src="/ueditor/lang/zh-cn/zh-cn.js"></script>
+        <script type="text/javascript">
+			$('#form').one('_ready',function(e,data){
+				var form=$(this).find('form');
+				form[0]._getFormData=function(){
+					var data=lib.tools.getFormData($(this));
+					data.isPush=document.getElementById("switch").checked?"Y":"N";
+					if(data.switch1==1){
+						delete data.detail;
+					}
+					if(data.switch1==2){
+						delete data.link;
+					}
+					return data;
+				}
+				form[0].goback=function(){
+					location.reload();
+				}
+				//编辑器
+				window.ue = UE.getEditor('editor');
+				window.ue.addListener("keyup",function(){
+					$('#hidden').val(window.ue.getContent());
+				});
+				window.ue.ready(function(){
+					$('#edui14').after($('#edui_simpleupload'));
+					lib.puploader.image({
+						browse_button: 'ueditor-upload',
+						auto_start:true,
+						filters: {
+							mime_types : [
+								{ title : "Image files", extensions : "jpg,gif,png,jpeg" }
+							]
+						}
+					},function(uploader){
+						uploader.bind('FileUploaded',function(up,file,res){
+							if(res&&res.response&&typeof res.response=='string'){
+								var data=JSON.parse(res.response);
+								if(data.code==0&&data.response)
+								UE.getEditor('editor').execCommand('insertHtml','<img src="'+data.response.img +'"/>');
+							}
+						});
+					});
+					if(!data.response.detail){
+						$('#editor-wrap').hide();
+					}
+					if(data.response.detail){
+						 UE.getEditor('editor').setContent(data.response.detail);
+						window.ue.setDisabled(true);
+					}
+					
+				});
+				
+
+			});
+			$(document).on('change','.radio-editor',function(){
+				var editor=$('#editor-wrap');
+				if($(this).val()==1){
+					editor.hide().siblings("input[name='link']").show().attr('disabled',false);
+					editor.find('textarea').attr("disabled",true);
+				}else{
+					editor.show().siblings("input[name='link']").hide().attr('disabled',true).blur();
+					editor.find('textarea').attr("disabled",false);
+				}
+			}).on('click','.edit',function(){
+				$(this).hide().siblings("button").show();
+				$(this).closest('form').find("input").each(function(){
+					if(this.name=="receive"||this.name=="push"){
+					}else{
+						this.disabled=false;
+					}
+				});
+				window.ue.setEnabled();
+			})
+			$(document).on('click','.edui-for-fullscreen',function(){
+				if($(this).find('.edui-state-checked').length==1){
+					parent.lib.fullpage(true);
+				}else{
+					parent.lib.fullpage(false);
+				}
+			})
+		</script>  
+  </body>
+</html>

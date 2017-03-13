@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>交易管理 </a>
+            <span>&gt;</span><a href="index.html">约发型师查询</a><span>&gt;</span>记录详情
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>记录详情</h4>
+                </div>
+                <div class="flex-item">
+                    <button type="button" class="btn fr" onclick="history.back()">取消</button>
+                </div>                
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="table-detail" ajat="appointment/show/<%=query.id%>#domid=table&tempid=table-t" id="table">
+				<script type="text/template" id="table-t"> 
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>用户臭美号</td>
+                            <td><%=data.userName%></td>
+                        </tr>
+
+                        <tr>
+                            <td>用户手机号</td>
+                            <td><%=data.userMobile%></td>
+                        </tr>
+
+                        <tr>
+                            <td>美发项目</td>
+                            <td><%=data.service_item%></td>
+                        </tr>
+
+                        <tr>
+                            <td>到店时间</td>
+                            <td><%=data.appoint_date%></td>
+                        </tr>
+
+                        <tr>
+                            <td>联系客户</td>
+                            <td><%=data.contacted==1?"已联系":"未联系"%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td>店铺名称</td>
+                            <td><%=data.salonName%></td>
+                        </tr>   
+
+                        <tr>
+                            <td>店铺地址</td>
+                            <td><%=data.addr%></td>
+                        </tr>
+
+                        <tr>
+                            <td>造型师等级</td>
+							<%var grade=["","资深发型师","资深发型师","设计总监","美发大师"]%>
+                            <td><%=grade[data.stylistGrade]%></td>
+                        </tr>  
+
+                        <tr>
+                            <td>造型师名称</td>
+                            <td><%=data.stylistName%></td>
+                        </tr>  
+
+                        <tr>
+                            <td>造型师手机号</td>
+                            <td><%=data.stylistMobile%></td>
+                        </tr> 
+
+                        <tr>
+                            <td>提交时间</td>
+                            <td><%=data.add_time%></td>
+                        </tr>                                                                   
+                    </tbody>                     
+                </table>
+				</script>
+            </div>
+        </div>
+    </body>
+</html>

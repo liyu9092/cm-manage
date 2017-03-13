@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>臭美管理后台</title>
+		<script type="text/javascript" src="/js/include.js"></script>
+    </head>
+
+    <body>
+        <div class="breadcrumb">
+            <a>店铺管理</a>
+            <span>&gt;</span>
+            <a href="index.html">店铺帐号</a>
+            <span>&gt;</span>新增店铺账号
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>新增店铺账号</h4>
+				</div>
+			</div>
+			<hr />
+        </div>
+        <div class="wrapper">
+            <form method="post" class="form-vertical" data-role="form" action="salonAccount/save">
+				<div class="detail-operation">
+					<button type="button" class="btn btn-cancel">取消</button>
+					<span class="space"></span>
+					<button class="btn-primary">提交</button>
+				</div>
+               <legend>账号信息</legend>
+				<input type="hidden" name="salonid" id="salonid"/>
+				 <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
+                    <div class="control complete">
+                        <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" 
+							ajat-resources="/module/public/widget/autocomplete/index.js"
+							autocomplete="off" required />
+						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ></div>
+						<span id="sn" class="weak"></span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
+                    <div class="control">
+                        <input type="text" id="merchantname"  disabled>
+						<input type="hidden" name="merchantId" id="merchantId" required requiredmsg="没有找到店铺名称对应的商户"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>用户名：</label>
+                    <div class="control">
+                        <input type="text" name="username" required maxlength="16" pattern="phone" >
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""></label>
+					<label>
+						<input type="radio" value="1" name="roleType" checked><span>普通用户</span>
+					</label>
+					<label>
+						<input type="radio" value="2" name="roleType"><span>超级管理员</span>	
+					</label>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""></label>
+                    <button class="btn-primary">提交</button>
+                </div>                                                                  
+            </form>        
+        </div>
+    </body>
+</html>

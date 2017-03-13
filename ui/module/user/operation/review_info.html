@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>用户操作 </a>
+            <span>&gt;</span><a href="customer_review.html">评价管理</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>评价详情</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="table table-detail" style="margin:0" ajat="comment/show/<%=query.id%>#domid=table&tempid=table-t" id="table">
+                <script type="text/template" id='table-t'>
+                    <div class="fr wrapper">
+                        <form action="comment/hidden/<%=data.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                        <button class="btn" data-slug="comment.hidden" id="hiddenBtn" type="submit" data-toggle="tooltip" <%= data.status != 1 ? "disabled='disabled'" : ""%>  data-placement="top" title="隐藏后，前端-个人中心-查看评价处可视，前端-店铺评价以及商家后台评价管理处不可视">隐藏</button>
+                        <input type="hidden" name="id" value="<%=data.id%>">
+                    </form>
+                        <span class="space"></span>
+                        <form action="comment/delete/<%=data.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                        <button class="btn" data-slug="comment.delete" id="deleteBtn" type="submit" data-toggle="tooltip" <%= data.status != 1 ? "disabled='disabled'" : ""%> data-placement="top" title="删除后，前端-个人中心、前端-店铺评价、商家后台评价管理均处不可视">删除</button>
+                        <input type="hidden" name="id" value="<%=data.id%>">
+                        </form>
+                    </div>
+                    <div class="clearfix"></div>
+                <table >
+                    <tbody>
+                        <tr>
+                            <td class="td">用户手机号</td>
+                            <td><%=data.mobilePhone%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">臭美劵密码</td>
+                            <td><%=data.ticketNo%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">店铺名称</td>
+                            <td><%=data.salonName%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">评价时间</td>
+                            <td><%=data.time%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">评价结果</td>
+                            <td><%=data.satisfyType%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">评价对象</td>
+                            <td><%=data.hairstylist%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">评价详情内容</td>
+                            <td><%=data.content%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">评价图片<br/>（点击可查看大图）</td>
+                            <td>
+                                <div class="gallery">
+            					    <%data.imgsrc && data.imgsrc.forEach(function(item){%>
+            					    <%galleryList.push(item)%>
+            						<div class="thumbnail"><img src="<%=item%>" alt=""></div>
+            						<%})%>
+            					</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </script>
+            </div>
+            <style type="text/css">
+			.gallery .thumbnail{
+				float: left;
+				margin:10px;
+				width: 144px;
+				max-height: 144px;
+				overflow: hidden;
+				text-align: center;
+			}
+		</style>
+            <script>
+            var galleryList = [];
+            $('#table').on('click','.gallery .thumbnail',function(){
+                var newSwiper=lib.popup.swiper({
+                    list:galleryList,
+                    index:$(this).index()
+                });
+            })
+            seajs.use(['/js/tooltip/tooltip.js','/js/tooltip/tooltip.css'],function(){
+                $("button[data-toggle=tooltip]").tooltip();
+            })
+            </script>
+        </div>
+    </body>
+</html>

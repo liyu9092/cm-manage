@@ -1,0 +1,371 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+		<a>消息管理</a><span>&gt;</span><a href="index.html">申请消息</a> 
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4>申请消息</h4>
+			</div>
+		 </div>		
+		<hr />
+	</div>	
+	
+	<div class="wrapper" ajat="<%if(query.id){%>message/getOne?id=<%=query.id%><%}%>#domid=form&tempid=form-t&xss=false" id="form">
+		<script type="text/template" id="form-t">
+		<form  method="post" class="form-vertical" data-role="form" action="<%=query._?"message/update":"message/create"%>" data-xss="none">
+				<div class="detail-operation">
+					<button class="btn btn-cancel" type="button" >取消</button>
+					<span class="space"></span>
+					<button class="btn-primary" data-slug="<%if(query.id){%>message.update<%}else{%>message.create<%}%>">提交</button>			
+				</div>
+				<input type="hidden" name="id" value="<%=data.id%>" />
+                 <div class="control-group">
+                    <label class="control-label">发送对象：</label>
+					<div class="control">
+						<label>
+							<input type="radio" class="radio" name="receive_type" value="1"
+							<%=!data.receive_type||data.receive_type==1 ? "checked" : "" %>>
+							<span>所有臭美发型的发型师</span>
+						</label>
+						<br/>
+						<label>
+							<input type="radio" class="radio" name="receive_type" value="2" 
+							<%=data.receive_type==2 ? "checked" : "" %>>
+							<span>个别手机号码</span> 
+						</label>
+						<br />
+						<style type="text/css">
+							.editor-validate{
+								border-width:1px;
+								border-style:solid;
+								display:inline-block;
+								width:400px;
+								height:auto;
+								border-radius:3px;
+								min-height:74px;
+								padding:5px 10px;
+								margin-top:10px;
+							}
+							.editor-validate li{
+								line-height:1;
+							}
+							.editor-validate input{
+								border:0!important;
+								box-shadow:none!important;
+								line-height:24px;
+								height:24px;
+								padding:0px;
+								min-width:0px!important;
+								width:160px!important;
+							}
+							.editor-validate .control-help{
+								display:none;
+								line-height:24px;
+							}
+						</style>
+						<div class="editor-validate input untransition" style="<%=!data.receive_type||data.receive_type==1 ? "display:none;" : "" %>">
+							<ul>
+								<%if(!data.receivers){
+									data.receivers="";
+									}
+								%>
+								<%data.receivers.split(",").forEach(function(item){%>
+								<li>
+									<input type="text" id="er-1" value="<%=item%>" required requiredmsg="请输入手机号码" pattern="mobile" patternmsg="号码格式有误" /><label class="control-help" for="er-1"></label>
+								</li>
+								<%})%>
+							</ul>
+							
+						</div>
+						<input type="hidden" name="receivers" id="receivers" value="<%=data.receivers%>" />
+					</div>
+                </div>  
+				<div class="control-separation">
+                    <legend>消息编辑-列表</legend>
+					<hr />
+                </div>	
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>标题：</label>
+                    <div class="control">
+                        <input type="text" required maxlength="32" name="title" value="<%=data.title%>">
+						<span class="weak">(限制32字以内)</span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>摘要：</label>
+                    <div class="control">
+					<input type="text" required maxlength="32" name="description" value="<%=data.description%>">
+					<span class="weak">(限制32字以内)</span>
+					</div>
+                </div>
+				 <div class="control-group">
+                    <label class="control-label" for="">列表展示图片：</label>
+					<div class="control">
+						  <div class="control-image">
+								<div class="control-single-image">
+									<img src="<%=data.img%>" alt="" />
+									<div class="control-image-ud">
+										<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
+									</div>
+									<input type="hidden" name="img" class="original" value="<%=data.img%>" data-helpid="image-help">
+									<a class="fa fa-times-circle control-image-single-remove"></a>
+								</div>
+							</div>
+						 <div class="weak">图片规格：2M以内，支持jpg、png格式建议630*210px</div>
+						<div class="control-help" style="display:none;" id="image-help"></div>
+					</div>
+                </div>
+				<div class="control-separation">
+                    <legend>消息编辑-详情</legend>
+					<hr />
+                </div>
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>消息内容：</label>
+					<div class="control">
+						<label>
+							<input type="radio" name="switch1" value="1" class="radio-editor"
+							<%=data.url||!data.content ? "checked" : "" %>>
+							<span>信息链接</span>
+						</label>
+						<label>
+							<input type="radio" name="switch1" value="2" class="radio-editor"
+							<%=data.content ? "checked" : "" %>>
+							<span>编辑生成</span>
+						</label>
+						<div style="margin-top:10px">
+							<input type="text" placeholder="信息链接需以http或者https开头" id="url" value="<%=data.url%>" style="<%=data.content?"display:none":""%>" pattern="^(http|https)://" patternmsg="链接地址不正确"/>
+							<div id="editor-wrap">
+								<div id="editor" type="text/plain" style="width:800px;height:300px;"></div>
+								<div class="weak">详情中的图片建议尺寸：690x320px</div>
+							</div>
+							<div class="hide">
+								<div id="edui_simpleupload" class="edui-box edui-button edui-for-simpleupload edui-default">
+									<div id="edui_simpleupload_state" class="edui-default">
+										<div class="edui-button-wrap edui-default">
+											<div id="edui15_body"  title="单图上传" class="edui-button-body edui-default" >
+												<div class="edui-box edui-icon edui-default" id="ueditor-upload">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<textarea type="hidden" id="hidden" class="hide" required ><%=data.url||data.content%></textarea>
+						<br />
+					</div>
+                </div>  
+				<div class="control-group">
+					<label class="control-label" for=""></label>
+					<div class="control">
+						<button class="btn-primary" data-slug="<%if(query.id){%>message.update<%}else{%>message.create<%}%>">提交</button>
+						<span class="space"></span>
+						<button class="btn" type="submit" id="preview">预览</button>
+					</div>
+				</div>
+		  </form>
+		  </script>
+		 
+	</div>
+		<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+		<script type="text/javascript" src="/ueditor/ueditor.all.js"></script>
+		<script type="text/javascript" src="/ueditor/lang/zh-cn/zh-cn.js"></script>
+        <script type="text/javascript">
+			
+			$('#form').one('_ready',function(e,data){
+				var form=$(this).find('form');
+				//编辑器
+				window.ue = UE.getEditor('editor');
+				window.ue.ready(function(){
+					$('#edui14').after($('#edui_simpleupload'));
+					lib.puploader.image({
+						browse_button: 'ueditor-upload',
+						auto_start:true,
+						filters: {
+							mime_types : [
+								{ title : "Image files", extensions : "jpg,gif,png,jpeg" }
+							]
+						}
+					},function(uploader){
+						uploader.bind('FileUploaded',function(up,file,res){
+							if(res&&res.response&&typeof res.response=='string'){
+								var data=JSON.parse(res.response);
+								if(data.code==0&&data.response)
+								UE.getEditor('editor').execCommand('insertHtml','<img src="'+data.response.img +'"/>');
+							}
+						});
+					});
+					if(!data.response.id||!data.response.content){
+						$('#editor-wrap').hide();
+					}
+					if(data.response.content){
+						 UE.getEditor('editor').setContent(data.response.content);
+					}
+				});
+				
+				//预览消息
+				$('#preview').on('click',function(e){
+					var val=$('.radio-editor:checked').val();
+					if(val==1){
+						e.stopPropagation();
+						e.preventDefault();
+						var val=$('#url').val();
+						if(val){
+							window.open('preview.html?url='+encodeURIComponent(val),"_blank");
+						}else{
+							$('#hidden').blur();
+							$('#url').focus();
+						}
+					}else if(val==2){
+						$('#hidden').attr('name','content').val(window.ue.getContent());
+						var receivers=[];
+						$('.editor-validate input').each(function(){
+							receivers.push($(this).val());
+						})
+						$('#receivers').val(receivers);
+						form[0].goback=function(){}
+						form.one('success',function(e,data){
+							if(data.result==1&&data.data){
+								window.open('preview.html?key='+data.data,'_blank');
+							}
+						});
+						var action=form.attr('action');
+						form.attr('action','message/addingPreview/');
+						setTimeout(function(){
+							form.attr('action',action).attr('disabled',false);
+						},1000);
+					}
+					
+				});
+				//提交消息
+				$('.btn-primary').on('click',function(e){
+					var receivers=[];
+					$('.editor-validate input').each(function(){
+						receivers.push($(this).val());
+					});
+					$('#receivers').val(receivers);
+					var val=$('.radio-editor:checked').val();
+					if(val==1){
+						$('#hidden').attr('name','url').val($('#url').val());
+					}
+					if(val==2){
+						$('#hidden').attr('name','content').val(window.ue.getContent());
+					}
+					var type=$('.radio:checked').val();
+					if(type==1){
+						$('#receivers').val('');
+					}
+					form[0].goback=function(){
+						history.back();
+					}
+				})
+				
+				/**添加手机验证**/
+				$('.editor-validate').on('keydown','input',function(e){
+					var $this=$(this);
+					if(e.keyCode==13){
+						var id="er-"+e.timeStamp;
+						var clone=$this.closest('li').clone();
+						clone.children('input').attr('id',id).val('');
+						clone.children('label').attr('for',id).removeAttr('style').text('');
+						$this.closest('ul').append(clone);
+						clone.children('input').focus();
+						e.preventDefault();
+					}
+				}).on('keyup','input',function(e){
+					var $this=$(this);
+					if(e.keyCode==8&&$.trim($this.val())==''){
+						if($this.closest('li').siblings().length!=0){
+							if($this.closest('li').prev().length==1){
+								$this.closest('li').prev().children('input').focus();
+							}else if($this.closest('li').next().length==1){
+								$this.closest('li').next().children('input').focus();
+							}
+							$this.closest('li').remove();
+						}
+					}
+					if(e.keyCode==38){
+						if($this.closest('li').prev().length==1){
+							$this.closest('li').prev().children('input').focus();
+						}
+					}
+					if(e.keyCode==40){
+						if($this.closest('li').next().length==1){
+							$this.closest('li').next().children('input').focus();
+						}
+					}
+				}).on('focus','input',function(){
+					$(this).closest('.editor-validate').addClass('focus');
+				}).on('pass','input',function(){
+					var $this=$(this);
+					$this.closest('.editor-validate').removeClass('focus');
+					lib.ajax({
+						url:'message/checkPhone',
+						type:'POST',
+						async:false,
+						data:{
+							receivers:$(this).val()
+						},
+						success:function(data){
+							if(data.result==1&&data.data&&data.data.length>0){
+								$this.trigger('error',{type:'error',errormsg:'没有找到该号码的发型师'})
+							}
+						}
+					});
+				}).on('click',function(e){
+					var $target=$(e.target);
+					if($target.is('li')){
+						target.children('input').addClass('focus');
+					}
+					if($target.is('div')){
+						$(this).find('input').last().focus();
+					}
+				});
+				
+				//图片上传
+				lib.puploader.image({
+					browse_button: 'imageUpload',
+					auto_start:true,
+					filters: {
+						mime_types : [
+							{ title : "Image files", extensions : "jpg,png,jpeg" },
+						]
+					},
+					max_file_size:'2mb'
+				});
+			});
+			
+			$(document).on('change','.radio',function(){
+				var val=$(this).val();
+				var editor=$('.editor-validate');
+				if(val==2){
+					editor.slideDown(200);
+					editor.find('input').last().focus();
+				}else{
+					editor.slideUp(200);
+				}
+			}).on('change','.radio-editor',function(){
+				var editor=$('#editor-wrap');
+				if($(this).val()==1){
+					editor.hide().prev().show();
+				}else{
+					editor.show().prev().hide();
+				}
+			});
+			$(document).on('click','.edui-for-fullscreen',function(){
+				if($(this).find('.edui-state-checked').length==1){
+					parent.lib.fullpage(true);
+				}else{
+					parent.lib.fullpage(false);
+				}
+			})
+			
+		</script>  
+  </body>
+</html>

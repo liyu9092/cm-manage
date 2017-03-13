@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script> 
+      <script type="text/javascript" src="/js/validator.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>店铺管理</a>
+            <span>&gt;</span>
+            <a href="index.html">店铺列表</a>
+            <span>&gt;</span><%=query.type=="add"?"新增店铺":"编辑店铺"%>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4><%=query.type=="add" ? "新增店铺" : "编辑店铺"%></h4>
+                </div>
+            </div>
+            <hr />
+        </div>
+
+        <div class="wrapper">
+            <form class="form-vertical" data-role="form" id="form">
+                <script type="text/template" id="form-t">            
+                <div class="detail-operation">
+                    <button type="button" class="btn btn-cancel">取消</button>
+                    <span class="space"></span>
+                    <button class="btn-primary">提交</button>
+                </div>
+
+                <ul class="nav-step flex-box">
+                    <li class="flex-item">
+                        <a href="add.html">
+                            <i class="fa fa-check-circle"></i>
+                            <span>1.店铺基本信息</span>
+                        </a>
+                    </li>
+
+                    <li class="flex-item">
+                        <a href="picture.html">
+                            <i class="fa fa-check-circle"></i>
+                            <span>2.店铺图片信息</span>
+                        </a>
+                    </li>                      
+
+                    <li class="flex-item">
+                        <a href="bank.html">
+                            <i class="fa fa-check-circle"></i>
+                            <span>3.银行账号信息</span>
+                        </a>
+                    </li>
+
+                    <li class="flex-item">
+                        <a href="assess.html">
+                            <i class="fa fa-check-circle"></i>
+                            <span>4.准入评估信息</span>
+                        </a>
+                    </li>
+
+                    <li class="flex-item">
+                        <a href="upload.html">
+                            <i class="fa fa-check-circle"></i>
+                            <span>5.附件上传</span>
+                        </a>
+                    </li>
+
+                    <li class="flex-item active">
+                        <span class="arrow">6.财务结算</span>
+                    </li>
+                </ul>
+
+                <div class="control-group">
+                    <label class="control-label" for="">落地日期：</label>
+                    <div class="control">
+                        <%
+                        if(!data.floorDate || +data.floorDate == 0){
+                            data.floorDate = "";
+                        }else{
+                            data.floorDate = lib.tools.getDate(data.floorDate);
+                        }
+                        %>                        
+                        <input type="date" name="floorDate" value="<%=data.floorDate%>" 
+                        placeholder="落地日期" patternMsg="落地日期有误">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="">预付款额度：</label>
+                    <div class="control">
+                        <input type="text" name="advanceFacility" value="<%=data.advanceFacility%>" 
+                        placeholder="预付款额度" pattern="float" patternMsg="预付款额度有误">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="">佣金率：</label>
+                    <div class="control">
+                        <input type="text" name="commissionRate" value="<%=data.commissionRate || 0 %>" 
+                        placeholder="佣金率" pattern="float" len="2" decimal="2" patternMsg="佣金率有误">
+                        <span class="unit">%</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="">分红政策：</label>
+                    <div class="control">
+                        <input type="text" name="dividendPolicy" value="<%=data.dividendPolicy%>" maxlength="200"
+                        placeholder="分红政策" patternMsg="分红政策有误">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="">返佣政策：</label>
+                    <div class="control">
+                        <input type="text" name="rebatePolicy" value="<%=data.rebatePolicy%>" maxlength="200" 
+                        placeholder="返佣政策" patternMsg="返佣政策有误">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="">基础补贴政策：</label>
+                    <div class="control">
+                        <input type="text" name="basicSubsidies" value="<%=data.basicSubsidies%>" maxlength="200" 
+                        placeholder="基础补贴政策" patternMsg="基础补贴政策有误">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="">基础补贴起始日：</label>
+                    <%
+                    if(!data.bsStartTime || +data.bsStartTime == 0){
+                        data.bsStartTime = "";
+                    }else{
+                        data.bsStartTime = lib.tools.getDate(data.bsStartTime);
+                    }
+                    %>                          
+                    <div class="control">
+                        <input type="date" name="bsStartTime" value="<%=data.bsStartTime%>" 
+                        placeholder="基础补贴起始日" patternMsg="基础补贴起始日有误">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="">基础补贴截止日：</label>
+                    <div class="control">
+                        <%
+                        if(!data.bsEndTime || +data.bsEndTime == 0){
+                            data.bsEndTime = "";
+                        }else{
+                            data.bsEndTime = lib.tools.getDate(data.bsEndTime);
+                        }
+                        %>                        
+                        <input type="date" name="bsEndTime" value="<%=data.bsEndTime%>" 
+                        placeholder="基础补贴截止日" patternMsg="基础补贴截止日有误">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="">强补贴政策：</label>
+                    <div class="control">
+                        <input type="text" name="strongSubsidies" value="<%=data.strongSubsidies%>"  maxlength="200"
+                        placeholder="强补贴政策" patternMsg="强补贴政策有误">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="">强补贴起始日：</label>
+                    <%
+                    if(!data.ssStartTime || +data.ssStartTime == 0){
+                        data.ssStartTime = "";
+                    }else{
+                        data.ssStartTime = lib.tools.getDate(data.ssStartTime);
+                    }
+                    %>                      
+                    <div class="control">
+                        <input type="date" name="ssStartTime" value="<%=data.ssStartTime%>" 
+                        placeholder="强补贴起始日" patternMsg="强补贴起始日有误">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="">强补贴截止日：</label>
+                        <%
+                        if(!data.ssEndTime || +data.ssEndTime == 0){
+                            data.ssEndTime = "";
+                        }else{
+                            data.ssEndTime = lib.tools.getDate(data.ssEndTime);
+                        }
+                        %>                      
+                    <div class="control">
+                        <input type="date" name="ssEndTime" value="<%=data.ssEndTime%>" 
+                        placeholder="强补贴截止日" patternMsg="强补贴截止日有误">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="">强补贴月交易单数要求：</label>
+                    <div class="control">
+                        <input type="text" name="strongClaim" value="<%=data.strongClaim%>" pattern="number" maxlength="6" placeholder="强补贴月交易单数要求"  patternMsg="强补贴月交易单数要求有误">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="">首单指标补贴政策：</label>
+                    <div class="control">
+                        <input type="text" name="subsidyPolicy" value="<%=data.subsidyPolicy%>" pattern="number" maxlength="6" placeholder="首单指标补贴政策" patternMsg="首单指标补贴政策有误">
+                    </div>
+                </div>                                
+
+                <div class="control-group">
+                    <label class="control-label" for=""></label>
+                    <button class="btn" type="button" id="preview-btn" style="margin-right:20px">预览</button>
+                    <button class="btn-primary">提交</button>
+                </div> 
+                </script>                                                                 
+            </form>
+        </div> 
+        <script src="settlement.js"></script>     
+    </body>
+</html>

@@ -1,0 +1,107 @@
+.week{
+	line-height:36px;
+	background:#F6F8F9;
+	text-align:center;
+	font-weight:bold;
+	font-size:16px;
+}
+.week li{
+	width:14.28%;
+	float:left;
+	margin:-1px -1px 0 0;
+	border:1px solid #E6EAF2;
+	box-sizing:border-box;
+}
+.date-item{
+	padding:10px;
+	border:1px solid #E6EAF2;
+	float:left;
+	width:14.28%;
+	box-sizing:border-box;
+	min-height:170px;
+	position:relative;
+	margin:-1px -1px 0 0;
+}
+.today{
+	border-color:#58A2EC;
+	position:relative;
+	z-index:10;
+	color:#58A2EC!important;
+}
+.today-block{
+	background:#58A2EC;
+	color:#fff;
+	position:absolute;
+	top:0;
+	right:0;
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+}
+.date-item:hover{
+	background:rgba(215,231,247,0.3);
+}
+.today .weak{
+	color:#58A2EC;
+}
+.date-item .control-help{
+	position:absolute;
+	left:10px;
+	bottom:0;
+}
+.date-item h4{
+	text-align:center;
+	font-size:24px;
+	line-height:100%;
+	margin-bottom:10px;
+	margin-top:10px;
+}
+.date-item[disabled]{
+	background:#eee;
+	opacity:0.7;
+}
+.date-item p{
+	line-height:26px;
+}
+.date-item input{
+	width:50px;
+	height:22px;
+	line-height:22px;
+	padding:0px 5px;
+	display:none;
+}
+.position-group{
+	border:1px solid #E6EAF2;
+	margin-left:-100px;
+}
+.position-group input{
+	border: 0;
+	box-shadow: none;
+	font-size: 20px;
+	width: 134px;
+	padding-right:0!important;
+	padding-left:0!important;
+	background:transparent;
+	text-align:center;
+	margin:0 5px!important;
+}
+.position-group .fa{
+	font-size:20px;
+	color:#999;
+	vertical-align: middle;
+}
+.position-group .table-item{
+	vertical-align:middle;
+	position:relative;
+}
+.edit-page .position-group{
+	opacity:0.3;
+	z-index:-1;
+}
+.edit-page .date-item input{
+	display:inline;
+}
+.edit-page .date-item span{
+	display:none;
+}

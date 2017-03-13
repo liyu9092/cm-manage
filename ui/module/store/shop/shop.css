@@ -1,0 +1,378 @@
+/* 
+* @Author: anchen
+* @Date:   2015-06-30 10:24:56
+* @Last Modified by:   anchen
+* @Last Modified time: 2015-08-24 14:21:46
+*/
+
+/********************店铺列表***********************/
+/*
+.area-box{
+    margin-top: 15px;
+    border:1px solid #ddd;
+    padding :10px;
+}        
+.area-box > div{
+    line-height: 45px;
+    vertical-align: middle;
+}*/
+.mr{
+  margin-right:5px;
+}
+
+/********************店铺详情***********************/
+.btn-group{
+    height:50px;
+	margin-top:-50px;
+}
+.table-wrapper th{
+    font-size: 14px;            
+}
+.shop-name{
+    padding-left:30px!important;
+    border:none!important;
+}          
+.shop-num{
+    text-align:right!important;
+    padding-right:30px!important;
+    border:none!important;
+}
+.content{
+    width:15%;
+    padding-left: 30px!important;
+}
+.con-special{
+    width:30%;
+    padding-left: 30px!important;     
+	background:rgba(0,0,0,0.035);
+}
+.map{
+    display: inline-block;
+    border: 1px solid #ddd;
+    height: 350px;
+    line-height: 350px;
+    vertical-align: top;
+    width:330px;
+    margin-left: 25px;  
+    box-sizing:border-box;     
+}
+.ie9 .map{
+	display:table-cell;
+}
+.map > div:first-child{
+    vertical-align: middle;
+    height: 30px;
+    line-height: 30px;
+    margin: 5px;            
+}
+.map > div:last-child{
+    vertical-align: middle;
+    height: 300px;
+    line-height: 300px;
+    margin: 5px; 
+    border:1px solid #ddd;           
+}
+.map-content{
+    height:255px;
+    line-height:255px;
+}
+.map-search-box{
+    height:45px;
+    line-height:45px;
+    background-color:#f5f5f5;
+    text-align:center;
+}
+.map-search-bar{
+    width: 26px;
+    height: 26px;
+    margin-right: 5px;
+    vertical-align: middle;
+    display: inline-block;
+    background: url(/images/search-bar.png);
+    cursor: pointer;        
+}
+
+.img-wrapper{
+  border:1px solid #ddd;
+  width:196px;height:138px;
+  margin:5px;
+  display:inline-block;
+  cursor: pointer;
+}
+
+.img-wrapper img{
+  width:192px;
+  height:134px;
+  padding:2px;
+  box-shadow: 2px 2px 2px #ddd;
+}
+
+.contract-mr{
+  display: inline-block;
+  margin-right: 30px;
+}
+
+/********************新增、修改店铺***********************/
+.textarea{
+    margin-top: 10px;
+    width: 20%; 
+    min-width: 250px; 
+    margin-right: 10px;        
+}
+.textarea-bar{
+    background-color: #F0F3F8;
+    height: 40px;
+    width: 20%;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    line-height: 40px;
+    min-width: 250px; 
+    display: inline-block;
+    margin-right:10px; 
+}
+.area-btn{
+    border-radius: 12px;
+    float: right;
+    margin-top:3px;
+    right:10px;
+}
+.min-width{
+    min-width:80px;
+    width:6.4%;
+}
+.area-coor{
+    display:inline-block;
+    font-size:14px;
+    vertical-align:middle;
+    padding-left:15px;
+}
+
+.defalut-width{
+  width:20%;
+  min-width:250px;
+  margin-right:10px
+}
+
+.mask{
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  position: fixed;
+  background-color: #000;
+  filter: alpha(opacity=35);
+  opacity: 0.35;
+  z-index: 999;
+}
+
+.pop{
+  position: fixed;
+  min-width: 500px;
+  height: 500px;
+  left: 30%;
+  top: 20%;
+  width: 45%;
+  background-color: #fff;
+  z-index: 1000;
+}
+
+.pop-header-wrapper{
+    height: 50px;
+    line-height: 50px;
+    padding:0 20px;
+    color: #fff;
+    font-weight: bold;
+    background: #58A2EC;
+}
+.pop-tip{
+    font-size: 16px;
+    letter-spacing: 3px;
+}
+.pop-close{
+    font-size: 20px;
+    float: right;
+    cursor: pointer;
+}
+.pop-close:hover{
+    transition: all 0.2s ease;
+    transform: scale(1.2);
+}
+.noSelect{
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select:none;
+}
+.pop-search-wrapper{
+  position: absolute;
+  top: 60px;
+  right: 40px;
+  border-radius: 4px;
+  z-index: 1001;
+}
+.pop-map-wrapper{
+  background:#aaa;
+  height:380px;
+}
+.pop-bar-wrapper{
+    height:70px;
+    line-height:70px;
+}
+.bar-mark{
+  padding-left: 30px;
+  float: left;
+  font-size: 14px;
+}
+.bar-group{
+  float: right;
+  padding-right: 30px;
+}
+.hide{
+    display: none;
+}
+
+.tangram-suggestion-main{
+  z-index : 1001;
+}
+
+.show{
+  display: block!important;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/********************准入评估信息表***********************/
+.component-width{
+  width: 9.5%!important;
+  min-width: 120px!important;
+}
+
+.border-dash{
+    width: 100%;
+    border-top: 1px dashed #ddd;
+    margin: 10px auto;            
+}
+.finished{
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  margin-top: -3px;
+  vertical-align: middle;
+  display: inline-block;
+  background:  url(../../images/finished.png) no-repeat center;
+}
+
+/********************图片上传***********************/
+.thead{
+  text-align: left;
+  font-weight: normal;
+  font-size: 15px;
+}
+.conent{
+  display:inline-block;
+  font-weight: bold;
+  font-size: 15px;
+  padding-left: 5px;
+  width:150px;            
+}
+.thumbnail{
+  position: relative;
+  width:196px;
+  height:138px;
+  line-height: 138px;
+  display:inline-block;
+  border:1px solid #ddd;
+  margin:5px; 
+  border-radius: 3px;
+  cursor: pointer;                     
+}
+
+.thumbnail img{
+  width:192px;
+  height:134px;
+  padding:2px;
+  box-shadow: 2px 2px 2px #ddd;  
+}
+
+.upload-btn{
+  position: relative;
+  display:inline-block;
+  background-color: #ddd;
+  border-radius: 3px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: bold; 
+  width:196px;
+  height:138px;
+  line-height: 138px;
+  border:1px solid #ddd;
+  margin:5px;                    
+}
+
+.upload-btn .fa{
+  font-size: 40px;         
+}
+.btn-text{
+  position: absolute;
+  top:40px;
+  left:50px;
+  height:70%
+}
+
+.file-btn{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  opacity:0;
+  cursor: pointer;
+}
+
+.del{
+/*  width: 20px;
+  height: 20px;*/
+  position: absolute;
+  right: -6px;
+  top: -6px;
+  font-size: 1.5rem;
+  background-color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  line-height: 20px;
+}
+.del:hover{
+	color:red;
+}
+.position{
+	position:absolute;
+	left:50%;
+	margin-left:-200px;
+	top:40px;
+}
+.shop-hash-form input.label+label{
+	border:0px;
+	margin-bottom:5px;
+	line-height:25px;
+	min-width:0;
+}
+.shop-hash-form input.label:checked+label{
+	font-weight:bold;
+}
+.shop-hash-form input[name="district"]:checked+label{
+	border:1px solid #D7D7D7;
+	border-bottom-color:#fff;
+	background:#fff;
+	position:relative;
+	z-index:100;
+	border-radius:0px;
+}
+
+.table table{
+	margin-bottom:-1px;
+}
+

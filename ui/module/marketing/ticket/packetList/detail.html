@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理 </a>
+            <span>&gt;</span><a href="index.html">红包列表</a>
+            <span>&gt;</span>红包详情
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>红包详情</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="detail-operation">
+                <button class="btn" type="button" onclick="window.close()">关闭</button>  
+            </div>  
+
+            <div class="table-detail" style="margin:0" ajat="bonus/show/<%=query.id%>#domid=table&tempid=table-t" id="table">
+				<script type="text/template" id="table-t">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>红包编号</td>
+                            <td><%=data.bonusSn%></td>
+                        </tr>
+
+                        <tr>
+                            <td>生成时间</td>
+                            <td><%=data.add_time%></td>
+                        </tr>
+
+                        <tr>
+                            <td>到期时间</td>
+                            <td><%=data.over_time%></td>
+                        </tr>
+
+                        <tr>
+                            <td>红包有效期</td>
+                            <td><%=data.add_time%> ~ <%=data.over_time%></td>
+                        </tr>
+
+                        <tr>
+                            <td>红包分享用户</td>
+                            <td>
+								<%=data.mobilephone%>
+							</td>                            
+                        </tr>
+
+                        <tr>
+                            <td>现金券总数</td>
+                            <td><%=data.voucherNum%></td>
+                        </tr>   
+
+                        <tr>
+                            <td>被领取现金券数</td>
+                            <td><%=data.receiveNum%></td>
+                        </tr>
+
+                        <tr>
+                            <td>被领取大礼包</td>
+                            <td><%=data.receiveGiftNum%></td>
+                        </tr>  
+
+                        <tr>
+                            <td>红包总金额</td>
+                            <td><%=data.bonusAmount%></td>
+                        </tr>  
+
+                        <tr>
+                            <td>现金券详情</td>
+                            <td>
+								<%data.voucher.forEach&&data.voucher.forEach(function(item){%>
+									<%=item.useMoney%>元<span class="space"></span><%=item.useItemTypes%>*<%=item.useTotalNum%> <br />
+								<%})%>
+							</td>
+                        </tr> 
+						<tr>
+                            <td>礼包详情</td>
+                            <td>
+								<%data.voucherGift.forEach&&data.voucherGift.forEach(function(item){%>
+									<%=item.useMoney%>元<span class="space"></span><%=item.useItemTypes%>*<%=item.useTotalNum%> <br />
+								<%})%>
+							</td>
+                        </tr> 
+                        <tr>
+                            <td>被领取现金券详情</td>
+                            <td>
+								<%data.receive_voucher.forEach(function(item){%>
+									<%=item.vsn%> <span class="space"></span><%=item.mobilephone%> <br />
+								<%})%>
+							</td>
+                        </tr> 
+						<tr>
+                            <td>领取礼包用户</td>
+                            <td>
+								<%data.giftUser.forEach(function(item){%>
+									<%=item.mobilephone%> <br />
+								<%})%>
+							</td>
+                        </tr> 
+                        <tr>
+                            <td>红包状态</td>
+                            <td><%=data.status=="Y"?"进行中":"已过期"%></td>
+                        </tr>                                                                                  
+                    </tbody>                     
+                </table>
+				</script>
+            </div>
+        </div>
+    </body>
+</html>

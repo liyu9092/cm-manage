@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+	  <style type="text/css">
+		input{
+			margin-right:10px;
+		}
+	  </style>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>用户中心 </a><span>&gt;</span><a href="index.html">等级设置</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>等级设置</h4>
+				</div>
+			</div>
+		</div>
+		<div class="wrapper">
+			<p>
+				请设置各个等级所需要的成长值。<br />
+				用户的成长值=购买金额-退款金额；用户的成长值达到某等级设定的成长值，则用户的等级就为此等级。
+			</p>
+			<br />
+			<div class="table-detail" ajat="level/index#domid=detail&tempid=detail-t" id="detail">
+				<script type="text/template" id="detail-t">
+				<form action="level/update" data-role="form">
+				<table>
+					<thead>
+						<tr>
+							<th>等级</th>
+							<th>成长值</th>
+						</tr>
+					</thead>
+					<tbody>
+						<%data&&data.forEach(function(item,i){%>
+						<tr>
+							<td>V<%=item.level%></td>
+							<td>
+								<input type="hidden" value="<%=item.id%>" name="id"/>
+								<input type="hidden" value="<%=item.level%>" name="level"/>
+								<input type="text" value="<%=item.growth%>" required pattern="number" name="growth"/>
+							</td>
+						</tr>
+						<%})%>
+						<tr>
+							<td></td>
+							<td><button data-slug="level.update" class="btn-primary">保存</button></td>
+						</tr>
+					</tbody>
+				</table>
+				</form>
+				</script>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$('#detail').on('_ready',function(){
+			/*重写getFormData**/
+			var form=$('form')[0];
+			form._getFormData=function(){
+				var data={
+					level:[]
+				}
+				$(this).find('input[name="growth"]').each(function(){
+					var $this=$(this);
+					data.level.push({
+						id:$this.siblings('input[name="id"]').val(),
+						level:$this.siblings('input[name="level"]').val(),
+						growth:$this.val()
+					});
+				});
+				return data;
+			}
+			form.goback=function(){
+				$(this).removeAttr('disabled');
+			}
+			$('#detail').on('pass','input[type="text"]',function(){
+				var $this=$(this);
+				$this.closest('tr').next().find('input[type="text"]').attr('min',$this.val());
+			});
+		})
+	</script>
+  </body>
+</html>

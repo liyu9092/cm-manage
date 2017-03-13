@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>用户中心 </a><span>&gt;</span><a href="index.html">用户列表</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>用户列表</h4>
+				</div>
+			</div>
+		</div>
+		<div class="wrapper">
+			<form data-role="hash">
+				<span class="input-group input-switch">
+					<select>
+						<option value="0">臭美号</option>
+						<option selected value="1">手机号</option>
+						<option value="2" >集团邀请码</option>
+						<option value="3">商家邀请码</option>
+						<option value="4">活动邀请码</option>
+						<option value="5">店铺推荐码</option>
+						<option value="6">用户推荐码</option>
+						<option value="7">活动推荐码</option>
+					</select>
+					<input type="text" name="username" placeholder="请输入臭美号" style="display:none"/>
+					<input type="text" name="mobilephone"   placeholder="请输入手机号"/>
+					<input type="text" name="companyCode" style="display:none"  placeholder="请输入集团邀请码"/>
+					<input type="text" name="recommendCode" style="display:none"  placeholder="请输入商家邀请码"/>
+					<input type="text" name="recommendCode" style="display:none"  placeholder="请输入活动邀请码"/>
+					<input type="text" name="recommendCode" style="display:none"  placeholder="请输入店铺推荐码"/>
+					<input type="text" name="recommendCode" style="display:none"  placeholder="请输入用户推荐码"/>
+					<input type="text" name="recommendCode" style="display:none"  placeholder="请输入活动推荐码"/>
+				</span>
+				选择性别
+				<select name="sex">
+				    <option value="" >全部</option>
+				    <option value="2">男</option>
+				    <option value="1">女</option>
+				    <option value="0">未知</option>
+				</select>
+				注册时间
+				<span class="date-group">
+					<input type="date" name="start_at" data-role="start" placeholder="YYYY-MM-DD"/>到<input name="end_at" type="date" data-role="end" placeholder="YYYY-MM-DD"/>
+				</span>
+				选择地区
+				<select id="province" required ajat-one="true" style="width:100px" 
+				ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t" ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t">
+				</select>
+				<select id="city" required ajat-one="true" style="width:100px" ajat="#domid=city&tempid=city_t"
+				ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t">
+				</select>
+				<select id="area"
+				required ajat-one="true"  style="width:100px" ajat="#domid=area&tempid=area_t">
+				</select>
+				<input type="hidden" name="area" id="hidden" />
+				<button class="btn">搜索</button>
+			</form>
+			<form action="user/export" data-role="export" data-slug="user.export"><button class="btn"><i class="fa fa-file-excel-o"></i> 导出</button></form>
+			<div class="table" ajat="user/index?<%=query._%>#domid=table&tempid=table-t&timeout=30000" id="table">
+				<script type="text/template" id="table-t">
+				<table>
+				  <thead>
+					<tr>
+					  <th>序号</th>
+					  <th>臭美号</th>
+					  <th>昵称</th>
+					  <th>性别</th>
+					  <th>会员等级</th>
+					  <th>手机号</th>
+					  <th>地区</th>
+					  <th>集团邀请码</th>
+					  <th>商家邀请码</th>
+					  <th>活动邀请码</th>
+					  <th>店铺推荐码</th>
+					  <th>活动推荐码</th>
+					  <th>用户推荐码</th>
+					  <th>状态</th>
+					  <th>注册时间</th>
+					  <th>操作</th>
+					</tr>
+				  </thead>
+				  <tbody>			  
+					<%var data=data.data%>
+					<%data.forEach(function(item,i){%>
+					<tr>
+					  <td><%=i+1%></td>
+					  <td><%=item.username%></td>
+					  <td><%=item.nickname%></td>
+					  <td><%=item.sex%></td>
+					  <td><%=item.level?"V"+item.level:""%></td>
+					  <td><%=item.mobilephone%></td>
+					  <td><%=item.area%></td>
+					  <td><%=item.companyCode%></td>
+					  <td>
+						<%item.recommend_codes.forEach(function(code){%>
+							 <%=code.activity==2&&code.type==1?code.recommend_code:""%>
+						<%})%>
+					 </td>
+					  <td>
+						<%item.recommend_codes.forEach(function(code){%>
+							<%=code.activity==1&&code.type==1?code.recommend_code:""%>
+						<%})%>
+					 </td>
+					  <td>
+						<%item.recommend_codes.forEach(function(code){%>
+							<%=code.type==2?code.recommend_code:""%>
+						<%})%>
+						</td>
+					  <td>
+						<%item.recommend_codes.forEach(function(code){%>
+							<%=code.type==4?code.recommend_code:""%>
+						<%})%>
+					  </td>
+					  <td>
+						<%item.recommend_codes.forEach(function(code){%>
+							<%=code.type==3?code.recommend_code:""%>
+						<%})%>
+					  </td>
+					  <td><%=item.status==1?"禁用":"启用"%></td>
+					  <td><%=item.add_time%></td>
+					  <td>
+						 <a class="link" data-slug="user.show,user.update" href="detail.html?id=<%=item.user_id%>">查看</a>
+						 <span class="space"></span>
+						 <%if(item.status==1){%>
+						 <form data-confirm="确认启用此用户吗？" action="user/enable/<%=item.user_id%>" data-role="normal" data-slug="user.enable" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+							<button class="link">启用</button>
+						 </form>
+						 <%}else{%>
+						 <form data-confirm="确认禁用此用户吗？" action="user/disable/<%=item.user_id%>" data-role="normal" data-slug="user.disable" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+							<button class="link">禁用</button>
+						 </form>
+						 <%}%>
+					  </td>
+					</tr>
+					<%})%>
+				  </tbody>
+				</table>
+				<div class="pager"></div>
+				</script>
+			</div>
+		</div>
+	<script type="text/template" id="province_t">
+		<option value="">省份</option>
+		<%data.forEach&&data.forEach(function(item){%>
+			<option <%=item.pid==protocol.custom.provinceId?"selected":""%> value="<%=item.pid%>"><%=item.pname%></option>
+		<%})%>
+	</script>
+
+	<script type="text/template" id="city_t">
+		<option value="">城市</option>
+		<%data.forEach&&data.forEach(function(item){%>
+			<option <%=item.iid==protocol.custom.citiesId?"selected":""%> value="<%=item.iid%>"><%=item.iname%></option>
+		<%})%>
+	</script>
+
+	<script type="text/template" id="area_t">
+		<option value="">地区</option>
+		<%data.forEach&&data.forEach(function(item){%>
+			<option <%=item.tid==protocol.custom.district?"selected":""%> value="<%=item.tid%>"><%=item.tname%></option>
+		<%})%>
+	</script>
+	<script type="text/javascript">
+		 $('#province,#city,#area').on('change',function(){
+			var array=[];
+			var province=$('#province');
+			if(province.val()){
+				array.push(province.children('option:selected').text());
+			}
+			var city=$('#city');
+			if(city.val()){
+				array.push(city.children('option:selected').text());
+			}
+			var area=$('#area');
+			if(area.val()){
+				array.push(area.children('option:selected').text());
+			}
+			$('#hidden').val(array);
+		 });
+	</script>
+  </body>
+</html>

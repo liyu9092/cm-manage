@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+    <div class="breadcrumb">
+        <a>付款管理 </a><span>&gt;</span><a href="index.html">付款列表</a><span>&gt;</span><span id="breadcrumb-current">查看付款单</span>
+		<div class="flex-box">
+			<div class="flex-item">
+				<h4> 查看付款单</h4>
+			</div>	
+		</div>
+		<hr />
+    </div>	
+   <div class="wrapper" ajat="pay_manage/show/<%=query.id%>#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		<div class="detail-operation">
+			<%if(data.from==1){%>
+			<%if(data.state==1||data.state==2){%>
+			<form data-slug="pay_manage.destroy" action="pay_manage/destroy/<%=query.id%>" data-role="normal" data-confirm="你正在删除此付款单，是否执行删除？" 
+			onsuccess="parent.lib.popup.result({define:function(){history.back()}})">
+				<button class="btn">删除</button>
+			</form>
+			<%}%>
+			<%if(data.state==1||data.state==2){%>
+			<span class="space"></span>
+			<a data-slug="pay_manage.update" class="btn" href="edit.html?id=<%=query.id%>">编辑</a>
+			<%}%>
+			<%if(data.state==1){%>
+			<span class="space"></span>
+			<form data-slug="pay_manage.update" action="pay_manage/update/<%=query.id%>" data-role="normal" 
+			onsuccess="parent.lib.popup.result({define:function(){history.back()}})">
+				<button class="btn">提交</button>
+			</form>
+			<%}%>
+			<%}%>
+			&nbsp;
+			<button class="btn btn-cancel" type="button">返回</button>
+		</div>
+        <div class="table-detail">
+        <table>
+            <thead>
+                <tr>
+                    <td colspan="2">
+                      <%=data.salon?data.salon.salonname:""%>
+					  <span class="table-detail-sn">店铺编号：<%=data.salon?data.salon.sn:""%></span>
+                    </td>
+                </tr>
+            </thead>
+              <tbody>
+			   <%var state=["","待提交","待审批","待付款","已付款"]%>
+			   <%var type=["","付交易代收款","付业务投资款"]%>
+			   <%var pay_type=["","银行存款","账扣支付","现金","支付宝","财付通"];%>
+                <tr>
+                  <td>付款单号：</td>
+                  <td><%=data.code%></td>
+                </tr>
+				<tr>
+                  <td>关联收款单号：</td>
+                  <td><%=data.r_code%></td>
+                </tr>
+				<tr>
+                  <td>关联转付单号：</td>
+                  <td><%=data.p_code%></td>
+                </tr>
+                <tr>
+                  <td>付款类型：</td>
+                  <td><%=type[data.type]%></td>
+                </tr>
+				<tr>
+                  <td>付款金额：</td>
+                  <td><%=data.money%></td>
+                </tr>
+				<tr>
+                  <td>备注：</td>
+                  <td><%=data.remark%></td>
+                </tr>
+				 <tr>
+                  <td>创建日期：</td>
+                  <td class="format"><%=new Date(data.created_at).format("yyyy-MM-dd")%></td>
+                </tr>
+                <tr>
+                 <td>制单人：</td>
+                  <td>
+					<%if(data.from==1){%>
+						<%=data.make_user?data.make_user.name:""%>
+					<%}else{%>
+						<%=data.salon_user?data.salon_user.username:""%>
+					<%}%>
+				  </td>
+               </tr>
+			   <tr>
+                 <td>审批人：</td>
+                  <td><%=data.confirm_user?data.confirm_user.name:""%></td>
+               </tr>
+			   <tr>
+                 <td>审批日期：</td>
+                  <td class="format"><%=data.confirm_at%></td>
+               </tr>
+			   <tr>
+                 <td>出纳：</td>
+                  <td><%=data.cash_user?data.cash_user.name:""%></td>
+               </tr>
+			   <tr>
+                 <td>实际付款日期：</td>
+                  <td class="format"><%=data.pay_day%></td>
+               </tr>
+			   <tr>
+                 <td>付款方式：</td>
+                  <td><%=pay_type[data.pay_type]%></td>
+               </tr>
+                <tr>
+                  <td>状态：</td>
+                  <td><%=data.state==1&&data.from==2?"审批不通过":state[data.state]%></td>
+                </tr>
+              </tbody>
+        </table>
+		  </script>
+        </div>
+    </div>
+   <script type="text/javascript">
+	
+   </script>
+  </body>
+</html>

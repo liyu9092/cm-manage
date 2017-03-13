@@ -1,0 +1,42 @@
+
+.form-group{
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    margin-left: 20px;
+}
+.mr-20{
+    margin-left: 20px !important;
+}
+
+.mr-15{
+    margin-left: 15px !important;
+}
+
+.mr-5{
+    margin-left: 5px !important;
+}
+
+.shop-name{
+    padding-left:30px!important;
+    border:none!important;
+}          
+.shop-num{
+    text-align:right!important;
+    padding-right:30px!important;
+    border:none!important;
+}
+.td{
+  width: 15%;
+  padding-left: 30px!important;
+}
+.fr{
+    float: right;
+}
+.footer{
+    height: 50px;
+    line-height: 50px;
+    background-color: #F6F8F9;
+    margin-top: 10px;
+    padding-left: 10px;   
+}

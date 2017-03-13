@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理 </a>
+            <span>&gt;</span><a href="index.html">兑换活动</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>活动概况</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="table table-detail" style="margin:0" ajat="coupon/actView/<%=query.id%>#domid=table&tempid=table-t" id="table">
+                <script type="text/template" id='table-t'>
+                <table >
+                <%var status=["","进行中","下线","已关闭","已结束"]%>
+                    <tbody>
+                        <tr>
+                            <td class="td">活动名称</td>
+                            <td><%=data.vcTitle%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">活动编号</td>
+                            <td><%=data.vcSn%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">活动简介</td>
+                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">活动时间</td>
+                            <td><%=data.actTime%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">活动状态</td>
+                            <td><%=status[data.status]%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">券总数</td>
+                            <td><%=data.totalNum%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">券预算总金额</td>
+                            <td><%=data.budget%></td>
+                        </tr>   
+
+                        <tr>
+                            <td class="td">申请部门</td>
+                            <td><%=data.department%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">负责人</td>
+                            <td><%=data.manager%></td>
+                        </tr>  
+
+                        <tr>
+                            <td class="td">已兑换数</td>
+                            <td><%=data.allNum%></td>
+                        </tr>  
+
+                        <tr>
+                            <td class="td">已兑换金额</td>
+                            <td><%=data.allMoney%></td>
+                        </tr> 
+
+                        <tr>
+                            <td class="td">已使用数</td>
+                            <td><%=data.useNumed%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">已使用总金额</td>
+                            <td><%=data.useMoneyed%></td>
+                        </tr> 
+
+                        <tr>
+                            <td class="td">已消费数</td>
+                            <td><%=data.consumeNum%></td>
+                        </tr>  
+
+                        <tr>
+                            <td class="td">已消费数金额</td>
+                            <td><%=data.consumeMoney%></td>
+                        </tr> 
+
+                        <tr>
+                            <td class="td">已失效数</td>
+                            <td><%=data.invalidNum%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">实体券编号和密码</td>
+                            <td><a class="<%= data.export == 0 ? 'disabled': 'link'%>" <%if (data.export != 0){%> href='ticketMsg.html#id=<%=query.id%>'<%}%> data-slug="coupon.getCoupon" >查看实体券编码和密码</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="control-group">
+                        <a href='index.html'>
+                            <button class="btn"> 返回</button>
+                        </a>
+                        <a  id="edit_btn" data-id="<%=query.id%>" data-slug="coupon.getInfo">
+                            <button class="btn btn-primary"><%if (data.status ==3 || data.status == 4){%>查看配置<%}else{%>编辑<%}%></button>
+                        </a>
+                </div>
+                 </script>
+                 <script type="text/javascript">
+                  $('body').on('click','#edit_btn',function(){
+                        clearTmpData();
+                        var id = $(this).attr('data-id');
+                        window.location.href="addBase.html?id="+id;
+                  });
+                  var clearTmpData  = function(){
+                      window.localStorage.removeItem('couponTmpData');
+                  }
+                 </script>
+            </div>
+        </div>
+    </body>
+</html>

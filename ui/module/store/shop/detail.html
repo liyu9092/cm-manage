@@ -1,0 +1,578 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <link rel="stylesheet" href="shop.css" />  
+    </head>
+
+    <body>
+        <div class="breadcrumb">
+            <a>店铺管理</a>
+            <span>&gt;</span>
+            <a id="branchTitle" href="index.html">店铺列表</a>
+            <span>&gt;</span>
+            <span id="leafTitle">店铺详情</span>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>店铺详情</h4>
+				</div>
+			</div>
+        </div>
+        <div class="wrapper" id="table-wrapper">
+            <script type="text/template" id="table-t">                
+            <div class="btn-group">
+                <div style="float:right">
+					<%if(query.type!="preview"){%>
+                    <button data-slug="salon.endCooperation" class="btn" id="stop_cooperation_btn" salonid="<%=data.salonid%>" status="<%=data.salestatus%>">
+                        <%=data.salestatus == 0 ? '恢复合作' : '终止合作'%> 
+                    </button>
+					&nbsp;
+                    <button class="btn" id="remove_stop_btn" salonid="<%=data.salonid%>" data-slug="salon.del"  <%=data.salestatus != 0 ? 'disabled' : ''%> >
+                        删除店铺
+                    </button>
+					&nbsp;
+                    <a href='add.html?type=edit' data-slug="salon.update">
+                        <button class="btn">编辑</button>
+                    </a>
+                    &nbsp;
+					<%}%>	
+
+                    <%if(query.type=="preview"){%>      
+                        <button class="btn" type="button" onclick='window.close()'>关闭预览</button>
+                    <%}else{%> 
+    					<a class="btn" type="button" href='index.html'>取消</a>
+                    <%}%>               
+                </div>
+            </div>
+                    
+            <div class="flex-box">
+                <div class="table-wrapper flex-item"  >
+                        <div class="table" style="margin:0px">
+                            <table>
+                                <tr style="height:60px;">
+                                    <td class="shop-name">
+                                        <h1 style="padding-left:0"><%=data.salonname%></h1>
+                                        <p>所属商户：<%=data.name%></p>
+                                    </td>
+                                    <td class="shop-num">编号：<%=data.sn%></td>
+                                </tr>                      
+                            </table>
+
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td class="content">店铺地址：</td>
+                                        <td><%=data.provinceName!="省份"?data.provinceName:""%>
+											<%=data.citiesName!="城市"?data.citiesName:""%>
+											<%=data.districtName!="地区"?data.districtName:""%>
+											<%=data.addr%>
+										</td>
+                                    </tr>
+                                    <tr><td class="content">所属商圈：</td>
+                                        <td><%=data.zoneName%></td>
+                                    </tr>
+
+                                    <tr><td class="content">店铺分类：</td>
+                                        <%
+                                        var salonCategory="";
+                                        if(data.salonCategory == 1){
+                                           salonCategory = "工作室";
+                                        }                                        
+                                        if(data.salonCategory == 2){
+                                           salonCategory = "店铺";
+                                        }
+                                        %>
+                                        <td><%=salonCategory%></td>
+                                    </tr>
+
+                                    <tr><td class="content">店铺类型：</td>
+                                        <%
+                                        var typeName = "";
+                                        if(data.shopType == 1) typeName = "预付款店";
+                                        if(data.shopType == 2) typeName = "投资店";
+                                        if(data.shopType == 3) typeName = "金字塔店";
+                                        if(data.shopType == 4) typeName = "高端店";
+                                        if(data.shopType == 5) typeName = "写字楼店";                                        
+                                        %>
+                                        <td><%=typeName%></td>
+                                    </tr>
+
+                                   
+                                    <tr>
+                                        <td class="content"> 显示设置：</td>
+                                        <td><%= data.isAppShow=="2" ? "不在APP中显示" : "在APP中显示"%></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="content">店铺邀请码：</td>
+                                        <td><%=data.recommend_code%></td>
+                                    </tr>                                    
+
+                                    <tr>
+                                        <td class="content">分红联盟：</td>
+                                        <%
+                                            var dividendStatus = "";
+                                            if(data.dividendStatus=="0"){
+                                                dividendStatus = "加入分红联盟";
+                                            }else if(data.dividendStatus=="1"){
+                                                dividendStatus = "退出分红联盟";
+                                            }
+                                        %>
+                                        <td><%=dividendStatus%></td>
+                                    </tr>
+                                    
+                                    <%
+                                        var salonGradeName="";
+                                        var salonChangeGradeName="";
+
+                                        if(data.salonGrade == "1"){
+                                            salonGradeName = "S";
+                                        }else if(data.salonGrade == "2"){
+                                            salonGradeName = "A";
+                                        }else if(data.salonGrade == "3"){
+                                            salonGradeName = "B";
+                                        }else if(data.salonGrade == "4"){
+                                            salonGradeName = "C";
+                                        }else if(data.salonGrade == "5"){
+                                            salonGradeName = "新落地";
+                                        }else if(data.salonGrade == "6"){
+                                            salonGradeName = "淘汰店";
+                                        }
+
+                                        if(data.salonChangeGrade == "1"){
+                                            salonChangeGradeName = "S";
+                                        }else if(data.salonChangeGrade == "2"){
+                                            salonChangeGradeName = "A";
+                                        }else if(data.salonChangeGrade == "3"){
+                                            salonChangeGradeName = "B";
+                                        }else if(data.salonChangeGrade == "4"){
+                                            salonChangeGradeName = "C";
+                                        }else if(data.salonChangeGrade == "5"){
+                                            salonChangeGradeName = "新落地";
+                                        }else if(data.salonGrade == "6"){
+                                            salonGradeName = "淘汰店";
+                                        }
+                                    %>
+                                    <tr><td class="content">当前等级：</td><td><%=salonGradeName%></td></tr>
+                                    <tr><td class="content">调整等级：</td><td><%=salonChangeGradeName%></td></tr>
+                                    <%
+                                    if(data.changeInTime==0){
+                                        data.changeInTime = "";
+                                    } else if(!isNaN(data.changeInTime)){
+                                        data.changeInTime = lib.tools.getDate(data.changeInTime);
+                                    }
+                                    %>
+                                    <tr><td class="content">调整生效日期：</td><td><%=data.changeInTime%></td></tr>
+                                    <tr>
+                                        <td class="content">合同：</td>
+                                        <td>
+                                            <%
+                                            if(data.contractTime==0){
+                                                data.contractTime = "";
+                                            } else if(!isNaN(data.contractTime)){
+                                                data.contractTime = lib.tools.getDate(data.contractTime);
+                                            }
+
+                                            if(data.contractEndTime==0){
+                                                data.contractEndTime = "";
+                                            } else if(!isNaN(data.contractEndTime)){
+                                                data.contractEndTime = lib.tools.getDate(data.contractEndTime);
+                                            }
+                                            %>
+                                            <span class="contract-mr">合同起始日期：<%=data.contractTime%></span>
+                                            <span class="contract-mr">合同截止日期：<%=data.contractEndTime%></span>
+                                            <span class="contract-mr">合同编号：<%=data.bargainno%></span>
+                                        </td>
+                                    </tr>
+                                    <tr><td class="content">联系人：</td><td><%=data.bcontacts%></td></tr>
+                                    <tr><td class="content">联系手机：</td><td><%=data.phone%></td></tr>
+                                    <tr><td class="content">店铺电话：</td><td><%=data.tel%></td></tr>
+                                    <tr><td class="content">法人代表：</td><td><%=data.corporateName%></td></tr>
+                                    <tr><td class="content">法人手机：</td><td><%=data.corporateTel%></td></tr>
+                                    <tr><td class="content">业务代表：</td><td><%=data.businessName%></td></tr>
+                                </tbody>
+                            </table>
+
+                            <table>
+                                  <thead>
+                                    <tr>
+                                      <th colspan="4" class="content">店铺图片信息</th>
+                                    </tr>
+                                  </thead>                    
+                                <tbody>
+                                    <tr>
+                                        <td colspan="1" class="content">店铺LOGO：</td>
+                                        <td colspan="3" id="con_wrapper">
+                                            <%
+                                            if(data.salonLogo && typeof data.salonLogo === "string"){
+                                                data.salonLogo = JSON.parse(data.salonLogo);
+                                            }
+                                            %>
+                                            <%data.salonLogo&&data.salonLogo.forEach(function(item){%>
+                                               <div class="control-thumbnails-item" id="<%=item.id%>">
+                                                    <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>"
+                                                    data-type="<%=item.type%>"/>       
+                                                </div> 
+                                            <%
+                                                });
+                                            %>                                         
+                                        </td>
+                                    </tr>  
+
+                                    <tr>
+                                        <td colspan="1" class="content">店铺图片集：</td>
+                                        <td colspan="3" id="con_wrapper"> 
+                                            <%
+                                            if(data.salonImg && typeof data.salonImg === "string"){
+                                                data.salonImg = JSON.parse(data.salonImg);
+                                            }
+                                            %>
+                                            <%data.salonImg&&data.salonImg.forEach(function(item){%>
+                                               <div class="control-thumbnails-item" id="<%=item.id%>">
+													<img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>"
+                                                    data-type="<%=item.type%>"/>       
+                                                </div> 
+                                            <%
+                                                });
+                                            %> 
+                                        </td>
+                                    </tr> 
+
+                                    <tr>
+                                        <td colspan="1" class="content">团队照片：</td>
+                                        <td colspan="3" id="con_wrapper"> 
+                                            <%
+                                            if(data.workImg && typeof data.workImg === "string"){
+                                                data.workImg = JSON.parse(data.workImg);
+                                            }
+                                            %>
+                                            <%data.workImg&&data.workImg.forEach(function(item){%>
+                                               <div class="control-thumbnails-item" id="<%=item.id%>">
+												 <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>"
+                                                 data-type="<%=item.type%>"/>
+                                                </div> 
+                                            <%
+                                                });
+                                            %> 
+                                        </td>
+                                    </tr>                               
+                                </tbody>
+                            </table>                             
+
+                            <table>
+                                  <thead>
+                                    <tr>
+                                      <th colspan="4" class="content">银行账户信息</th>
+                                    </tr>
+                                  </thead>                      
+                                <tbody>
+                                    <tr>
+                                        <td class="content">银行名称：</td>
+                                        <td><%=data.bankName%></td>
+                                        <td class="content">支行名称：</td>
+                                        <td><%=data.branchName%></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="content">收款人：</td>
+                                        <td><%=data.beneficiary%></td>
+                                        <td class="content">银行账号：</td>
+                                        <td><%=data.bankCard%></td>
+                                    </tr>
+                                    <tr>
+                                    <td colspan="1" class="content">账户类型：</td>
+                                    <td colspan="3">
+                                    <%= data.accountType==1 ? " 对公帐户" : "对私帐户"  %>
+                                    </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table>
+                                  <thead>
+                                    <tr>
+                                      <th colspan="8" class="content">准入评估表</th>
+                                    </tr>
+                                  </thead>  
+
+                                <tbody>
+                                    <tr>
+                                        <td class="content">店铺面积：</td>
+                                        <td><%=data.salonArea && data.salonArea + '<span class="unit" style="text-indent:1px">m<sup>2</sup></span>'%></td>
+                                        <td class="content">镜台数量：</td>
+                                        <td><%=data.dressingNums && data.dressingNums + '个'%></td>
+                                        <td class="content">员工总人数：</td>
+                                        <td><%=data.staffNums && data.staffNums + '个'%></td>
+                                        <td class="content">发型师人数：</td>
+                                        <td><%=data.stylistNums && data.stylistNums + '个'%></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="con-special">店铺平均月销售量：</td>
+                                        <td colspan="2"><%=data.monthlySales && data.monthlySales+'万元'%></td>
+                                        <td colspan="2" class="content">年销售总额：</td>
+                                        <td colspan="2"><%=data.totalSales && data.totalSales+'万元'%></td>
+                                    </tr>                            
+                                    <tr>
+                                        <td colspan="2" class="con-special">本店客单价：</td>
+                                        <td colspan="2"><%=data.price && data.price+'元'%></td>
+                                        <td colspan="2" class="content">充值卡占月销售额：</td>
+                                        <td colspan="2"><%=data.payScale && data.payScale+'%'%></td>
+                                    </tr>                            
+                                    <tr>
+                                        <td  colspan="2" class="con-special">销售最多的充值卡金额：</td>
+                                        <td ><%=data.payMoney && data.payMoney + '万元'%></td>
+                                        <td ><%=data.payMoneyScale && data.payMoneyScale + '折'%></td>
+                                        <td colspan="2" class="content">占全部充值总额：</td>
+                                        <td colspan="2"><%=data.payCountScale && data.payCountScale+'%'%></td>
+                                    </tr>                            
+                                    <tr>
+                                        <td colspan="2" class="con-special">洗剪吹占销售额：</td>
+                                        <td colspan="2"><%=data.blowScale && data.blowScale+'%'%></td>
+                                        <td colspan="2" class="content">烫染占销售额：</td>
+                                        <td colspan="2"><%=data.hdScale && data.hdScale+'%'%></td>
+                                    </tr>                            
+                                    <tr>
+                                        <td colspan="2" class="con-special">O2O平台合作：</td>
+                                        <td colspan="2"><%=data.platformName%></td>
+                                        <td colspan="2" class="content">合作O2O销售额占比：</td>
+                                        <td colspan="2"><%=data.platformScale && data.platformScale+'%'%></td>
+                                    </tr>                            
+                                    <tr>
+                                        <td colspan="2" class="con-special">本店正常工作时间每日最多客接待人次理论数：</td>
+                                        <td colspan="6"><%=data.receptionNums && data.receptionNums + '人'%></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="con-special">平均每月实际接待：</td>
+                                        <td colspan="2"><%=data.receptionMons && data.receptionMons+'人次'%></td>
+                                        <td colspan="2" class="content">店铺成立时间：</td>
+                                        <td colspan="2">
+                                        <%
+                                        if(data.setupTime==0){
+                                            data.setupTime = "";
+                                        }else if(!isNaN(data.setupTime)){
+                                            data.setupTime = lib.tools.getDate(data.setupTime);
+                                        }
+                                        %>
+                                        <%=data.setupTime%>
+                                        </td>
+                                    </tr>                            
+                                    <tr>
+                                        <td colspan="2" class="con-special">店铺租金：</td>
+                                        <td colspan="2"><%=data.hotdyeScale && data.hotdyeScale+'元'%></td>
+                                        <td colspan="2" class="content">店铺租赁合同剩余有效期：</td>
+                                        <td colspan="2"><%=data.lastValidity && data.lastValidity+'个月'%></td>
+                                    </tr>                            
+
+                                    <tr>
+                                        <td colspan="2" class="content">店铺类型：</td>
+                                        <td colspan="6">
+                                            <label class="checkbox" style="display:none">
+                                                <input type="checkbox" name="salonType" value="1">
+                                                <span>纯社区店</span>
+                                            </label>
+
+                                            <label class="checkbox" style="display:none">
+                                                <input type="checkbox" name="salonType" value="2">
+                                                <span>社区商圈店</span>
+                                            </label>
+
+                                            <label class="checkbox" style="display:none">
+                                                <input type="checkbox" name="salonType" value="3">
+                                                <span>商圈店</span>
+                                            </label>
+
+                                            <label class="checkbox" style="display:none">
+                                                <input type="checkbox" name="salonType" value="4">
+                                                <span>商场店</span>
+                                            </label>
+
+                                            <label class="checkbox" style="display:none">
+                                                <input type="checkbox" name="salonType" value="5">
+                                                <span>工作室(写字楼)店</span>
+                                            </label>                                                                       
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>  
+
+                            <table>
+                                  <thead>
+                                    <tr>
+                                      <th colspan="8" class="content">附件图片</th>
+                                    </tr>
+                                  </thead>                    
+                                <tbody>
+                                    <tr>
+                                        <td colspan="2" class="content">合同照片：</td>
+                                        <td colspan="6" id="con_wrapper">
+											
+                                            <%
+                                            if(data.contractPicUrl && typeof data.contractPicUrl === "string"){
+                                                data.contractPicUrl = JSON.parse(data.contractPicUrl);
+                                            }%>
+											<%data.contractPicUrl&&data.contractPicUrl.forEach(function(item){%>
+												<div class="control-thumbnails-item" id="<%=item.id%>">
+													<img src="<%=item.thumbimg?item.thumbimg.replace('w/100/h/100','w/160/h/160'):item.img%>" data-original="<%=item.img%>"  />
+												</div>
+                                            <%
+                                               });
+                                            %>                                                                               
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="content">营业执照：</td>
+                                        <td colspan="6" id="lic_wrapper">
+                                            <%
+                                            if(data.licensePicUrl && typeof data.licensePicUrl === "string"){
+                                                data.licensePicUrl = JSON.parse(data.licensePicUrl);
+											}
+                                            %>
+											<%data.licensePicUrl&&data.licensePicUrl.forEach(function(item){%>
+                                               <div class="control-thumbnails-item" id="<%=item.id%>">
+													<img src="<%=item.thumbimg?item.thumbimg.replace('w/100/h/100','w/160/h/160'):item.img%>" data-original="<%=item.img%>"  />
+												</div> 
+                                            <%
+                                                });
+                                            %>  
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="content">法人执照：</td>
+                                        <td colspan="6" id="cor_wrapper">
+                                            <%
+                                            if(data.corporatePicUrl && typeof data.corporatePicUrl === "string"){
+                                                data.corporatePicUrl = JSON.parse(data.corporatePicUrl);
+											}
+                                            %>
+											<%data.corporatePicUrl&&data.corporatePicUrl.forEach(function(item){%>
+                                                <div class="control-thumbnails-item" id="<%=item.id%>">
+													<img src="<%=item.thumbimg?item.thumbimg.replace('w/100/h/100','w/160/h/160'):item.img%>" data-original="<%=item.img%>"  />
+												</div>
+                                            <%
+                                                });
+                                            %>  
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table> 
+
+                            <table>
+                              <thead>
+                                  <tr>
+                                      <th colspan="8" class="content">财务核算</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+
+                                  <tr>
+                                      <td colspan="2" class="content">预付款额度：</td>
+                                      <td colspan="6"><%=data.advanceFacility %></td>
+                                  </tr> 
+
+                                  <tr>
+                                      <%
+                                      if(!data.floorDate || +data.floorDate == 0){
+                                        data.floorDate = "";
+                                      }else{
+                                        data.floorDate = lib.tools.getDate(data.floorDate);
+                                      }
+                                      %>
+                                      <td colspan="2" class="content">落地日期：</td>
+                                      <td colspan="6"><%=data.floorDate %></td>
+                                  </tr>
+
+                                  <tr>
+                                      <td colspan="2" class="content">佣金率：</td>
+                                      <td colspan="6"><%=(data.commissionRate ? data.commissionRate*1 : 0)  + "%" %></td>
+                                  </tr>
+
+                                  <tr>
+                                      <td colspan="2" class="content">分红政策：</td>
+                                      <td colspan="6"><%=data.dividendPolicy %></td>
+                                  </tr> 
+                                                                   
+                                  <tr>
+                                      <td colspan="2" class="content">基础补贴政策：</td>
+                                      <td colspan="6"><%=data.basicSubsidies %></td>
+                                  </tr>
+
+                                  <tr>
+                                      <%
+                                      if(!data.bsStartTime || +data.bsStartTime == 0){
+                                        data.bsStartTime = "";
+                                      }else{
+                                        data.bsStartTime = lib.tools.getDate(data.bsStartTime);
+                                      }
+
+                                      if(!data.bsEndTime || +data.bsEndTime == 0){
+                                        data.bsEndTime = "";
+                                      }else{
+                                        data.bsEndTime = lib.tools.getDate(data.bsEndTime);
+                                      }
+                                      %>
+                                      <td colspan="2" class="content">基础补贴起始日：</td>
+                                      <td colspan="2"><%=data.bsStartTime%></td>
+                                      <td colspan="2" class="content">基础补贴起截止日：</td>
+                                      <td colspan="2"><%=data.bsEndTime %></td>
+                                  </tr>
+
+                                  <tr>
+                                      <td colspan="2" class="content">强补贴政策：</td>
+                                      <td colspan="6"><%=data.strongSubsidies %></td>
+                                  </tr>
+
+                                  <tr>
+                                      <%
+                                      if(!data.ssStartTime || +data.ssStartTime == 0){
+                                        data.ssStartTime = "";
+                                      }else{
+                                        data.ssStartTime = lib.tools.getDate(data.ssStartTime);
+                                      }
+
+                                      if(!data.ssEndTime || +data.ssEndTime == 0){
+                                        data.ssEndTime = "";
+                                      }else{
+                                        data.ssEndTime = lib.tools.getDate(data.ssEndTime);
+                                      }
+                                      %>                                  
+                                      <td colspan="2" class="content">强补贴起始日：</td>
+                                      <td colspan="2"><%=data.ssStartTime %></td>
+                                      <td colspan="2" class="content">强补贴截止日：</td>
+                                      <td colspan="2"><%=data.ssEndTime %></td>
+                                  </tr>
+
+                                  <tr>
+                                      <td colspan="2" class="content">强补贴月交易单数要求：</td>
+                                      <td colspan="6"><%=data.strongClaim %></td>
+                                  </tr>
+
+                                  
+                                  <tr>
+                                      <td colspan="2" class="content">首单指标补贴政策：</td>
+                                      <td colspan="6"><%=data.subsidyPolicy %></td>
+                                  </tr>
+
+                              </tbody>
+                          </table>                                          
+                        </div>
+                </div>
+                <div class="map" data-lat="<%=data.addrlati%>" data-lng="<%=data.addrlong%>" 
+                data-addr="<%=data.addr%>">
+                    <div><strong>地理坐标：</strong></div>
+                    <div>
+                        <div class="map-content" id="mapContent"></div>
+                        <div class="map-search-box">
+							<a id="map-open">
+                            <i class="map-search-bar"></i>
+                            <strong>查看完整地图</strong>
+							</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </script>
+        </div>
+        <script src="detail.js"></script>           
+    </body>
+</html>
